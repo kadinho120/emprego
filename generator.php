@@ -216,10 +216,21 @@ require_once __DIR__ . '/vendor/autoload.php';
                             <input type="email" name="email" required placeholder="joao@email.com">
                         </div>
                         <div>
-                            <label>Telefone</label>
-                            <input type="text" name="phone" placeholder="(11) 99999-9999">
-                        </div>
+                        <label>Telefone</label>
+                        <input type="text" name="phone" placeholder="(11) 99999-9999">
                     </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+                    <div>
+                        <label>Cidade</label>
+                        <input type="text" name="city" placeholder="São Paulo">
+                    </div>
+                    <div>
+                        <label>Estado (UF)</label>
+                        <input type="text" name="state" placeholder="SP">
+                    </div>
+                </div>
 
                     <label>Resumo Profissional</label>
                     <textarea name="summary" rows="4" placeholder="Fale um pouco sobre sua carreira..."></textarea>

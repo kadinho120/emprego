@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS resumes (
     full_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     phone VARCHAR(50),
+    city VARCHAR(100),
+    state VARCHAR(50),
     linkedin VARCHAR(255),
     website VARCHAR(255),
     summary TEXT,

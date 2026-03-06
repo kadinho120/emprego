@@ -44,7 +44,8 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
 {
     $template = $resume['template_id'] ?? 'modern';
     $skillsArr = array_map(function ($s) {
-        return $s['skill_name']; }, $skills);
+        return $s['skill_name'];
+    }, $skills);
     $skillsText = implode(' • ', $skillsArr);
 
     $expHtml = '';
@@ -129,7 +130,9 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
     <body>
         <div class='header'>
             <div class='name'>{$resume['full_name']}</div>
-            <div class='contact'>{$resume['email']} | {$resume['phone']}</div>
+            <div class='contact'>
+                {$resume['city']} - {$resume['state']} | {$resume['email']} | {$resume['phone']}
+            </div>
         </div>
 
         <div class='section-title'>Resumo</div>

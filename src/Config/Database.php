@@ -62,9 +62,12 @@ class Database
             $sql = file_get_contents($schemaPath);
             try {
                 $this->conn->exec($sql);
+
+                // Migrations: Add city and state if they don't exist
+                $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS city VARCHAR(100)");
+                $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS state VARCHAR(50)");
             } catch (PDOException $e) {
-                // Ignore if tables already exist or other schema-related issues
-                // but log if necessary or handle gracefully.
+                // Ignore errors
             }
         }
     }

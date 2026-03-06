@@ -9,11 +9,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $db->beginTransaction();
 
         // 1. Insert Resume Main Info
-        $stmt = $db->prepare("INSERT INTO resumes (full_name, email, phone, summary, template_id) VALUES (?, ?, ?, ?, ?)");
+        $stmt = $db->prepare("INSERT INTO resumes (full_name, email, phone, city, state, summary, template_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $_POST['full_name'],
             $_POST['email'],
             $_POST['phone'],
+            $_POST['city'],
+            $_POST['state'],
             $_POST['summary'],
             $_POST['template_id']
         ]);
