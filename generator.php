@@ -200,6 +200,15 @@ require_once __DIR__ . '/vendor/autoload.php';
             float: right;
             margin-top: -10px;
         }
+
+        .field-tip {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: -1.2rem;
+            margin-bottom: 1.2rem;
+            line-height: 1.3;
+            display: block;
+        }
     </style>
 </head>
 
@@ -220,15 +229,18 @@ require_once __DIR__ . '/vendor/autoload.php';
                     <h2 style="margin-bottom: 1.5rem;">Dados Pessoais</h2>
                     <label>Nome Completo</label>
                     <input type="text" name="full_name" required placeholder="João Silva">
+                    <span class="field-tip">Use seu nome completo e oficial. Evite apelidos.</span>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <div>
                             <label>E-mail</label>
                             <input type="email" name="email" required placeholder="joao@email.com">
+                            <span class="field-tip">Use um e-mail profissional e que você acesse sempre.</span>
                         </div>
                         <div>
                             <label>Telefone</label>
                             <input type="text" name="phone" id="phone" placeholder="(11) 99999-9999" maxlength="15">
+                            <span class="field-tip">Coloque seu número principal com o DDD.</span>
                         </div>
                     </div>
 
@@ -236,15 +248,18 @@ require_once __DIR__ . '/vendor/autoload.php';
                         <div>
                             <label>Cidade</label>
                             <input type="text" name="city" placeholder="São Paulo">
+                            <span class="field-tip">Onde você mora atualmente?</span>
                         </div>
                         <div>
                             <label>Estado (UF)</label>
                             <input type="text" name="state" placeholder="SP">
+                            <span class="field-tip">Ex: SP, RJ, ES...</span>
                         </div>
                     </div>
 
                     <label>Resumo Profissional</label>
                     <textarea name="summary" rows="4" placeholder="Fale um pouco sobre sua carreira..."></textarea>
+                    <span class="field-tip">Escreva 3 ou 4 linhas sobre sua carreira e seu maior diferencial. Isso é a primeira coisa que o contratante lê.</span>
 
                     <div class="btn-group">
                         <div></div>
@@ -259,8 +274,12 @@ require_once __DIR__ . '/vendor/autoload.php';
                         <div class="dynamic-field">
                             <label>Empresa</label>
                             <input type="text" name="experience[0][company]">
+                            <span class="field-tip">Nome da empresa ou hospital onde trabalhou.</span>
+
                             <label>Cargo</label>
                             <input type="text" name="experience[0][position]">
+                            <span class="field-tip">Seu título oficial (Ex: Enfermeiro Obstetra, Desenvolvedor Backend).</span>
+
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                                 <div>
                                     <label>Início</label>
@@ -273,8 +292,11 @@ require_once __DIR__ . '/vendor/autoload.php';
                                         placeholder="Atual" maxlength="7">
                                 </div>
                             </div>
+                            <span class="field-tip">Use o formato Mês/Ano (Ex: 05/2020). Se ainda trabalhar lá, escreva "Atual" no campo Fim.</span>
+
                             <label>Descrição</label>
                             <textarea name="experience[0][description]" rows="3"></textarea>
+                            <span class="field-tip">O que você fazia no dia a dia? Cite 2 ou 3 tarefas importantes. Dica: Use palavras como "Realizei", "Fui responsável por", "Liderei".</span>
                         </div>
                     </div>
                     <button type="button" class="add-more" onclick="addExperience()">+ Adicionar Experiência</button>
@@ -292,11 +314,16 @@ require_once __DIR__ . '/vendor/autoload.php';
                         <div class="dynamic-field">
                             <label>Instituição</label>
                             <input type="text" name="education[0][institution]">
+                            <span class="field-tip">Escola, Faculdade ou Centro Tecnológico.</span>
+
                             <label>Curso/Grau</label>
                             <input type="text" name="education[0][degree]">
+                            <span class="field-tip">Ex: Graduação em Enfermagem, Técnico em Redes, MBA em Gestão, Ensino Médio...</span>
+
                             <label>Conclusão</label>
                             <input type="text" name="education[0][graduation_date]" class="date-mask"
                                 placeholder="MM/AAAA" maxlength="7">
+                            <span class="field-tip">Data em que se formou ou previsão de formatura.</span>
                         </div>
                     </div>
                     <button type="button" class="add-more" onclick="addEducation()">+ Adicionar Formação</button>
@@ -312,12 +339,14 @@ require_once __DIR__ . '/vendor/autoload.php';
                     <h2 style="margin-bottom: 1.5rem;">Habilidades e Estilo</h2>
                     <label>Habilidades (separadas por vírgula)</label>
                     <input type="text" name="skills" placeholder="PHP, PostgreSQL, Docker, UX Design">
+                    <span class="field-tip">Liste ferramentas, tecnologias ou competências que você domina. Ex: Excel Avançado, Punção Venosa, Java, Liderança de Equipe...</span>
 
                     <label>Modelo do Currículo</label>
                     <select name="template_id">
                         <option value="tech">TI & Desenvolvimento (Sénior/Fullstack)</option>
                         <option value="health">Saúde (Enfermeiros/Técnicos)</option>
                     </select>
+                    <span class="field-tip">Escolha o modelo que mais combina com sua área de atuação.</span>
 
                     <div class="btn-group">
                         <button type="button" class="btn-prev" onclick="nextStep(3)">Anterior</button>
@@ -349,8 +378,12 @@ require_once __DIR__ . '/vendor/autoload.php';
                 <button type="button" class="btn-remove" onclick="removeField(this)">Remover</button>
                 <label>Empresa</label>
                 <input type="text" name="experience[${expCount}][company]">
+                <span class="field-tip">Nome da empresa ou hospital onde trabalhou.</span>
+
                 <label>Cargo</label>
                 <input type="text" name="experience[${expCount}][position]">
+                <span class="field-tip">Seu título oficial (Ex: Enfermeiro Obstetra, Desenvolvedor Backend).</span>
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <div>
                         <label>Início</label>
@@ -361,8 +394,11 @@ require_once __DIR__ . '/vendor/autoload.php';
                         <input type="text" name="experience[${expCount}][end_date]" class="date-mask" placeholder="Atual" maxlength="7">
                     </div>
                 </div>
+                <span class="field-tip">Use o formato Mês/Ano (Ex: 05/2020). Se ainda trabalhar lá, escreva "Atual" no campo Fim.</span>
+
                 <label>Descrição</label>
                 <textarea name="experience[${expCount}][description]" rows="3"></textarea>
+                <span class="field-tip">O que você fazia no dia a dia? Cite 2 ou 3 tarefas importantes.</span>
             </div>
         `;
             container.insertAdjacentHTML('beforeend', html);
@@ -377,10 +413,15 @@ require_once __DIR__ . '/vendor/autoload.php';
                 <button type="button" class="btn-remove" onclick="removeField(this)">Remover</button>
                 <label>Instituição</label>
                 <input type="text" name="education[${eduCount}][institution]">
+                <span class="field-tip">Escola, Faculdade ou Centro Tecnológico.</span>
+
                 <label>Curso/Grau</label>
                 <input type="text" name="education[${eduCount}][degree]">
+                <span class="field-tip">Ex: Graduação em Enfermagem, Técnico em Redes, MBA em Gestão, Ensino Médio...</span>
+
                 <label>Conclusão</label>
                 <input type="text" name="education[${eduCount}][graduation_date]" class="date-mask" placeholder="MM/AAAA" maxlength="7">
+                <span class="field-tip">Data em que se formou ou previsão de formatura.</span>
             </div>
         `;
             container.insertAdjacentHTML('beforeend', html);
