@@ -438,7 +438,11 @@ require_once __DIR__ . '/vendor/autoload.php';
                 <!-- Passo 5: Habilidades e Modelo -->
                 <div class="form-step" id="step5">
                     <h2 style="margin-bottom: 1.5rem;">Habilidades e Estilo</h2>
-                    <label>Habilidades (separadas por vírgula)</label>
+                    <div class="suggestion-header">
+                        <label style="margin-bottom: 0;">Habilidades (separadas por vírgula)</label>
+                        <button type="button" class="btn-suggestion" onclick="openSuggestions('skills', this)">✨ Ver
+                            Sugestões</button>
+                    </div>
                     <input type="text" name="skills" placeholder="PHP, PostgreSQL, Docker, UX Design" required>
                     <span class="field-tip">Liste ferramentas, tecnologias ou competências que você domina. Ex: Excel
                         Avançado, Punção Venosa, Java, Liderança de Equipe...</span>
@@ -496,6 +500,13 @@ require_once __DIR__ . '/vendor/autoload.php';
                     "Liderança técnica de equipe de 5 desenvolvedores em projetos críticos. Revisão de código e mentoria de novos talentos para manter altos padrões de qualidade.",
                     "Integração de APIs de terceiros e sistemas de pagamento de alta segurança. Redução de falhas críticas em 25% através de implementação de testes automatizados.",
                     "Análise e levantamento de requisitos técnicos junto aos stakeholders. Documentação completa de infraestrutura e padrões de desenvolvimento da empresa."
+                ],
+                skills: [
+                    "PHP 8, Laravel, JavaScript (ES6+), Vue.js, React, Node.js, TypeScript",
+                    "PostgreSQL, MySQL, Redis, MongoDB, Eloquent ORM, Query Optimization",
+                    "Docker, Kubernetes, AWS, Google Cloud, CI/CD Pipelines, Git, Linux",
+                    "Arquitetura de Microsserviços, Design Patterns, SOLID, Clean Code, APIs RESTful",
+                    "Metodologias Ágeis (Scrum/Kanban), Jira, TDD, Unit Testing, Pair Programming"
                 ]
             },
             health: {
@@ -512,14 +523,25 @@ require_once __DIR__ . '/vendor/autoload.php';
                     "Realização de triagem de pacientes em Pronto-Socorro de alta complexidade. Classificação de risco e suporte imediato em casos de trauma e paradas cardiorrespiratórias.",
                     "Administração rigorosa de medicamentos e cuidados pós-operatórios complexos. Registro detalhado de evolução clínica e interface com equipe médica multidisciplinar.",
                     "Acompanhamento e suporte em partos de baixo e alto risco. Realização de exames físicos e assistência integral ao recém-nascido e puérpera."
+                ],
+                skills: [
+                    "Punção Venosa, Administração de Medicamentos, Curativos Complexos, Monitorização Hemodinâmica, Reanimação Cardiorrespiratória",
+                    "Assistência Humanizada, Gestão de Equipes, Protocolos de Segurança do Paciente, SAE (Sistematização da Assistência de Enfermagem)",
+                    "Triagem e Classificação de Risco, Manejo de Emergências, Cuidados Críticos (UTI), Gasometria Arterial, Ventilação Mecânica",
+                    "Saúde Coletiva, Imunização, Visita Domiciliar, Educação em Saúde, Prevenção de Doenças, Controle de Infecção Hospitalar",
+                    "Acesso Central, Sondagem Vesical e Nasogástrica, Coleta de Exames, ECG, Suporte Básico e Avançado de Vida (BLS/ACLS)"
                 ]
             }
         };
 
         function openSuggestions(type, btn) {
-            currentTargetField = btn.closest('.suggestion-header').nextElementSibling || btn.closest('.dynamic-field').querySelector('textarea');
-            if (btn.closest('.dynamic-field')) {
-                currentTargetField = btn.parentElement.nextElementSibling;
+            if (type === 'skills') {
+                currentTargetField = document.querySelector('input[name="skills"]');
+            } else {
+                currentTargetField = btn.closest('.suggestion-header').nextElementSibling || btn.closest('.dynamic-field').querySelector('textarea');
+                if (btn.closest('.dynamic-field')) {
+                    currentTargetField = btn.parentElement.nextElementSibling;
+                }
             }
 
             const list = document.getElementById('suggestionsList');
