@@ -81,6 +81,7 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
             .header { background: #f0fff4; border-bottom: 4px solid #319795; padding: 20px; margin-bottom: 25px; border-radius: 0 0 15px 15px; }
             .name { font-size: 24pt; font-weight: bold; color: #2c7a7b; text-align: center; }
             .contact { font-size: 10pt; color: #4a5568; margin-top: 5px; text-align: center; font-weight: 500; }
+            .content-wrapper { padding: 0 20px; }
             .section-title { font-size: 11pt; font-weight: 800; color: #ffffff; background: #319795; padding: 4px 12px; margin-top: 15px; margin-bottom: 10px; border-radius: 4px; display: inline-block; text-transform: uppercase; letter-spacing: 1px; }
             .company { font-weight: bold; color: #2d3748; display: block; }
             .date { color: #718096; float: right; font-size: 0.85em; background: #edf2f7; padding: 2px 8px; border-radius: 10px; }
@@ -90,17 +91,18 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
         ";
     } else { // tech
         $css = "
-            body { font-family: 'Arial', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #ffffff; background-color: #0f172a; margin: 0; }
-            .header { background: #1e293b; color: #38b2ac; padding: 30px; text-align: left; border-bottom: 5px solid #38b2ac; margin-bottom: 20px; }
-            .name { font-size: 28pt; font-weight: 900; color: #38b2ac; text-transform: uppercase; }
-            .contact { font-size: 10pt; color: #94a3b8; font-weight: 600; font-family: 'Courier New', monospace; margin-top: 8px; }
-            .section-title { font-size: 12pt; font-weight: 800; color: #38b2ac; margin-top: 25px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; border-left: 4px solid #38b2ac; padding-left: 10px; }
-            .section-item { border-bottom: 1px solid rgba(148, 163, 184, 0.1); padding-bottom: 15px; }
-            .company { font-weight: 800; color: #f8fafc; font-size: 1.1em; }
-            .date { color: #38b2ac; font-weight: bold; font-family: 'Courier New', monospace; font-size: 0.9em; float: right; }
-            .item-sub { color: #94a3b8; font-style: italic; margin-bottom: 8px; display: block; }
-            .item-desc { color: #cbd5e1; text-align: justify; }
-            .skills-box { background: rgba(56, 178, 172, 0.1); border: 1px solid #38b2ac; padding: 12px; border-radius: 8px; color: #38b2ac; font-family: 'Courier New', monospace; font-weight: bold; }
+            body { font-family: 'Helvetica', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #e2e8f0; background-color: #0f172a; margin: 0; padding: 0; }
+            .header { background: #1e293b; color: #2dd4bf; padding: 40px; text-align: left; border-bottom: 6px solid #2dd4bf; margin-bottom: 30px; }
+            .name { font-size: 30pt; font-weight: 900; color: #2dd4bf; text-transform: uppercase; margin: 0; }
+            .contact { font-size: 10pt; color: #94a3b8; font-weight: 600; font-family: 'Courier New', monospace; margin-top: 10px; }
+            .content-wrapper { padding: 0 40px; }
+            .section-title { font-size: 13pt; font-weight: 800; color: #2dd4bf; margin-top: 30px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid rgba(45, 212, 191, 0.3); padding-bottom: 5px; }
+            .section-item { margin-bottom: 25px; border-bottom: 1px solid rgba(148, 163, 184, 0.1); padding-bottom: 15px; }
+            .company { font-weight: 800; color: #f8fafc; font-size: 1.2em; display: inline-block; }
+            .date { color: #2dd4bf; font-weight: bold; font-family: 'Courier New', monospace; font-size: 0.9em; float: right; padding-top: 5px; }
+            .item-sub { color: #94a3b8; font-weight: 700; margin-bottom: 10px; display: block; font-size: 1.05em; }
+            .item-desc { color: #cbd5e1; text-align: justify; padding-right: 10px; }
+            .skills-box { background: rgba(45, 212, 191, 0.1); border: 1px solid #2dd4bf; padding: 15px; border-radius: 12px; color: #2dd4bf; font-family: 'Courier New', monospace; font-weight: bold; line-height: 1.6; }
         ";
     }
 
@@ -124,25 +126,27 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
             </div>
         </div>
 
-        " . (!empty(trim($resume['summary'])) ? "
-        <div class='section-title'>Resumo</div>
-        <div class='item-desc'>{$resume['summary']}</div>
-        " : "") . "
+        <div class='content-wrapper'>
+            " . (!empty(trim($resume['summary'])) ? "
+            <div class='section-title'>Resumo</div>
+            <div class='item-desc'>{$resume['summary']}</div>
+            " : "") . "
 
-        " . (!empty($experiences) ? "
-        <div class='section-title'>Experiência</div>
-        {$expHtml}
-        " : "") . "
+            " . (!empty($experiences) ? "
+            <div class='section-title'>Experiência</div>
+            {$expHtml}
+            " : "") . "
 
-        " . (!empty($education) ? "
-        <div class='section-title'>Educação</div>
-        {$eduHtml}
-        " : "") . "
+            " . (!empty($education) ? "
+            <div class='section-title'>Educação</div>
+            {$eduHtml}
+            " : "") . "
 
-        " . (!empty($skills) ? "
-        <div class='section-title'>Habilidades</div>
-        <div class='skills-box'>{$skillsText}</div>
-        " : "") . "
+            " . (!empty($skills) ? "
+            <div class='section-title'>Habilidades</div>
+            <div class='skills-box'>{$skillsText}</div>
+            " : "") . "
+        </div>
     </body>
     </html>
     ";
