@@ -126,12 +126,12 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
     </head>
     <body>
         <div class='header'>
-            " . (!empty($resume['photo_path']) ? "
+            " . (!empty($resume['photo_path']) && file_exists(__DIR__ . "/" . $resume['photo_path']) ? "
             <div class='photo-container'>
-                <img src='" . __DIR__ . "/" . $resume['photo_path'] . "' class='photo'>
+                <img src='data:image/" . pathinfo($resume['photo_path'], PATHINFO_EXTENSION) . ";base64," . base64_encode(file_get_contents(__DIR__ . "/" . $resume['photo_path'])) . "' class='photo'>
             </div>
             " : "") . "
-            <div class='header-text' style='" . (empty($resume['photo_path']) || $template === 'health' ? "width: 100%;" : "") . "'>
+            <div class='header-text' style='" . (empty($resume['photo_path']) || !file_exists(__DIR__ . "/" . $resume['photo_path']) || $template === 'health' ? "width: 100%;" : "") . "'>
                 <div class='name'>{$resume['full_name']}</div>
                 <div class='contact'>
                     {$resume['city']} - {$resume['state']} | {$resume['email']} | {$resume['phone']}

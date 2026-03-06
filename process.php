@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($_FILES['photo']['name'])) {
             $uploadDir = __DIR__ . '/uploads/';
             if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
+                mkdir($uploadDir, 0777, true);
             }
 
             $fileExtension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
