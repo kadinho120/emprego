@@ -183,11 +183,22 @@ require_once __DIR__ . '/vendor/autoload.php';
 
         .add-more {
             background: rgba(16, 185, 129, 0.1);
-            color: var(--accent);
+            color: #10b981;
             border: 1px solid rgba(16, 185, 129, 0.2);
             padding: 0.5rem 1rem;
             font-size: 0.85rem;
             margin-bottom: 1.5rem;
+        }
+
+        .btn-remove {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 0.4rem 0.8rem;
+            font-size: 0.75rem;
+            border-radius: 8px;
+            float: right;
+            margin-top: -10px;
         }
     </style>
 </head>
@@ -216,21 +227,21 @@ require_once __DIR__ . '/vendor/autoload.php';
                             <input type="email" name="email" required placeholder="joao@email.com">
                         </div>
                         <div>
-                        <label>Telefone</label>
-                        <input type="text" name="phone" id="phone" placeholder="(11) 99999-9999" maxlength="15">
+                            <label>Telefone</label>
+                            <input type="text" name="phone" id="phone" placeholder="(11) 99999-9999" maxlength="15">
+                        </div>
                     </div>
-                </div>
 
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
-                    <div>
-                        <label>Cidade</label>
-                        <input type="text" name="city" placeholder="São Paulo">
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+                        <div>
+                            <label>Cidade</label>
+                            <input type="text" name="city" placeholder="São Paulo">
+                        </div>
+                        <div>
+                            <label>Estado (UF)</label>
+                            <input type="text" name="state" placeholder="SP">
+                        </div>
                     </div>
-                    <div>
-                        <label>Estado (UF)</label>
-                        <input type="text" name="state" placeholder="SP">
-                    </div>
-                </div>
 
                     <label>Resumo Profissional</label>
                     <textarea name="summary" rows="4" placeholder="Fale um pouco sobre sua carreira..."></textarea>
@@ -253,11 +264,13 @@ require_once __DIR__ . '/vendor/autoload.php';
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                                 <div>
                                     <label>Início</label>
-                                    <input type="text" name="experience[0][start_date]" class="date-mask" placeholder="MM/AAAA" maxlength="7">
+                                    <input type="text" name="experience[0][start_date]" class="date-mask"
+                                        placeholder="MM/AAAA" maxlength="7">
                                 </div>
                                 <div>
                                     <label>Fim</label>
-                                    <input type="text" name="experience[0][end_date]" class="date-mask" placeholder="Atual" maxlength="7">
+                                    <input type="text" name="experience[0][end_date]" class="date-mask"
+                                        placeholder="Atual" maxlength="7">
                                 </div>
                             </div>
                             <label>Descrição</label>
@@ -282,7 +295,8 @@ require_once __DIR__ . '/vendor/autoload.php';
                             <label>Curso/Grau</label>
                             <input type="text" name="education[0][degree]">
                             <label>Conclusão</label>
-                            <input type="text" name="education[0][graduation_date]" class="date-mask" placeholder="MM/AAAA" maxlength="7">
+                            <input type="text" name="education[0][graduation_date]" class="date-mask"
+                                placeholder="MM/AAAA" maxlength="7">
                         </div>
                     </div>
                     <button type="button" class="add-more" onclick="addEducation()">+ Adicionar Formação</button>
@@ -304,7 +318,7 @@ require_once __DIR__ . '/vendor/autoload.php';
                         <option value="modern">Moderno e Limpo</option>
                         <option value="corporate">Corporativo Tradicional</option>
                         <option value="minimal">Minimalista</option>
-                        <option value="health">Saude (Enfermeiros/Tecnicos)</option>
+                        <option value="health">Saúde (Enfermeiros/Técnicos)</option>
                     </select>
 
                     <div class="btn-group">
@@ -334,6 +348,7 @@ require_once __DIR__ . '/vendor/autoload.php';
             const container = document.getElementById('experienceContainer');
             const html = `
             <div class="dynamic-field">
+                <button type="button" class="btn-remove" onclick="removeField(this)">Remover</button>
                 <label>Empresa</label>
                 <input type="text" name="experience[${expCount}][company]">
                 <label>Cargo</label>
@@ -361,6 +376,7 @@ require_once __DIR__ . '/vendor/autoload.php';
             const container = document.getElementById('educationContainer');
             const html = `
             <div class="dynamic-field">
+                <button type="button" class="btn-remove" onclick="removeField(this)">Remover</button>
                 <label>Instituição</label>
                 <input type="text" name="education[${eduCount}][institution]">
                 <label>Curso/Grau</label>
@@ -372,6 +388,10 @@ require_once __DIR__ . '/vendor/autoload.php';
             container.insertAdjacentHTML('beforeend', html);
             eduCount++;
             applyDateMasks();
+        }
+
+        function removeField(btn) {
+            btn.closest('.dynamic-field').remove();
         }
 
         // Phone Mask
