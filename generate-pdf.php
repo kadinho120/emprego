@@ -84,8 +84,8 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
             .name { font-size: 28pt; font-weight: 800; color: #0f766e; text-transform: capitalize; margin: 0; }
             .contact { font-size: 10.5pt; color: #64748b; margin-top: 10px; font-weight: 600; }
             .content-wrapper { padding: 0 40px; }
-            .section-title { font-size: 11pt; font-weight: 800; color: #ffffff; background: #0d9488; padding: 5px 15px; margin-top: 25px; margin-bottom: 15px; border-radius: 6px; display: inline-block; text-transform: uppercase; letter-spacing: 1.5px; }
-            .section-item { margin-bottom: 20px; }
+            .section-title { font-size: 11pt; font-weight: 800; color: #ffffff; background: #0d9488; padding: 5px 15px; margin-top: 15px; margin-bottom: 10px; border-radius: 6px; display: block; text-transform: uppercase; letter-spacing: 1.5px; page-break-after: avoid; }
+            .section-item { margin-bottom: 15px; page-break-inside: avoid; }
             .company { font-weight: bold; color: #1e293b; font-size: 1.1em; display: inline-block; }
             .date { color: #64748b; float: right; font-size: 0.85em; background: #f1f5f9; padding: 3px 10px; border-radius: 12px; font-weight: 600; }
             .item-sub { color: #0d9488; font-weight: 700; margin-bottom: 8px; display: block; font-size: 1.05em; }
@@ -102,8 +102,8 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
             .name { font-size: 30pt; font-weight: 900; color: #2dd4bf; text-transform: uppercase; margin: 0; }
             .contact { font-size: 10pt; color: #94a3b8; font-weight: 600; font-family: 'Courier New', monospace; margin-top: 10px; }
             .content-wrapper { padding: 0 40px; }
-            .section-title { font-size: 13pt; font-weight: 800; color: #2dd4bf; margin-top: 30px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid rgba(45, 212, 191, 0.3); padding-bottom: 5px; }
-            .section-item { margin-bottom: 25px; border-bottom: 1px solid rgba(148, 163, 184, 0.1); padding-bottom: 15px; }
+            .section-title { font-size: 13pt; font-weight: 800; color: #2dd4bf; margin-top: 20px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid rgba(45, 212, 191, 0.3); padding-bottom: 5px; page-break-after: avoid; display: block; }
+            .section-item { margin-bottom: 20px; border-bottom: 1px solid rgba(148, 163, 184, 0.1); padding-bottom: 10px; page-break-inside: avoid; }
             .company { font-weight: 800; color: #f8fafc; font-size: 1.2em; display: inline-block; }
             .date { color: #2dd4bf; font-weight: bold; font-family: 'Courier New', monospace; font-size: 0.9em; float: right; padding-top: 5px; }
             .item-sub { color: #94a3b8; font-weight: 700; margin-bottom: 10px; display: block; font-size: 1.05em; }
@@ -146,24 +146,28 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
 
         <div class='content-wrapper'>
             " . (!empty(trim($resume['summary'])) ? "
-            <div style='page-break-inside: avoid;'>
+            <div class='section-group'>
                 <div class='section-title'>Resumo</div>
                 <div class='item-desc'>" . nl2br(htmlspecialchars($resume['summary'])) . "</div>
             </div>
             " : "") . "
 
             " . (!empty($experiences) ? "
-            <div class='section-title'>Experiência</div>
-            {$expHtml}
+            <div class='section-group'>
+                <div class='section-title'>Experiência</div>
+                {$expHtml}
+            </div>
             " : "") . "
 
             " . (!empty($education) ? "
-            <div class='section-title'>Educação</div>
-            {$eduHtml}
+            <div class='section-group'>
+                <div class='section-title'>Educação</div>
+                {$eduHtml}
+            </div>
             " : "") . "
 
             " . (!empty($skills) ? "
-            <div style='page-break-inside: avoid;'>
+            <div class='section-group'>
                 <div class='section-title'>Habilidades</div>
                 <div class='skills-box'>{$skillsText}</div>
             </div>
