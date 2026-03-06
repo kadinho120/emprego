@@ -8,14 +8,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $db = Database::getInstance();
         $db->beginTransaction();
 
-        // 1. Insert Resume Main Info
-        $stmt = $db->prepare("INSERT INTO resumes (full_name, email, phone, city, state, summary, template_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        // 1. Handle Photo Upload
+        $photoPath = null;
+        if (!empty($_FILES['photo']['name'])) {
+            $uploadDir = __DIR__ . '/uploads/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            $fileExtension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
+            $fileName = uniqid() . '.' . $fileExtension;
+            $targetFile = $uploadDir . $fileName;
+
+            if (move_uploaded_file($_FILES['photo']['tmp_name'], $targetFile)) {
+                $photoPath = 'uploads/' . $fileName;
+            }
+        }
+
+        // 2. Insert Resume Main Info
+        $stmt = $db->prepare("INSERT INTO resumes (full_name, email, phone, city, state, photo_path, summary, template_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $_POST['full_name'],
             $_POST['email'],
             $_POST['phone'],
             $_POST['city'],
             $_POST['state'],
+            $photoPath,
             $_POST['summary'],
             $_POST['template_id']
         ]);

@@ -221,9 +221,10 @@ require_once __DIR__ . '/vendor/autoload.php';
                 <div class="step-dot" data-step="2">2</div>
                 <div class="step-dot" data-step="3">3</div>
                 <div class="step-dot" data-step="4">4</div>
+                <div class="step-dot" data-step="5">5</div>
             </div>
 
-            <form id="resumeForm" action="process.php" method="POST">
+            <form id="resumeForm" action="process.php" method="POST" enctype="multipart/form-data">
                 <!-- Passo 1: Dados Pessoais -->
                 <div class="form-step active" id="step1">
                     <h2 style="margin-bottom: 1.5rem;">Dados Pessoais</h2>
@@ -270,8 +271,25 @@ require_once __DIR__ . '/vendor/autoload.php';
                     </div>
                 </div>
 
-                <!-- Passo 2: Experiência -->
+                <!-- Passo 2: Foto -->
                 <div class="form-step" id="step2">
+                    <h2 style="margin-bottom: 1.5rem;">Sua Foto</h2>
+                    <label>Foto (Opcional)</label>
+                    <input type="file" name="photo" id="photoInput" accept="image/*">
+                    <span class="field-tip">A foto será cortada automaticamente para 3:4. Prefira fotos com fundo neutro e boa iluminação.</span>
+                    
+                    <div id="photoPreview" style="margin-top: 1rem; display: none;">
+                        <img id="previewImg" src="" style="width: 150px; height: 200px; object-fit: cover; border-radius: 12px; border: 2px solid var(--primary);">
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn-prev" onclick="nextStep(1)">Anterior</button>
+                        <button type="button" class="btn-next" onclick="nextStep(3)">Próximo</button>
+                    </div>
+                </div>
+
+                <!-- Passo 3: Experiência -->
+                <div class="form-step" id="step3">
                     <h2 style="margin-bottom: 1.5rem;">Experiência Profissional</h2>
                     <div id="experienceContainer">
                         <div class="dynamic-field">
@@ -308,13 +326,13 @@ require_once __DIR__ . '/vendor/autoload.php';
                     <button type="button" class="add-more" onclick="addExperience()">+ Adicionar Experiência</button>
 
                     <div class="btn-group">
-                        <button type="button" class="btn-prev" onclick="nextStep(1)">Anterior</button>
-                        <button type="button" class="btn-next" onclick="nextStep(3)">Próximo</button>
+                        <button type="button" class="btn-prev" onclick="nextStep(2)">Anterior</button>
+                        <button type="button" class="btn-next" onclick="nextStep(4)">Próximo</button>
                     </div>
                 </div>
 
-                <!-- Passo 3: Formação -->
-                <div class="form-step" id="step3">
+                <!-- Passo 4: Formação -->
+                <div class="form-step" id="step4">
                     <h2 style="margin-bottom: 1.5rem;">Educação</h2>
                     <div id="educationContainer">
                         <div class="dynamic-field">
@@ -336,13 +354,13 @@ require_once __DIR__ . '/vendor/autoload.php';
                     <button type="button" class="add-more" onclick="addEducation()">+ Adicionar Formação</button>
 
                     <div class="btn-group">
-                        <button type="button" class="btn-prev" onclick="nextStep(2)">Anterior</button>
-                        <button type="button" class="btn-next" onclick="nextStep(4)">Próximo</button>
+                        <button type="button" class="btn-prev" onclick="nextStep(3)">Anterior</button>
+                        <button type="button" class="btn-next" onclick="nextStep(5)">Próximo</button>
                     </div>
                 </div>
 
-                <!-- Passo 4: Habilidades e Modelo -->
-                <div class="form-step" id="step4">
+                <!-- Passo 5: Habilidades e Modelo -->
+                <div class="form-step" id="step5">
                     <h2 style="margin-bottom: 1.5rem;">Habilidades e Estilo</h2>
                     <label>Habilidades (separadas por vírgula)</label>
                     <input type="text" name="skills" placeholder="PHP, PostgreSQL, Docker, UX Design" required>
@@ -357,7 +375,7 @@ require_once __DIR__ . '/vendor/autoload.php';
                     <span class="field-tip">Escolha o modelo que mais combina com sua área de atuação.</span>
 
                     <div class="btn-group">
-                        <button type="button" class="btn-prev" onclick="nextStep(3)">Anterior</button>
+                        <button type="button" class="btn-prev" onclick="nextStep(4)">Anterior</button>
                         <button type="submit" class="btn-submit">Gerar Currículo</button>
                     </div>
                 </div>
@@ -477,6 +495,19 @@ require_once __DIR__ . '/vendor/autoload.php';
                 });
             });
         }
+
+        // Photo Preview
+        document.getElementById('photoInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('photoPreview').style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
 
         applyDateMasks();
     </script>

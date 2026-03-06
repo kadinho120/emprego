@@ -78,7 +78,9 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
     if ($template === 'health') {
         $css = "
             body { font-family: 'Helvetica', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #334155; margin: 0; padding: 0; }
-            .header { background: #f0fdfa; border-bottom: 6px solid #0d9488; padding: 40px; margin-bottom: 30px; border-radius: 0 0 20px 20px; text-align: center; }
+            .header { background: #f0fdfa; border-bottom: 6px solid #0d9488; padding: 30px 40px; margin-bottom: 30px; border-radius: 0 0 20px 20px; text-align: center; }
+            .photo-container { width: 105px; height: 140px; margin: 0 auto 15px auto; border-radius: 15px; border: 3px solid #0d9488; overflow: hidden; background: #e2e8f0; }
+            .photo { width: 100%; height: 100%; object-fit: cover; }
             .name { font-size: 28pt; font-weight: 800; color: #0f766e; text-transform: capitalize; margin: 0; }
             .contact { font-size: 10.5pt; color: #64748b; margin-top: 10px; font-weight: 600; }
             .content-wrapper { padding: 0 40px; }
@@ -93,7 +95,10 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
     } else { // tech
         $css = "
             body { font-family: 'Helvetica', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #e2e8f0; background-color: #0f172a; margin: 0; padding: 0; }
-            .header { background: #1e293b; color: #2dd4bf; padding: 40px; text-align: left; border-bottom: 6px solid #2dd4bf; margin-bottom: 30px; }
+            .header { background: #1e293b; color: #2dd4bf; padding: 30px 40px; text-align: left; border-bottom: 6px solid #2dd4bf; margin-bottom: 30px; overflow: hidden; }
+            .header-text { float: left; width: 75%; }
+            .photo-container { float: right; width: 105px; height: 140px; border-radius: 12px; border: 2px solid #2dd4bf; overflow: hidden; background: #0f172a; }
+            .photo { width: 100%; height: 100%; object-fit: cover; }
             .name { font-size: 30pt; font-weight: 900; color: #2dd4bf; text-transform: uppercase; margin: 0; }
             .contact { font-size: 10pt; color: #94a3b8; font-weight: 600; font-family: 'Courier New', monospace; margin-top: 10px; }
             .content-wrapper { padding: 0 40px; }
@@ -121,9 +126,16 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
     </head>
     <body>
         <div class='header'>
-            <div class='name'>{$resume['full_name']}</div>
-            <div class='contact'>
-                {$resume['city']} - {$resume['state']} | {$resume['email']} | {$resume['phone']}
+            " . (!empty($resume['photo_path']) ? "
+            <div class='photo-container'>
+                <img src='" . __DIR__ . "/" . $resume['photo_path'] . "' class='photo'>
+            </div>
+            " : "") . "
+            <div class='header-text' style='" . (empty($resume['photo_path']) || $template === 'health' ? "width: 100%;" : "") . "'>
+                <div class='name'>{$resume['full_name']}</div>
+                <div class='contact'>
+                    {$resume['city']} - {$resume['state']} | {$resume['email']} | {$resume['phone']}
+                </div>
             </div>
         </div>
 

@@ -66,6 +66,7 @@ class Database
                 // Migrations: Add city and state if they don't exist
                 $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS city VARCHAR(100)");
                 $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS state VARCHAR(50)");
+                $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS photo_path VARCHAR(255)");
             } catch (PDOException $e) {
                 // Ignore errors
             }

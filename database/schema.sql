@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS resumes (
     phone VARCHAR(50),
     city VARCHAR(100),
     state VARCHAR(50),
+    photo_path VARCHAR(255),
     linkedin VARCHAR(255),
     website VARCHAR(255),
     summary TEXT,
