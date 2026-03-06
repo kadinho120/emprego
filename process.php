@@ -16,11 +16,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 mkdir($uploadDir, 0777, true);
             }
 
-            $fileExtension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
+            $tmpFile = $_FILES['photo']['tmp_name'];
+            $fileExtension = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
             $fileName = uniqid() . '.' . $fileExtension;
             $targetFile = $uploadDir . $fileName;
 
-            if (move_uploaded_file($_FILES['photo']['tmp_name'], $targetFile)) {
+            // --- Server-side Crop 3:4 ---
+            $img = null;
+            if ($fileExtension === 'jpg' || $fileExtension === 'jpeg')
+                $img = imagecreatefromjpeg($tmpFile);
+            elseif ($fileExtension === 'png')
+                $img = imagecreatefrompng($tmpFile);
+            elseif ($fileExtension === 'webp')
+                $img = imagecreatefromwebp($tmpFile);
+
+            if ($img) {
+                $width = imagesx($img);
+                $height = imagesy($img);
+                $targetRatio = 3 / 4;
+                $currentRatio = $width / $height;
+
+                if ($currentRatio > $targetRatio) {
+                    // Cortar largura
+                    $newWidth = $height * $targetRatio;
+                    $x = ($width - $newWidth) / 2;
+                    $y = 0;
+                    $width = $newWidth;
+                } else {
+                    // Cortar altura
+                    $newHeight = $width / $targetRatio;
+                    $x = 0;
+                    $y = ($height - $newHeight) / 2;
+                    $height = $newHeight;
+                }
+
+                $cropped = imagecreatetruecolor(600, 800); // Resolução fixa 3:4
+                imagecopyresampled($cropped, $img, 0, 0, $x, $y, 600, 800, $width, $height);
+
+                if ($fileExtension === 'jpg' || $fileExtension === 'jpeg')
+                    imagejpeg($cropped, $targetFile, 90);
+                elseif ($fileExtension === 'png')
+                    imagepng($cropped, $targetFile);
+                elseif ($fileExtension === 'webp')
+                    imagewebp($cropped, $targetFile);
+
+                imagedestroy($img);
+                imagedestroy($cropped);
                 $photoPath = 'uploads/' . $fileName;
             }
         }
