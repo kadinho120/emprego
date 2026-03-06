@@ -100,6 +100,19 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
             .item-desc { text-align: justify; }
             .skills-box { font-weight: bold; text-align: center; border-top: 1px solid #ccc; padding-top: 5px; }
         ";
+    } elseif ($template === 'health') {
+        $css = "
+            body { font-family: 'Helvetica', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #2d3748; margin: 0; }
+            .header { background: #f0fff4; border-bottom: 4px solid #319795; padding: 20px; margin-bottom: 25px; border-radius: 0 0 15px 15px; }
+            .name { font-size: 24pt; font-weight: bold; color: #2c7a7b; text-align: center; }
+            .contact { font-size: 10pt; color: #4a5568; margin-top: 5px; text-align: center; font-weight: 500; }
+            .section-title { font-size: 12pt; font-weight: 800; color: #ffffff; background: #319795; padding: 5px 15px; margin-top: 20px; margin-bottom: 12px; border-radius: 4px; display: inline-block; }
+            .company { font-weight: bold; color: #2d3748; display: block; }
+            .date { color: #718096; float: right; font-size: 0.85em; background: #edf2f7; padding: 2px 8px; border-radius: 10px; }
+            .item-sub { color: #38b2ac; font-weight: 700; margin-bottom: 5px; display: block; }
+            .item-desc { border-left: 2px solid #e2e8f0; padding-left: 15px; margin-left: 5px; }
+            .skills-box { border: 1px dashed #319795; padding: 10px; color: #2c7a7b; font-weight: 600; }
+        ";
     } else { // minimal
         $css = "
             body { font-family: 'Arial', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #333; margin: 0; }
