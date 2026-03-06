@@ -77,7 +77,7 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
     $css = "";
     if ($template === 'health') {
         $css = "
-            body { font-family: 'Helvetica', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #334155; margin: 0; padding: 0; }
+            body { font-family: 'DejaVu Sans', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #334155; margin: 0; padding: 0; }
             .header { background: #f0fdfa; border-bottom: 6px solid #0d9488; padding: 30px 40px; margin-bottom: 30px; border-radius: 0 0 20px 20px; text-align: center; }
             .photo-container { width: 105px; height: 140px; margin: 0 auto 15px auto; border-radius: 15px; border: 3px solid #0d9488; overflow: hidden; background: #e2e8f0; }
             .photo { width: 100%; height: 100%; object-fit: cover; }
@@ -94,7 +94,7 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
         ";
     } else { // tech
         $css = "
-            body { font-family: 'Helvetica', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #e2e8f0; background-color: #0f172a; margin: 0; padding: 0; }
+            body { font-family: 'DejaVu Sans', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #e2e8f0; background-color: #0f172a; margin: 0; padding: 0; }
             .header { background: #1e293b; color: #2dd4bf; padding: 30px 40px; text-align: left; border-bottom: 6px solid #2dd4bf; margin-bottom: 30px; overflow: hidden; }
             .header-text { float: left; width: 75%; }
             .photo-container { float: right; width: 105px; height: 140px; border-radius: 12px; border: 2px solid #2dd4bf; overflow: hidden; background: #0f172a; }
@@ -113,18 +113,22 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
     }
 
     $html = "
-    <html>
+    <!DOCTYPE html>
+    <html lang='pt-br'>
     <head>
+        <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
         <style>
-            @page { margin: 1.5cm; }
-            * { box-sizing: border-box; }
+            @page { margin: 1cm 1.5cm; }
+            * { box-sizing: border-box; -webkit-print-color-adjust: exact; }
+            body { font-family: 'DejaVu Sans', sans-serif; }
             {$css}
-            .section-item { margin-bottom: 20px; clear: both; }
-            .item-header { margin-bottom: 5px; }
-            .item-desc { margin-top: 5px; }
+            .section-item { margin-bottom: 15px; clear: both; page-break-inside: avoid; }
+            .item-header { margin-bottom: 3px; overflow: hidden; }
+            .item-desc { margin-top: 3px; text-align: justify; }
+            .section-title { page-break-after: avoid; }
         </style>
     </head>
-    <body>
+    <body style='margin: 0; padding: 0;'>
         <div class='header'>
             " . (!empty($resume['photo_path']) && file_exists(__DIR__ . "/" . $resume['photo_path']) ? "
             <div class='photo-container'>
@@ -137,12 +141,15 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
                     {$resume['city']} - {$resume['state']} | {$resume['email']} | {$resume['phone']}
                 </div>
             </div>
+            <div style='clear: both;'></div>
         </div>
 
         <div class='content-wrapper'>
             " . (!empty(trim($resume['summary'])) ? "
-            <div class='section-title'>Resumo</div>
-            <div class='item-desc'>{$resume['summary']}</div>
+            <div style='page-break-inside: avoid;'>
+                <div class='section-title'>Resumo</div>
+                <div class='item-desc'>" . nl2br(htmlspecialchars($resume['summary'])) . "</div>
+            </div>
             " : "") . "
 
             " . (!empty($experiences) ? "
@@ -156,8 +163,10 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
             " : "") . "
 
             " . (!empty($skills) ? "
-            <div class='section-title'>Habilidades</div>
-            <div class='skills-box'>{$skillsText}</div>
+            <div style='page-break-inside: avoid;'>
+                <div class='section-title'>Habilidades</div>
+                <div class='skills-box'>{$skillsText}</div>
+            </div>
             " : "") . "
         </div>
     </body>
