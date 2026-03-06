@@ -77,17 +77,18 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
     $css = "";
     if ($template === 'health') {
         $css = "
-            body { font-family: 'Helvetica', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #2d3748; margin: 0; }
-            .header { background: #f0fff4; border-bottom: 4px solid #319795; padding: 20px; margin-bottom: 25px; border-radius: 0 0 15px 15px; }
-            .name { font-size: 24pt; font-weight: bold; color: #2c7a7b; text-align: center; }
-            .contact { font-size: 10pt; color: #4a5568; margin-top: 5px; text-align: center; font-weight: 500; }
-            .content-wrapper { padding: 0 20px; }
-            .section-title { font-size: 11pt; font-weight: 800; color: #ffffff; background: #319795; padding: 4px 12px; margin-top: 15px; margin-bottom: 10px; border-radius: 4px; display: inline-block; text-transform: uppercase; letter-spacing: 1px; }
-            .company { font-weight: bold; color: #2d3748; display: block; }
-            .date { color: #718096; float: right; font-size: 0.85em; background: #edf2f7; padding: 2px 8px; border-radius: 10px; }
-            .item-sub { color: #38b2ac; font-weight: 700; margin-bottom: 5px; display: block; }
-            .item-desc { border-left: 2px solid #e2e8f0; padding-left: 15px; margin-left: 5px; text-align: justify; }
-            .skills-box { border: 1px dashed #319795; padding: 10px; color: #2c7a7b; font-weight: 600; border-radius: 5px; background: #f0fff4; }
+            body { font-family: 'Helvetica', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #334155; margin: 0; padding: 0; }
+            .header { background: #f0fdfa; border-bottom: 6px solid #0d9488; padding: 40px; margin-bottom: 30px; border-radius: 0 0 20px 20px; text-align: center; }
+            .name { font-size: 28pt; font-weight: 800; color: #0f766e; text-transform: capitalize; margin: 0; }
+            .contact { font-size: 10.5pt; color: #64748b; margin-top: 10px; font-weight: 600; }
+            .content-wrapper { padding: 0 40px; }
+            .section-title { font-size: 11pt; font-weight: 800; color: #ffffff; background: #0d9488; padding: 5px 15px; margin-top: 25px; margin-bottom: 15px; border-radius: 6px; display: inline-block; text-transform: uppercase; letter-spacing: 1.5px; }
+            .section-item { margin-bottom: 20px; }
+            .company { font-weight: bold; color: #1e293b; font-size: 1.1em; display: inline-block; }
+            .date { color: #64748b; float: right; font-size: 0.85em; background: #f1f5f9; padding: 3px 10px; border-radius: 12px; font-weight: 600; }
+            .item-sub { color: #0d9488; font-weight: 700; margin-bottom: 8px; display: block; font-size: 1.05em; }
+            .item-desc { border-left: 3px solid #ccfbf1; padding-left: 15px; margin-left: 5px; text-align: justify; color: #475569; }
+            .skills-box { border: 2px dashed #99f6e4; padding: 15px; color: #0f766e; font-weight: 700; border-radius: 10px; background: #f0fdfa; line-height: 1.6; }
         ";
     } else { // tech
         $css = "
