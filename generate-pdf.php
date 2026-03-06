@@ -135,17 +135,25 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
             </div>
         </div>
 
+        " . (!empty(trim($resume['summary'])) ? "
         <div class='section-title'>Resumo</div>
         <div class='item-desc'>{$resume['summary']}</div>
+        " : "") . "
 
+        " . (!empty($experiences) ? "
         <div class='section-title'>Experiência</div>
         {$expHtml}
+        " : "") . "
 
+        " . (!empty($education) ? "
         <div class='section-title'>Educação</div>
         {$eduHtml}
+        " : "") . "
 
+        " . (!empty($skills) ? "
         <div class='section-title'>Habilidades</div>
         <div class='skills-box'>{$skillsText}</div>
+        " : "") . "
     </body>
     </html>
     ";
