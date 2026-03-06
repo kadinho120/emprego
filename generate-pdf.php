@@ -75,56 +75,32 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
 
     // Define CSS based on template
     $css = "";
-    if ($template === 'modern') {
-        $css = "
-            body { font-family: 'Helvetica', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #1e293b; margin: 0; }
-            .header { border-left: 10px solid #4f46e5; padding-left: 20px; margin-bottom: 30px; }
-            .name { font-size: 26pt; font-weight: 800; color: #1e293b; letter-spacing: -1px; }
-            .contact { font-size: 10pt; color: #64748b; margin-top: 5px; }
-            .section-title { font-size: 13pt; font-weight: bold; color: #4f46e5; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px; text-transform: uppercase; }
-            .company { font-weight: bold; color: #1e293b; font-size: 1.1em; }
-            .date { color: #64748b; float: right; font-weight: normal; font-size: 0.9em; }
-            .item-sub { color: #4f46e5; font-weight: 600; margin-bottom: 8px; }
-            .skills-box { background: #f8fafc; padding: 10px; border-radius: 5px; color: #475569; font-style: italic; }
-        ";
-    } elseif ($template === 'corporate') {
-        $css = "
-            body { font-family: 'Times', serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #000; margin: 0; }
-            .header { text-align: center; border-bottom: 1px double #000; padding-bottom: 15px; margin-bottom: 25px; }
-            .name { font-size: 28pt; font-weight: normal; text-transform: uppercase; letter-spacing: 2px; }
-            .contact { font-size: 11pt; color: #333; margin-top: 8px; font-style: italic; }
-            .section-title { font-size: 14pt; font-weight: bold; border-bottom: 1px solid #000; margin-top: 25px; margin-bottom: 12px; text-transform: uppercase; text-align: center; }
-            .company { font-weight: bold; text-decoration: underline; }
-            .date { float: right; font-weight: bold; }
-            .item-sub { font-weight: bold; font-style: italic; margin-bottom: 5px; display: block; }
-            .item-desc { text-align: justify; }
-            .skills-box { font-weight: bold; text-align: center; border-top: 1px solid #ccc; padding-top: 5px; }
-        ";
-    } elseif ($template === 'health') {
+    if ($template === 'health') {
         $css = "
             body { font-family: 'Helvetica', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #2d3748; margin: 0; }
             .header { background: #f0fff4; border-bottom: 4px solid #319795; padding: 20px; margin-bottom: 25px; border-radius: 0 0 15px 15px; }
             .name { font-size: 24pt; font-weight: bold; color: #2c7a7b; text-align: center; }
             .contact { font-size: 10pt; color: #4a5568; margin-top: 5px; text-align: center; font-weight: 500; }
-            .section-title { font-size: 12pt; font-weight: 800; color: #ffffff; background: #319795; padding: 5px 15px; margin-top: 20px; margin-bottom: 12px; border-radius: 4px; display: inline-block; }
+            .section-title { font-size: 11pt; font-weight: 800; color: #ffffff; background: #319795; padding: 4px 12px; margin-top: 15px; margin-bottom: 10px; border-radius: 4px; display: inline-block; text-transform: uppercase; letter-spacing: 1px; }
             .company { font-weight: bold; color: #2d3748; display: block; }
             .date { color: #718096; float: right; font-size: 0.85em; background: #edf2f7; padding: 2px 8px; border-radius: 10px; }
             .item-sub { color: #38b2ac; font-weight: 700; margin-bottom: 5px; display: block; }
-            .item-desc { border-left: 2px solid #e2e8f0; padding-left: 15px; margin-left: 5px; }
-            .skills-box { border: 1px dashed #319795; padding: 10px; color: #2c7a7b; font-weight: 600; }
+            .item-desc { border-left: 2px solid #e2e8f0; padding-left: 15px; margin-left: 5px; text-align: justify; }
+            .skills-box { border: 1px dashed #319795; padding: 10px; color: #2c7a7b; font-weight: 600; border-radius: 5px; background: #f0fff4; }
         ";
-    } else { // minimal
+    } else { // tech
         $css = "
-            body { font-family: 'Arial', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #333; margin: 0; }
-            .header { margin-bottom: 40px; }
-            .name { font-size: 32pt; font-weight: 300; color: #000; }
-            .contact { font-size: 9pt; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; }
-            .section-title { font-size: 10pt; font-weight: 800; color: #999; margin-top: 35px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; }
-            .company { font-weight: bold; color: #000; }
-            .date { color: #bbb; display: block; font-size: 0.85em; margin-bottom: 5px; }
-            .item-sub { color: #666; margin-bottom: 5px; }
-            .item-desc { color: #444; }
-            .skills-box { color: #777; line-height: 1.8; }
+            body { font-family: 'Arial', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #ffffff; background-color: #0f172a; margin: 0; }
+            .header { background: #1e293b; color: #38b2ac; padding: 30px; text-align: left; border-bottom: 5px solid #38b2ac; margin-bottom: 20px; }
+            .name { font-size: 28pt; font-weight: 900; color: #38b2ac; text-transform: uppercase; }
+            .contact { font-size: 10pt; color: #94a3b8; font-weight: 600; font-family: 'Courier New', monospace; margin-top: 8px; }
+            .section-title { font-size: 12pt; font-weight: 800; color: #38b2ac; margin-top: 25px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; border-left: 4px solid #38b2ac; padding-left: 10px; }
+            .section-item { border-bottom: 1px solid rgba(148, 163, 184, 0.1); padding-bottom: 15px; }
+            .company { font-weight: 800; color: #f8fafc; font-size: 1.1em; }
+            .date { color: #38b2ac; font-weight: bold; font-family: 'Courier New', monospace; font-size: 0.9em; float: right; }
+            .item-sub { color: #94a3b8; font-style: italic; margin-bottom: 8px; display: block; }
+            .item-desc { color: #cbd5e1; text-align: justify; }
+            .skills-box { background: rgba(56, 178, 172, 0.1); border: 1px solid #38b2ac; padding: 12px; border-radius: 8px; color: #38b2ac; font-family: 'Courier New', monospace; font-weight: bold; }
         ";
     }
 
