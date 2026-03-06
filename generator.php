@@ -209,6 +209,72 @@ require_once __DIR__ . '/vendor/autoload.php';
             line-height: 1.3;
             display: block;
         }
+
+        /* Suggestion Styles */
+        .suggestion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-suggestion {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 0.3rem 0.8rem;
+            font-size: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-suggestion:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .modal-suggestion {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .suggestion-content {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 24px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .suggestion-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .suggestion-item:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+            transform: translateX(5px);
+        }
     </style>
 </head>
 
@@ -259,7 +325,11 @@ require_once __DIR__ . '/vendor/autoload.php';
                         </div>
                     </div>
 
-                    <label>Resumo Profissional</label>
+                    <div class="suggestion-header">
+                        <label style="margin-bottom: 0;">Resumo Profissional</label>
+                        <button type="button" class="btn-suggestion" onclick="openSuggestions('summary', this)">✨ Ver
+                            Sugestões</button>
+                    </div>
                     <textarea name="summary" rows="4" placeholder="Fale um pouco sobre sua carreira..."
                         required></textarea>
                     <span class="field-tip">Escreva 3 ou 4 linhas sobre sua carreira e seu maior diferencial. Isso é a
@@ -276,10 +346,12 @@ require_once __DIR__ . '/vendor/autoload.php';
                     <h2 style="margin-bottom: 1.5rem;">Sua Foto</h2>
                     <label>Foto (Opcional)</label>
                     <input type="file" name="photo" id="photoInput" accept="image/*">
-                    <span class="field-tip">A foto será cortada automaticamente para 3:4. Prefira fotos com fundo neutro e boa iluminação.</span>
-                    
+                    <span class="field-tip">A foto será cortada automaticamente para 3:4. Prefira fotos com fundo neutro
+                        e boa iluminação.</span>
+
                     <div id="photoPreview" style="margin-top: 1rem; display: none;">
-                        <img id="previewImg" src="" style="width: 150px; height: 200px; object-fit: cover; border-radius: 12px; border: 2px solid var(--primary);">
+                        <img id="previewImg" src=""
+                            style="width: 150px; height: 200px; object-fit: cover; border-radius: 12px; border: 2px solid var(--primary);">
                     </div>
 
                     <div class="btn-group">
@@ -317,7 +389,11 @@ require_once __DIR__ . '/vendor/autoload.php';
                             <span class="field-tip">Use o formato Mês/Ano (Ex: 05/2020). Se ainda trabalhar lá, escreva
                                 "Atual" no campo Fim.</span>
 
-                            <label>Descrição</label>
+                            <div class="suggestion-header">
+                                <label style="margin-bottom: 0;">Descrição</label>
+                                <button type="button" class="btn-suggestion"
+                                    onclick="openSuggestions('experience', this)">✨ Ver Sugestões</button>
+                            </div>
                             <textarea name="experience[0][description]" rows="3"></textarea>
                             <span class="field-tip">O que você fazia no dia a dia? Cite 2 ou 3 tarefas importantes.
                                 Dica: Use palavras como "Realizei", "Fui responsável por", "Liderei".</span>
@@ -369,8 +445,14 @@ require_once __DIR__ . '/vendor/autoload.php';
 
                     <label>Modelo do Currículo</label>
                     <select name="template_id" required>
-                        <option value="tech">TI & Desenvolvimento (Sénior/Fullstack)</option>
-                        <option value="health">Saúde (Enfermeiros/Técnicos)</option>
+                        <?php if (isset($_GET['niche']) && $_GET['niche'] === 'tech'): ?>
+                            <option value="tech">TI & Desenvolvimento (Sénior/Fullstack)</option>
+                        <?php elseif (isset($_GET['niche']) && $_GET['niche'] === 'health'): ?>
+                            <option value="health">Saúde (Enfermeiros/Técnicos)</option>
+                        <?php else: ?>
+                            <option value="tech">TI & Desenvolvimento (Sénior/Fullstack)</option>
+                            <option value="health">Saúde (Enfermeiros/Técnicos)</option>
+                        <?php endif; ?>
                     </select>
                     <span class="field-tip">Escolha o modelo que mais combina com sua área de atuação.</span>
 
@@ -383,7 +465,87 @@ require_once __DIR__ . '/vendor/autoload.php';
         </div>
     </div>
 
+    <!-- Suggestion Modal -->
+    <div id="suggestionModal" class="modal-suggestion" onclick="closeSuggestions()">
+        <div class="suggestion-content" onclick="event.stopPropagation()">
+            <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Sugestões Profissionais</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Escolha uma opção abaixo.
+                Você poderá editá-la depois.</p>
+            <div id="suggestionsList"></div>
+            <button type="button" class="btn-prev" onclick="closeSuggestions()"
+                style="width: 100%; margin-top: 1rem;">Fechar</button>
+        </div>
+    </div>
+
     <script>
+        const niche = '<?php echo $_GET['niche'] ?? ''; ?>';
+        let currentTargetField = null;
+
+        const suggestionsData = {
+            tech: {
+                summary: [
+                    "Desenvolvedor Full Stack com 5 anos de experiência em PHP, JavaScript e bancos de dados SQL. Especialista em arquitetura escalável e otimização de performance. Focado em entregar soluções de alta qualidade com código limpo.",
+                    "Engenheiro de Software apaixonado por resolver problemas complexos através da tecnologia. Experiência sólida com Docker, CI/CD e ecossistemas Cloud. Ávido por aprendizado contínuo e metodologias ágeis.",
+                    "Desenvolvedor Backend com foco em segurança e performance de APIs. Sólidos conhecimentos em ecossistemas de microsserviços e integração de sistemas legados. Comprometido com a excelência técnica.",
+                    "Especialista em TI focado em transformação digital e automação de processos. Experiência em liderar equipes multidisciplinares e implementar infraestrutura ágil e resiliente.",
+                    "Desenvolvedor Frontend experiente na criação de interfaces modernas e responsivas. Especialista em UX/UI com foco na melhor experiência do usuário final utilizando as tecnologias mais recentes do mercado."
+                ],
+                experience: [
+                    "Desenvolvimento e manutenção de sistemas web complexos utilizando PHP e JavaScript. Otimização de consultas SQL reduzindo em 30% o tempo de resposta das aplicações principais.",
+                    "Implementação de arquitetura de microsserviços escalável utilizando Docker e Kubernetes. Responsável pela automação do pipeline de deployment (CI/CD).",
+                    "Liderança técnica de equipe de 5 desenvolvedores em projetos críticos. Revisão de código e mentoria de novos talentos para manter altos padrões de qualidade.",
+                    "Integração de APIs de terceiros e sistemas de pagamento de alta segurança. Redução de falhas críticas em 25% através de implementação de testes automatizados.",
+                    "Análise e levantamento de requisitos técnicos junto aos stakeholders. Documentação completa de infraestrutura e padrões de desenvolvimento da empresa."
+                ]
+            },
+            health: {
+                summary: [
+                    "Enfermeiro graduado com sólida experiência em Pronto Atendimento e UTI. Especialista em cuidados paliativos e assistência humanizada. Focado na segurança do paciente e gestão de equipes de enfermagem.",
+                    "Técnico em Enfermagem dedicado com 4 anos de experiência em clinica médica e pediátrica. Excelência em procedimentos técnicos e suporte ao paciente com foco em acolhimento e empatia.",
+                    "Enfermeiro Obstetra comprometido com a assistência segura ao parto e pós-parto. Vasta experiência em manejo de emergências obstétricas e orientação qualificada à família.",
+                    "Profissional de saúde focado em gestão hospitalar e controle de infecção. Experiência em implementação de protocolos de segurança e treinamento de equipes assistenciais.",
+                    "Enfermeiro generalista com experiência em ESF (Estratégia Saúde da Família). Especialista em saúde pública e promoção de cuidados preventivos na comunidade."
+                ],
+                experience: [
+                    "Assistência direta a pacientes em estado crítico na Unidade de Terapia Intensiva. Monitoramento contínuo e execução de protocolos de emergência com precisão.",
+                    "Gerenciamento de escala de funcionários e controle de materiais assistenciais. Responsável pelo treinamento mensal da equipe técnica sobre novos protocolos.",
+                    "Realização de triagem de pacientes em Pronto-Socorro de alta complexidade. Classificação de risco e suporte imediato em casos de trauma e paradas cardiorrespiratórias.",
+                    "Administração rigorosa de medicamentos e cuidados pós-operatórios complexos. Registro detalhado de evolução clínica e interface com equipe médica multidisciplinar.",
+                    "Acompanhamento e suporte em partos de baixo e alto risco. Realização de exames físicos e assistência integral ao recém-nascido e puérpera."
+                ]
+            }
+        };
+
+        function openSuggestions(type, btn) {
+            currentTargetField = btn.closest('.suggestion-header').nextElementSibling || btn.closest('.dynamic-field').querySelector('textarea');
+            if (btn.closest('.dynamic-field')) {
+                currentTargetField = btn.parentElement.nextElementSibling;
+            }
+
+            const list = document.getElementById('suggestionsList');
+            list.innerHTML = '';
+
+            const selectedNiche = niche || 'tech'; // Default to tech if niche not set
+            const items = suggestionsData[selectedNiche] ? suggestionsData[selectedNiche][type] : suggestionsData['tech'][type];
+
+            items.forEach(text => {
+                const div = document.createElement('div');
+                div.className = 'suggestion-item';
+                div.innerText = text;
+                div.onclick = () => {
+                    currentTargetField.value = text;
+                    closeSuggestions();
+                };
+                list.appendChild(div);
+            });
+
+            document.getElementById('suggestionModal').style.display = 'flex';
+        }
+
+        function closeSuggestions() {
+            document.getElementById('suggestionModal').style.display = 'none';
+        }
+
         let expCount = 1;
         let eduCount = 1;
 
@@ -439,7 +601,10 @@ require_once __DIR__ . '/vendor/autoload.php';
                 </div>
                 <span class="field-tip">Use o formato Mês/Ano (Ex: 05/2020). Se ainda trabalhar lá, escreva "Atual" no campo Fim.</span>
 
-                <label>Descrição</label>
+                <div class="suggestion-header">
+                    <label style="margin-bottom: 0;">Descrição</label>
+                    <button type="button" class="btn-suggestion" onclick="openSuggestions('experience', this)">✨ Ver Sugestões</button>
+                </div>
                 <textarea name="experience[${expCount}][description]" rows="3"></textarea>
                 <span class="field-tip">O que você fazia no dia a dia? Cite 2 ou 3 tarefas importantes.</span>
             </div>
@@ -497,11 +662,11 @@ require_once __DIR__ . '/vendor/autoload.php';
         }
 
         // Photo Preview
-        document.getElementById('photoInput').addEventListener('change', function(e) {
+        document.getElementById('photoInput').addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     document.getElementById('previewImg').src = e.target.result;
                     document.getElementById('photoPreview').style.display = 'block';
                 }

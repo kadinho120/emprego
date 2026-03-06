@@ -147,23 +147,84 @@ require_once __DIR__ . '/vendor/autoload.php';
             color: var(--text-muted);
         }
 
-        /* Glassmorphism Navbar */
-        .glass-nav {
+        /* Modal Styles */
+        .modal-overlay {
             position: fixed;
-            top: 1rem;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 800px;
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 100px;
-            padding: 0.75rem 2rem;
-            display: flex;
-            justify-content: space-between;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
             align-items: center;
-            z-index: 100;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 32px;
+            max-width: 600px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .modal h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .niche-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .niche-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .niche-card:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .niche-icon {
+            font-size: 3rem;
+        }
+
+        .niche-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .niche-card.tech:hover {
+            border-color: #2dd4bf;
+            background: rgba(45, 212, 191, 0.1);
+        }
+
+        .niche-card.health:hover {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
         }
 
         @media (max-width: 768px) {
@@ -182,7 +243,8 @@ require_once __DIR__ . '/vendor/autoload.php';
 
     <nav class="glass-nav">
         <div class="logo">AutoResume</div>
-        <a href="generator.php" class="cta-btn" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">Criar Agora</a>
+        <button onclick="openNicheModal()" class="cta-btn"
+            style="padding: 0.5rem 1.5rem; font-size: 0.9rem; border: none; cursor: pointer;">Criar Agora</button>
     </nav>
 
     <main class="container">
@@ -190,7 +252,8 @@ require_once __DIR__ . '/vendor/autoload.php';
             <h1>O Currículo Perfeito em <span>Apenas uma Página.</span></h1>
             <p>Modelos de alta conversão otimizados para atrair recrutadores. Tecnologia inteligente que ajusta tudo
                 para caber perfeitamente no PDF.</p>
-            <a href="generator.php" class="cta-btn">Gerar meu Currículo</a>
+            <button onclick="openNicheModal()" class="cta-btn" style="border: none; cursor: pointer;">Gerar meu
+                Currículo</button>
         </section>
 
         <section class="features">
@@ -211,6 +274,32 @@ require_once __DIR__ . '/vendor/autoload.php';
         </section>
     </main>
 
+    <!-- Niche Modal -->
+    <div id="nicheModal" class="modal-overlay" onclick="closeNicheModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <h2>Escolha sua área de atuação</h2>
+            <div class="niche-options">
+                <a href="generator.php?niche=tech" class="niche-card tech">
+                    <span class="niche-icon">💻</span>
+                    <span class="niche-name">TI & Tecnologia</span>
+                </a>
+                <a href="generator.php?niche=health" class="niche-card health">
+                    <span class="niche-icon">🩺</span>
+                    <span class="niche-name">Saúde & Enfermagem</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openNicheModal() {
+            document.getElementById('nicheModal').style.display = 'flex';
+        }
+
+        function closeNicheModal(e) {
+            document.getElementById('nicheModal').style.display = 'none';
+        }
+    </script>
 </body>
 
 </html>
