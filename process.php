@@ -23,12 +23,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // --- Server-side Crop 3:4 ---
             $img = null;
-            if ($fileExtension === 'jpg' || $fileExtension === 'jpeg')
-                $img = imagecreatefromjpeg($tmpFile);
-            elseif ($fileExtension === 'png')
-                $img = imagecreatefrompng($tmpFile);
-            elseif ($fileExtension === 'webp')
-                $img = imagecreatefromwebp($tmpFile);
+            // Check if GD functions exist for image manipulation
+            if (function_exists('imagecreatefromjpeg')) {
+                if ($fileExtension === 'jpg' || $fileExtension === 'jpeg')
+                    $img = imagecreatefromjpeg($tmpFile);
+                elseif ($fileExtension === 'png')
+                    $img = imagecreatefrompng($tmpFile);
+                elseif ($fileExtension === 'webp')
+                    $img = imagecreatefromwebp($tmpFile);
+            }
 
             if ($img) {
                 $width = imagesx($img);
@@ -63,6 +66,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 imagedestroy($img);
                 imagedestroy($cropped);
                 $photoPath = 'uploads/' . $fileName;
+            } else {
+                // Fallback: Se o GD não estiver disponível, apenas move o arquivo original
+                if (move_uploaded_file($tmpFile, $targetFile)) {
+                    $photoPath = 'uploads/' . $fileName;
+                }
             }
         }
 
