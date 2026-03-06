@@ -304,7 +304,7 @@ require_once __DIR__ . '/vendor/autoload.php';
                         <option value="modern">Moderno e Limpo</option>
                         <option value="corporate">Corporativo Tradicional</option>
                         <option value="minimal">Minimalista</option>
-                        <option value="health">Saúde (Enfermeiros/Técnicos)</option>
+                        <option value="health">Saude (Enfermeiros/Tecnicos)</option>
                     </select>
 
                     <div class="btn-group">
