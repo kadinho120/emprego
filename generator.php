@@ -253,11 +253,11 @@ require_once __DIR__ . '/vendor/autoload.php';
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                                 <div>
                                     <label>Início</label>
-                                    <input type="text" name="experience[0][start_date]" placeholder="MM/AAAA">
+                                    <input type="text" name="experience[0][start_date]" class="date-mask" placeholder="MM/AAAA" maxlength="7">
                                 </div>
                                 <div>
                                     <label>Fim</label>
-                                    <input type="text" name="experience[0][end_date]" placeholder="Atual">
+                                    <input type="text" name="experience[0][end_date]" class="date-mask" placeholder="Atual" maxlength="7">
                                 </div>
                             </div>
                             <label>Descrição</label>
@@ -282,7 +282,7 @@ require_once __DIR__ . '/vendor/autoload.php';
                             <label>Curso/Grau</label>
                             <input type="text" name="education[0][degree]">
                             <label>Conclusão</label>
-                            <input type="text" name="education[0][graduation_date]" placeholder="MM/AAAA">
+                            <input type="text" name="education[0][graduation_date]" class="date-mask" placeholder="MM/AAAA" maxlength="7">
                         </div>
                     </div>
                     <button type="button" class="add-more" onclick="addEducation()">+ Adicionar Formação</button>
@@ -340,11 +340,11 @@ require_once __DIR__ . '/vendor/autoload.php';
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <div>
                         <label>Início</label>
-                        <input type="text" name="experience[${expCount}][start_date]" placeholder="MM/AAAA">
+                        <input type="text" name="experience[${expCount}][start_date]" class="date-mask" placeholder="MM/AAAA" maxlength="7">
                     </div>
                     <div>
                         <label>Fim</label>
-                        <input type="text" name="experience[${expCount}][end_date]" placeholder="Atual">
+                        <input type="text" name="experience[${expCount}][end_date]" class="date-mask" placeholder="Atual" maxlength="7">
                     </div>
                 </div>
                 <label>Descrição</label>
@@ -353,6 +353,7 @@ require_once __DIR__ . '/vendor/autoload.php';
         `;
             container.insertAdjacentHTML('beforeend', html);
             expCount++;
+            applyDateMasks();
         }
 
         function addEducation() {
@@ -364,11 +365,12 @@ require_once __DIR__ . '/vendor/autoload.php';
                 <label>Curso/Grau</label>
                 <input type="text" name="education[${eduCount}][degree]">
                 <label>Conclusão</label>
-                <input type="text" name="education[${eduCount}][graduation_date]" placeholder="MM/AAAA">
+                <input type="text" name="education[${eduCount}][graduation_date]" class="date-mask" placeholder="MM/AAAA" maxlength="7">
             </div>
         `;
             container.insertAdjacentHTML('beforeend', html);
             eduCount++;
+            applyDateMasks();
         }
 
         // Phone Mask
@@ -377,6 +379,21 @@ require_once __DIR__ . '/vendor/autoload.php';
             let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
             e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
         });
+
+        // Date Mask (MM/AAAA)
+        function applyDateMasks() {
+            document.querySelectorAll('.date-mask').forEach(input => {
+                input.addEventListener('input', (e) => {
+                    let v = e.target.value.replace(/\D/g, '');
+                    if (v.length > 2) {
+                        v = v.substring(0, 2) + '/' + v.substring(2, 6);
+                    }
+                    e.target.value = v;
+                });
+            });
+        }
+
+        applyDateMasks();
     </script>
 
 </body>
