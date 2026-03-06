@@ -239,7 +239,8 @@ require_once __DIR__ . '/vendor/autoload.php';
                         </div>
                         <div>
                             <label>Telefone</label>
-                            <input type="text" name="phone" id="phone" placeholder="(11) 99999-9999" maxlength="15">
+                            <input type="text" name="phone" id="phone" placeholder="(11) 99999-9999" maxlength="15"
+                                required>
                             <span class="field-tip">Coloque seu número principal com o DDD.</span>
                         </div>
                     </div>
@@ -247,19 +248,21 @@ require_once __DIR__ . '/vendor/autoload.php';
                     <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
                         <div>
                             <label>Cidade</label>
-                            <input type="text" name="city" placeholder="São Paulo">
+                            <input type="text" name="city" placeholder="São Paulo" required>
                             <span class="field-tip">Onde você mora atualmente?</span>
                         </div>
                         <div>
                             <label>Estado (UF)</label>
-                            <input type="text" name="state" placeholder="SP">
+                            <input type="text" name="state" placeholder="SP" required>
                             <span class="field-tip">Ex: SP, RJ, ES...</span>
                         </div>
                     </div>
 
                     <label>Resumo Profissional</label>
-                    <textarea name="summary" rows="4" placeholder="Fale um pouco sobre sua carreira..."></textarea>
-                    <span class="field-tip">Escreva 3 ou 4 linhas sobre sua carreira e seu maior diferencial. Isso é a primeira coisa que o contratante lê.</span>
+                    <textarea name="summary" rows="4" placeholder="Fale um pouco sobre sua carreira..."
+                        required></textarea>
+                    <span class="field-tip">Escreva 3 ou 4 linhas sobre sua carreira e seu maior diferencial. Isso é a
+                        primeira coisa que o contratante lê.</span>
 
                     <div class="btn-group">
                         <div></div>
@@ -278,7 +281,8 @@ require_once __DIR__ . '/vendor/autoload.php';
 
                             <label>Cargo</label>
                             <input type="text" name="experience[0][position]">
-                            <span class="field-tip">Seu título oficial (Ex: Enfermeiro Obstetra, Desenvolvedor Backend).</span>
+                            <span class="field-tip">Seu título oficial (Ex: Enfermeiro Obstetra, Desenvolvedor
+                                Backend).</span>
 
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                                 <div>
@@ -292,11 +296,13 @@ require_once __DIR__ . '/vendor/autoload.php';
                                         placeholder="Atual" maxlength="7">
                                 </div>
                             </div>
-                            <span class="field-tip">Use o formato Mês/Ano (Ex: 05/2020). Se ainda trabalhar lá, escreva "Atual" no campo Fim.</span>
+                            <span class="field-tip">Use o formato Mês/Ano (Ex: 05/2020). Se ainda trabalhar lá, escreva
+                                "Atual" no campo Fim.</span>
 
                             <label>Descrição</label>
                             <textarea name="experience[0][description]" rows="3"></textarea>
-                            <span class="field-tip">O que você fazia no dia a dia? Cite 2 ou 3 tarefas importantes. Dica: Use palavras como "Realizei", "Fui responsável por", "Liderei".</span>
+                            <span class="field-tip">O que você fazia no dia a dia? Cite 2 ou 3 tarefas importantes.
+                                Dica: Use palavras como "Realizei", "Fui responsável por", "Liderei".</span>
                         </div>
                     </div>
                     <button type="button" class="add-more" onclick="addExperience()">+ Adicionar Experiência</button>
@@ -313,16 +319,17 @@ require_once __DIR__ . '/vendor/autoload.php';
                     <div id="educationContainer">
                         <div class="dynamic-field">
                             <label>Instituição</label>
-                            <input type="text" name="education[0][institution]">
+                            <input type="text" name="education[0][institution]" required>
                             <span class="field-tip">Escola, Faculdade ou Centro Tecnológico.</span>
 
                             <label>Curso/Grau</label>
-                            <input type="text" name="education[0][degree]">
-                            <span class="field-tip">Ex: Graduação em Enfermagem, Técnico em Redes, MBA em Gestão, Ensino Médio...</span>
+                            <input type="text" name="education[0][degree]" required>
+                            <span class="field-tip">Ex: Graduação em Enfermagem, Técnico em Redes, MBA em Gestão, Ensino
+                                Médio...</span>
 
                             <label>Conclusão</label>
                             <input type="text" name="education[0][graduation_date]" class="date-mask"
-                                placeholder="MM/AAAA" maxlength="7">
+                                placeholder="MM/AAAA" maxlength="7" required>
                             <span class="field-tip">Data em que se formou ou previsão de formatura.</span>
                         </div>
                     </div>
@@ -338,11 +345,12 @@ require_once __DIR__ . '/vendor/autoload.php';
                 <div class="form-step" id="step4">
                     <h2 style="margin-bottom: 1.5rem;">Habilidades e Estilo</h2>
                     <label>Habilidades (separadas por vírgula)</label>
-                    <input type="text" name="skills" placeholder="PHP, PostgreSQL, Docker, UX Design">
-                    <span class="field-tip">Liste ferramentas, tecnologias ou competências que você domina. Ex: Excel Avançado, Punção Venosa, Java, Liderança de Equipe...</span>
+                    <input type="text" name="skills" placeholder="PHP, PostgreSQL, Docker, UX Design" required>
+                    <span class="field-tip">Liste ferramentas, tecnologias ou competências que você domina. Ex: Excel
+                        Avançado, Punção Venosa, Java, Liderança de Equipe...</span>
 
                     <label>Modelo do Currículo</label>
-                    <select name="template_id">
+                    <select name="template_id" required>
                         <option value="tech">TI & Desenvolvimento (Sénior/Fullstack)</option>
                         <option value="health">Saúde (Enfermeiros/Técnicos)</option>
                     </select>
@@ -362,6 +370,23 @@ require_once __DIR__ . '/vendor/autoload.php';
         let eduCount = 1;
 
         function nextStep(step) {
+            const currentStepEl = document.querySelector('.form-step.active');
+            const currentStepNum = parseInt(currentStepEl.id.replace('step', ''));
+
+            // Só valida se estiver tentando avançar
+            if (step > currentStepNum) {
+                const inputs = currentStepEl.querySelectorAll('input, select, textarea');
+                let valid = true;
+                for (let input of inputs) {
+                    if (!input.checkValidity()) {
+                        input.reportValidity();
+                        valid = false;
+                        break;
+                    }
+                }
+                if (!valid) return;
+            }
+
             document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
             document.getElementById('step' + step).classList.add('active');
 
@@ -412,15 +437,15 @@ require_once __DIR__ . '/vendor/autoload.php';
             <div class="dynamic-field">
                 <button type="button" class="btn-remove" onclick="removeField(this)">Remover</button>
                 <label>Instituição</label>
-                <input type="text" name="education[${eduCount}][institution]">
+                <input type="text" name="education[${eduCount}][institution]" required>
                 <span class="field-tip">Escola, Faculdade ou Centro Tecnológico.</span>
 
                 <label>Curso/Grau</label>
-                <input type="text" name="education[${eduCount}][degree]">
+                <input type="text" name="education[${eduCount}][degree]" required>
                 <span class="field-tip">Ex: Graduação em Enfermagem, Técnico em Redes, MBA em Gestão, Ensino Médio...</span>
 
                 <label>Conclusão</label>
-                <input type="text" name="education[${eduCount}][graduation_date]" class="date-mask" placeholder="MM/AAAA" maxlength="7">
+                <input type="text" name="education[${eduCount}][graduation_date]" class="date-mask" placeholder="MM/AAAA" maxlength="7" required>
                 <span class="field-tip">Data em que se formou ou previsão de formatura.</span>
             </div>
         `;
