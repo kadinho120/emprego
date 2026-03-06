@@ -187,23 +187,22 @@ $lineHeight = 1.3;
 $maxIterations = 10;
 $iteration = 0;
 
-while ($iteration < $maxIterations) {
-    $html = getResumeHtml($resume, $experiences, $education, $skills, $fontSize, $lineHeight);
-    $dompdf->loadHtml($html);
-    $dompdf->setPaper('A4', 'portrait');
-    $dompdf->render();
+// Final PDF Generation (Single Pass, Multi-page support)
+$options = new Options();
+$options->set('isHtml5ParserEnabled', true);
+$options->set('isRemoteEnabled', true);
+$options->set('defaultFont', 'DejaVu Sans');
 
-    $pageCount = $dompdf->getCanvas()->get_page_count();
+$dompdf = new Dompdf($options);
 
-    if ($pageCount <= 1) {
-        break; // Succesfully fits in 1 page
-    }
+// Fixed sizes for better readability and multi-page stability
+$fontSize = 11;
+$lineHeight = 1.35;
 
-    // Content too large, reduce settings
-    $fontSize -= 0.5;
-    $lineHeight -= 0.05;
-    $iteration++;
-}
+$html = getResumeHtml($resume, $experiences, $education, $skills, $fontSize, $lineHeight);
+$dompdf->loadHtml($html);
+$dompdf->setPaper('A4', 'portrait');
+$dompdf->render();
 
 // Final output
 $dompdf->stream("Curriculo_" . str_replace(' ', '_', $resume['full_name']) . ".pdf", ["Attachment" => false]);
