@@ -42,6 +42,7 @@ try {
 // Function to generate HTML for the PDF
 function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 12, $lineHeight = 1.4)
 {
+    $template = $resume['template_id'] ?? 'modern';
     $skillsArr = array_map(function ($s) {
         return $s['skill_name']; }, $skills);
     $skillsText = implode(' • ', $skillsArr);
@@ -51,8 +52,8 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
         $expHtml .= "
         <div class='section-item'>
             <div class='item-header'>
-                <strong>{$exp['company']}</strong>
-                <span>{$exp['start_date']} – {$exp['end_date']}</span>
+                <span class='company'>{$exp['company']}</span>
+                <span class='date'>{$exp['start_date']} – {$exp['end_date']}</span>
             </div>
             <div class='item-sub'>{$exp['position']}</div>
             <div class='item-desc'>" . nl2br($exp['description']) . "</div>
@@ -64,44 +65,65 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
         $eduHtml .= "
         <div class='section-item'>
             <div class='item-header'>
-                <strong>{$edu['institution']}</strong>
-                <span>{$edu['graduation_date']}</span>
+                <span class='company'>{$edu['institution']}</span>
+                <span class='date'>{$edu['graduation_date']}</span>
             </div>
             <div class='item-sub'>{$edu['degree']}</div>
         </div>";
+    }
+
+    // Define CSS based on template
+    $css = "";
+    if ($template === 'modern') {
+        $css = "
+            body { font-family: 'Helvetica', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #1e293b; margin: 0; }
+            .header { border-left: 10px solid #4f46e5; padding-left: 20px; margin-bottom: 30px; }
+            .name { font-size: 26pt; font-weight: 800; color: #1e293b; letter-spacing: -1px; }
+            .contact { font-size: 10pt; color: #64748b; margin-top: 5px; }
+            .section-title { font-size: 13pt; font-weight: bold; color: #4f46e5; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px; text-transform: uppercase; }
+            .company { font-weight: bold; color: #1e293b; font-size: 1.1em; }
+            .date { color: #64748b; float: right; font-weight: normal; font-size: 0.9em; }
+            .item-sub { color: #4f46e5; font-weight: 600; margin-bottom: 8px; }
+            .skills-box { background: #f8fafc; padding: 10px; border-radius: 5px; color: #475569; font-style: italic; }
+        ";
+    } elseif ($template === 'corporate') {
+        $css = "
+            body { font-family: 'Times', serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #000; margin: 0; }
+            .header { text-align: center; border-bottom: 1px double #000; padding-bottom: 15px; margin-bottom: 25px; }
+            .name { font-size: 28pt; font-weight: normal; text-transform: uppercase; letter-spacing: 2px; }
+            .contact { font-size: 11pt; color: #333; margin-top: 8px; font-style: italic; }
+            .section-title { font-size: 14pt; font-weight: bold; border-bottom: 1px solid #000; margin-top: 25px; margin-bottom: 12px; text-transform: uppercase; text-align: center; }
+            .company { font-weight: bold; text-decoration: underline; }
+            .date { float: right; font-weight: bold; }
+            .item-sub { font-weight: bold; font-style: italic; margin-bottom: 5px; display: block; }
+            .item-desc { text-align: justify; }
+            .skills-box { font-weight: bold; text-align: center; border-top: 1px solid #ccc; padding-top: 5px; }
+        ";
+    } else { // minimal
+        $css = "
+            body { font-family: 'Arial', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #333; margin: 0; }
+            .header { margin-bottom: 40px; }
+            .name { font-size: 32pt; font-weight: 300; color: #000; }
+            .contact { font-size: 9pt; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; }
+            .section-title { font-size: 10pt; font-weight: 800; color: #999; margin-top: 35px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; }
+            .company { font-weight: bold; color: #000; }
+            .date { color: #bbb; display: block; font-size: 0.85em; margin-bottom: 5px; }
+            .item-sub { color: #666; margin-bottom: 5px; }
+            .item-desc { color: #444; }
+            .skills-box { color: #777; line-height: 1.8; }
+        ";
     }
 
     $html = "
     <html>
     <head>
         <style>
-            @page { margin: 1cm; }
-            body { 
-                font-family: 'Helvetica', sans-serif; 
-                font-size: {$fontSize}pt; 
-                line-height: {$lineHeight}; 
-                color: #333; 
-                margin: 0;
-            }
-            .header { text-align: center; border-bottom: 2px solid #444; padding-bottom: 10px; margin-bottom: 20px; }
-            .name { font-size: 24pt; font-weight: bold; color: #000; text-transform: uppercase; }
-            .contact { font-size: 10pt; color: #666; margin-top: 5px; }
-
-            .section-title { 
-                font-size: 14pt; 
-                font-weight: bold; 
-                color: #000; 
-                border-bottom: 1px solid #ccc; 
-                margin-top: 20px; 
-                margin-bottom: 10px; 
-                text-transform: uppercase;
-            }
-            .section-item { margin-bottom: 15px; }
-            .item-header { display: flex; justify-content: space-between; font-weight: bold; }
-            .item-sub { font-style: italic; color: #444; margin-bottom: 5px; }
-            .item-desc { font-size: 0.95em; text-align: justify; }
-            
-            .skills-box { font-style: italic; }
+            @page { margin: 1.5cm; }
+            * { box-sizing: border-box; }
+            {$css}
+            .section-item { margin-bottom: 20px; clear: both; }
+            .item-header { margin-bottom: 5px; }
+            .item-desc { margin-top: 5px; }
         </style>
     </head>
     <body>
@@ -110,13 +132,13 @@ function getResumeHtml($resume, $experiences, $education, $skills, $fontSize = 1
             <div class='contact'>{$resume['email']} | {$resume['phone']}</div>
         </div>
 
-        <div class='section-title'>Resumo Profissional</div>
+        <div class='section-title'>Resumo</div>
         <div class='item-desc'>{$resume['summary']}</div>
 
-        <div class='section-title'>Experiência Profissional</div>
+        <div class='section-title'>Experiência</div>
         {$expHtml}
 
-        <div class='section-title'>Formação Acadêmica</div>
+        <div class='section-title'>Educação</div>
         {$eduHtml}
 
         <div class='section-title'>Habilidades</div>
