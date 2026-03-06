@@ -217,7 +217,7 @@ require_once __DIR__ . '/vendor/autoload.php';
                         </div>
                         <div>
                         <label>Telefone</label>
-                        <input type="text" name="phone" placeholder="(11) 99999-9999">
+                        <input type="text" name="phone" id="phone" placeholder="(11) 99999-9999" maxlength="15">
                     </div>
                 </div>
 
@@ -370,6 +370,13 @@ require_once __DIR__ . '/vendor/autoload.php';
             container.insertAdjacentHTML('beforeend', html);
             eduCount++;
         }
+
+        // Phone Mask
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', (e) => {
+            let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
+            e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+        });
     </script>
 
 </body>
