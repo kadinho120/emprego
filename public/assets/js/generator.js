@@ -117,8 +117,8 @@ function openSuggestions(type, btn) {
     const list = document.getElementById('suggestionsList');
     list.innerHTML = '';
 
-    const selectedNiche = niche || 'tech';
-    const items = suggestionsData[selectedNiche] ? suggestionsData[selectedNiche][type] : suggestionsData['tech'][type];
+    const activeNiche = document.getElementById('nicheInput').value || 'tech';
+    const items = suggestionsData[activeNiche] ? suggestionsData[activeNiche][type] : suggestionsData['tech'][type];
 
     items.forEach(text => {
         const div = document.createElement('div');
