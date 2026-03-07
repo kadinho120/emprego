@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 use App\Auth;
-Auth::init();
+Auth::requireLogin();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -273,25 +273,19 @@ Auth::init();
     <nav class="glass-nav">
         <div class="logo">ApproveMax</div>
         <div style="display: flex; gap: 1.5rem; align-items: center;">
-            <?php if (Auth::isLoggedIn()): ?>
-                <a href="logout.php"
-                    style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600;">Sair</a>
-            <?php else: ?>
-                <a href="login.php"
-                    style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600;">Entrar</a>
-            <?php endif; ?>
-            <button onclick="openNicheModal()" class="cta-btn"
-                style="padding: 0.5rem 1.5rem; font-size: 0.9rem; border: none; cursor: pointer;">Criar Agora</button>
+            <a href="dashboard.php" style="color: var(--text-main); text-decoration: none; font-size: 0.9rem; font-weight: 600;">Meus Currículos</a>
+            <a href="logout.php" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600;">Sair</a>
         </div>
     </nav>
 
     <main class="container">
         <section class="hero">
             <h1>O Currículo Perfeito em <span>Apenas uma Página.</span></h1>
-            <p>Modelos de alta conversão otimizados para atrair recrutadores. Tecnologia inteligente que ajusta tudo
-                para caber perfeitamente no PDF.</p>
-            <button onclick="openNicheModal()" class="cta-btn" style="border: none; cursor: pointer;">Gerar meu
-                Currículo</button>
+            <p>Seu centro de comando para currículos de alta conversão.</p>
+            <div style="display: flex; gap: 1.5rem; justify-content: center; margin-top: 2rem;">
+                <button onclick="openNicheModal()" class="cta-btn" style="border: none; cursor: pointer;">Criar Novo Currículo</button>
+                <a href="dashboard.php" class="cta-btn" style="border: none; cursor: pointer; background: rgba(255, 255, 255, 0.1); text-decoration: none; display: inline-flex; align-items: center;">Ver Meus Currículos</a>
+            </div>
         </section>
 
         <section class="features">
