@@ -155,6 +155,7 @@ $resumes = $stmt->fetchAll();
         <header class="header">
             <div class="logo">ApproveMax</div>
             <div style="display: flex; gap: 1rem;">
+                <a href="index.php" class="btn btn-outline">🏠 Home</a>
                 <a href="generator.php" class="btn btn-primary">Criar Novo Currículo</a>
                 <a href="logout.php" class="btn btn-outline" style="color: #f87171;">Sair</a>
             </div>
