@@ -34,6 +34,7 @@
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
+        word-break: break-word;
     }
 
     .hero p {
@@ -75,11 +76,11 @@
         background: rgba(30, 41, 59, 0.85);
         backdrop-filter: blur(12px);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        padding: 0.75rem 1rem;
+        border-radius: 50px;
+        padding: 0.5rem 1.25rem;
         display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+        flex-direction: row;
+        justify-content: space-between;
         align-items: center;
         z-index: 1000;
     }
@@ -90,7 +91,7 @@
 
     .glass-nav div {
         display: flex;
-        gap: 0.75rem;
+        gap: 1rem;
     }
 
     /* Modal Mobile */
