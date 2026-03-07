@@ -26,8 +26,8 @@
     </script>
     <style type="text/tailwindcss">
         @layer base {
-            body {
-                @apply bg-[#0f172a] text-slate-200 antialiased;
+            html, body {
+                @apply bg-[#0f172a] text-slate-200 antialiased overflow-x-hidden;
             }
         }
         @layer components {
@@ -41,14 +41,16 @@
 <body>
 
     <nav
-        class="fixed top-4 left-4 right-4 z-50 glass-card rounded-full px-6 py-3 flex justify-between items-center transition-all">
-        <div class="text-xl font-extrabold bg-gradient-to-r from-white to-indigo-400 bg-clip-text text-transparent">
+        class="fixed top-4 left-4 right-4 z-50 glass-card rounded-full px-5 py-3 flex justify-between items-center transition-all">
+        <div
+            class="text-lg md:text-xl font-extrabold bg-gradient-to-r from-white to-indigo-400 bg-clip-text text-transparent shrink-0">
             ApproveMax</div>
-        <div class="flex gap-6 items-center">
-            <a href="dashboard.php" class="text-sm font-semibold hover:text-indigo-400 transition-colors">Meus
-                Currículos</a>
+        <div class="flex gap-4 md:gap-6 items-center">
+            <a href="dashboard.php"
+                class="text-[XS] md:text-sm font-semibold hover:text-indigo-400 transition-colors whitespace-nowrap">
+                <span class="hidden md:inline">Meus </span>Currículos</a>
             <a href="logout.php"
-                class="text-sm font-semibold text-slate-400 hover:text-red-400 transition-colors">Sair</a>
+                class="text-[XS] md:text-sm font-semibold text-slate-400 hover:text-red-400 transition-colors">Sair</a>
         </div>
     </nav>
 
