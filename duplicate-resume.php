@@ -17,6 +17,10 @@ try {
     $userId = $_SESSION['user_id'];
     $userRole = $_SESSION['user_role'] ?? 'user';
 
+    if (!is_numeric($userId)) {
+        $userId = null;
+    }
+
     // 1. Fetch original resume
     $stmt = $db->prepare("SELECT * FROM resumes WHERE id = ?");
     $stmt->execute([$resumeId]);
