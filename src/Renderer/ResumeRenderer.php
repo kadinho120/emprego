@@ -61,7 +61,6 @@ class ResumeRenderer
                     background-color: #f1f5f9;
                 }
                 .resume-page {
-                    background: white;
                     width: 210mm;
                     min-height: 297mm;
                     margin: 2rem auto;
@@ -203,6 +202,7 @@ class ResumeRenderer
             case 'health':
                 $p = $primaryColor ?? '#0d9488';
                 return "
+                    .resume-page { background: white; }
                     body { font-family: 'DejaVu Sans', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #334155; margin: 0; padding: 0; }
                     .header { background: #f0fdfa; border-bottom: 6px solid {$p}; padding: 30px 40px; margin-bottom: 30px; border-radius: 0 0 20px 20px; text-align: center; }
                     .photo-container { width: 105px; height: 140px; margin: 0 auto 15px auto; border-radius: 15px; border: 3px solid {$p}; overflow: hidden; background: #e2e8f0; }
@@ -222,6 +222,7 @@ class ResumeRenderer
             case 'health_professional':
                 $p = $primaryColor ?? '#1e3a8a';
                 return "
+                    .resume-page { background: white; }
                     body { font-family: 'DejaVu Sans', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #1e293b; margin: 0; padding: 0; }
                     .header { background: {$p}; color: white; padding: 40px; margin-bottom: 30px; text-align: left; overflow: hidden; }
                     .header-text { float: left; width: 75%; }
@@ -241,6 +242,7 @@ class ResumeRenderer
             case 'health_clean':
                 $p = $primaryColor ?? '#10b981';
                 return "
+                    .resume-page { background: white; }
                     body { font-family: 'DejaVu Sans', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #475569; margin: 0; padding: 0; }
                     .header { padding: 40px; text-align: center; border-bottom: 1px solid #e2e8f0; margin-bottom: 30px; }
                     .header-text { width: 100%; }
@@ -260,6 +262,7 @@ class ResumeRenderer
             case 'tech':
                 $p = $primaryColor ?? '#2dd4bf';
                 return "
+                    .resume-page { background: #0f172a; }
                     body { font-family: 'DejaVu Sans', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #e2e8f0; background-color: #0f172a; margin: 0; padding: 0; }
                     .header { background: #1e293b; color: {$p}; padding: 30px 40px; text-align: left; border-bottom: 6px solid {$p}; margin-bottom: 30px; overflow: hidden; }
                     .header-text { float: left; width: 75%; }
@@ -279,6 +282,7 @@ class ResumeRenderer
             case 'tech_modern':
                 $p = $primaryColor ?? '#4f46e5';
                 return "
+                    .resume-page { background: #f8fafc; }
                     body { font-family: 'DejaVu Sans', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #334155; background-color: #f8fafc; margin: 0; padding: 0; }
                     .header { background: {$p}; color: white; padding: 40px; margin-bottom: 30px; overflow: hidden; }
                     .header-text { float: left; width: 75%; }
@@ -298,6 +302,7 @@ class ResumeRenderer
             case 'tech_minimal':
                 $p = $primaryColor ?? '#111827';
                 return "
+                    .resume-page { background: white; }
                     body { font-family: 'DejaVu Sans', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #1f2937; margin: 0; padding: 0; }
                     .header { padding: 50px 40px 30px 40px; border-bottom: 2px solid {$p}; margin-bottom: 40px; overflow: hidden; }
                     .photo-container { float: left; width: 80px; height: 106px; margin-right: 30px; border: 1px solid {$p}; }
@@ -316,6 +321,7 @@ class ResumeRenderer
                 ";
             default: // modern fallback
                 return "
+                    .resume-page { background: white; }
                     body { font-family: 'DejaVu Sans', sans-serif; font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #334155; margin: 0; padding: 0; }
                     .header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 30px 40px; margin-bottom: 30px; text-align: center; }
                     .header-text { width: 100%; }
