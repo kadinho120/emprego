@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
+use App\Auth;
+Auth::requireLogin();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -281,6 +283,12 @@ require_once __DIR__ . '/vendor/autoload.php';
 <body>
 
     <div class="container">
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem; padding: 0 1rem;">
+            <a href="logout.php"
+                style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: color 0.3s;"
+                onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">Sair da
+                Conta</a>
+        </div>
         <div class="form-card">
             <div class="step-indicator">
                 <div class="step-dot active" data-step="1">1</div>
@@ -301,7 +309,8 @@ require_once __DIR__ . '/vendor/autoload.php';
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <div>
                             <label>E-mail</label>
-                            <input type="email" name="email" required placeholder="joao@email.com">
+                            <input type="email" name="email" required placeholder="joao@email.com"
+                                value="<?php echo htmlspecialchars($_SESSION['user_email'] ?? ''); ?>">
                             <span class="field-tip">Use um e-mail profissional e que você acesse sempre.</span>
                         </div>
                         <div>

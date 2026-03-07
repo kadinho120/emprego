@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
+use App\Auth;
+Auth::init();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -270,8 +272,17 @@ require_once __DIR__ . '/vendor/autoload.php';
 
     <nav class="glass-nav">
         <div class="logo">AutoResume</div>
-        <button onclick="openNicheModal()" class="cta-btn"
-            style="padding: 0.5rem 1.5rem; font-size: 0.9rem; border: none; cursor: pointer;">Criar Agora</button>
+        <div style="display: flex; gap: 1.5rem; align-items: center;">
+            <?php if (Auth::isLoggedIn()): ?>
+                <a href="logout.php"
+                    style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600;">Sair</a>
+            <?php else: ?>
+                <a href="login.php"
+                    style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600;">Entrar</a>
+            <?php endif; ?>
+            <button onclick="openNicheModal()" class="cta-btn"
+                style="padding: 0.5rem 1.5rem; font-size: 0.9rem; border: none; cursor: pointer;">Criar Agora</button>
+        </div>
     </nav>
 
     <main class="container">
