@@ -284,12 +284,27 @@ Auth::requireLogin();
 
     <div class="container">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem; padding: 0 1rem;">
-            <a href="logout.php"
-                style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: color 0.3s;"
-                onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">Sair da
-                Conta</a>
+            <?php if (Auth::isLoggedIn()): ?>
+                <div style="display: flex; gap: 1.5rem; align-items: center;">
+                    <a href="dashboard.php"
+                        style="color: var(--text-main); text-decoration: none; font-size: 0.9rem; font-weight: 600;">Meus
+                        Currículos</a>
+                    <a href="logout.php"
+                        style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600;">Sair</a>
+                </div>
+            <?php else: ?>
+                <a href="logout.php"
+                    style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: color 0.3s;"
+                    onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">Sair da
+                    Conta</a>
+            <?php endif; ?>
         </div>
         <div class="form-card">
+            <div style="display: flex; justify-content: center; margin-bottom: 2rem;">
+                <div class="logo"
+                    style="font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    ApproveMax</div>
+            </div>
             <div class="step-indicator">
                 <div class="step-dot active" data-step="1">1</div>
                 <div class="step-dot" data-step="2">2</div>

@@ -67,6 +67,7 @@ class Database
                 $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS city VARCHAR(100)");
                 $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS state VARCHAR(50)");
                 $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS photo_path VARCHAR(255)");
+                $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE CASCADE");
             } catch (PDOException $e) {
                 // Ignore errors
             }

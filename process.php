@@ -75,7 +75,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // 2. Insert Resume Main Info
-        $stmt = $db->prepare("INSERT INTO resumes (full_name, email, phone, city, state, photo_path, summary, template_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        if (session_status() === PHP_SESSION_NONE)
+            session_start();
+        $userId = $_SESSION['user_id'] ?? null;
+
+        $stmt = $db->prepare("INSERT INTO resumes (full_name, email, phone, city, state, photo_path, summary, template_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $_POST['full_name'],
             $_POST['email'],
@@ -84,7 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_POST['state'],
             $photoPath,
             $_POST['summary'],
-            $_POST['template_id']
+            $_POST['template_id'],
+            $userId
         ]);
         $resumeId = $db->lastInsertId();
 

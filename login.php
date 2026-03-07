@@ -13,7 +13,7 @@ if (Auth::isLoggedIn()) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - AutoResume</title>
+    <title>Login - ApproveMax</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -155,7 +155,7 @@ if (Auth::isLoggedIn()) {
 
 <body>
     <div class="login-card">
-        <a href="index.php" class="logo">AutoResume</a>
+        <div class="logo">ApproveMax</div>
 
         <div id="alert" class="alert alert-error"></div>
 

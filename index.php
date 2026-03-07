@@ -271,7 +271,7 @@ Auth::init();
 <body>
 
     <nav class="glass-nav">
-        <div class="logo">AutoResume</div>
+        <div class="logo">ApproveMax</div>
         <div style="display: flex; gap: 1.5rem; align-items: center;">
             <?php if (Auth::isLoggedIn()): ?>
                 <a href="logout.php"

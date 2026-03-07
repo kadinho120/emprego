@@ -12,9 +12,9 @@ if (!$resumeId)
 try {
     $db = Database::getInstance();
 
-    // Fetch Resume Data
-    $stmt = $db->prepare("SELECT * FROM resumes WHERE id = ?");
-    $stmt->execute([$resumeId]);
+    // Fetch Resume Data with ownership check
+    $stmt = $db->prepare("SELECT * FROM resumes WHERE id = ? AND (user_id = ? OR 'admin' = ?)");
+    $stmt->execute([$resumeId, $_SESSION['user_id'] ?? 0, $_SESSION['user_role'] ?? '']);
     $resume = $stmt->fetch();
 
     if (!$resume)
