@@ -191,6 +191,86 @@ Auth::requireLogin();
             box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
         }
 
+        /* Template Selection Grid */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .template-card {
+            background: var(--input-bg);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .template-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .template-card.selected {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        }
+
+        .template-preview {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: #f1f5f9;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .template-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .template-info {
+            padding: 1rem;
+            text-align: center;
+            background: var(--card-bg);
+        }
+
+        .template-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        .selected-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .template-card.selected .selected-badge {
+            display: flex;
+        }
+
+        input[name="template_id"] {
+            display: none;
+        }
+
         .btn-group {
             display: flex;
             justify-content: space-between;
@@ -416,11 +496,115 @@ Auth::requireLogin();
                     <div class="step-dot" data-step="3">3</div>
                     <div class="step-dot" data-step="4">4</div>
                     <div class="step-dot" data-step="5">5</div>
+                    <div class="step-dot" data-step="6">6</div>
                 </div>
 
                 <form id="resumeForm" action="process.php" method="POST" enctype="multipart/form-data">
-                    <!-- Passo 1: Dados Pessoais -->
+                    <!-- Passo 1: Seleção de Modelo -->
                     <div class="form-step active" id="step1">
+                        <h2 style="margin-bottom: 0.5rem;">Escolha seu Modelo</h2>
+                        <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">Selecione o layout que
+                            mais combina com seu perfil profissional.</p>
+
+                        <input type="hidden" name="template_id" id="templateInput" value="<?php echo (isset($_GET['niche']) && $_GET['niche'] === 'tech') ? 'tech' : ((isset($_GET['niche']) && $_GET['niche'] === 'health') ? 'health' : 'tech'); ?>" required>
+
+                        <div class="template-grid">
+                            <?php if (isset($_GET['niche']) && $_GET['niche'] === 'tech'): ?>
+                                <div class="template-card selected" onclick="selectTemplate('tech', this)">
+                                    <div class="selected-badge">✓</div>
+                                    <div class="template-preview">
+                                        <div style="background: #0f172a; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 10px; gap: 5px;">
+                                            <div style="background: var(--primary); height: 20px; width: 60%;"></div>
+                                            <div style="background: #1e293b; height: 10px; width: 100%;"></div>
+                                            <div style="background: #1e293b; height: 10px; width: 100%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="template-info">
+                                        <div class="template-name">TI - Dark Mode</div>
+                                    </div>
+                                </div>
+                                <div class="template-card" onclick="selectTemplate('tech_modern', this)">
+                                    <div class="selected-badge">✓</div>
+                                    <div class="template-preview">
+                                        <div style="background: #4f46e5; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 10px; gap: 5px;">
+                                            <div style="background: white; height: 20px; width: 60%;"></div>
+                                            <div style="background: rgba(255,255,255,0.2); height: 10px; width: 100%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="template-info">
+                                        <div class="template-name">Modern Blue</div>
+                                    </div>
+                                </div>
+                                <div class="template-card" onclick="selectTemplate('tech_minimal', this)">
+                                    <div class="selected-badge">✓</div>
+                                    <div class="template-preview">
+                                        <div style="background: white; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 10px; border: 1px solid #ddd; gap: 5px;">
+                                            <div style="background: #111827; height: 15px; width: 70%;"></div>
+                                            <div style="background: #eee; height: 8px; width: 100%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="template-info">
+                                        <div class="template-name">Minimalist Professional</div>
+                                    </div>
+                                </div>
+                            <?php elseif (isset($_GET['niche']) && $_GET['niche'] === 'health'): ?>
+                                <div class="template-card selected" onclick="selectTemplate('health', this)">
+                                    <div class="selected-badge">✓</div>
+                                    <div class="template-preview">
+                                        <div style="background: #f0fdfa; width: 100%; height: 100%; display: flex; flex-direction: column; border-bottom: 5px solid #0d9488;"></div>
+                                    </div>
+                                    <div class="template-info">
+                                        <div class="template-name">Health - Teal Basic</div>
+                                    </div>
+                                </div>
+                                <div class="template-card" onclick="selectTemplate('health_professional', this)">
+                                    <div class="selected-badge">✓</div>
+                                    <div class="template-preview">
+                                        <div style="background: #1e3a8a; width: 100%; height: 100%;"></div>
+                                    </div>
+                                    <div class="template-info">
+                                        <div class="template-name">Healthcare Leader</div>
+                                    </div>
+                                </div>
+                                <div class="template-card" onclick="selectTemplate('health_clean', this)">
+                                    <div class="selected-badge">✓</div>
+                                    <div class="template-preview">
+                                        <div style="background: white; width: 100%; height: 100%; border-bottom: 1px solid #eee;"></div>
+                                    </div>
+                                    <div class="template-info">
+                                        <div class="template-name">Clean Medical</div>
+                                    </div>
+                                </div>
+                            <?php else: ?>
+                                <div class="template-card selected" onclick="selectTemplate('tech', this)">
+                                    <div class="selected-badge">✓</div>
+                                    <div class="template-preview">
+                                        <div style="background: #0f172a; width: 100%; height: 100%;"></div>
+                                    </div>
+                                    <div class="template-info">
+                                        <div class="template-name">TI - Dark Mode</div>
+                                    </div>
+                                </div>
+                                <div class="template-card" onclick="selectTemplate('health', this)">
+                                    <div class="selected-badge">✓</div>
+                                    <div class="template-preview">
+                                        <div style="background: #f0fdfa; width: 100%; height: 100%; border-bottom: 5px solid #0d9488;"></div>
+                                    </div>
+                                    <div class="template-info">
+                                        <div class="template-name">Saúde - Teal Basic</div>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="btn-group">
+                            <div></div>
+                            <button type="button" class="btn-next" onclick="nextStep(2)">Começar Preenchimento</button>
+                        </div>
+                    </div>
+
+                    <!-- Passo 2: Dados Pessoais -->
+                    <div class="form-step" id="step2">
                         <h2 style="margin-bottom: 1.5rem;">Dados Pessoais</h2>
                         <label>Nome Completo</label>
                         <input type="text" name="full_name" required placeholder="João Silva">
@@ -467,13 +651,13 @@ Auth::requireLogin();
                             primeira coisa que o contratante lê.</span>
 
                         <div class="btn-group">
-                            <div></div>
-                            <button type="button" class="btn-next" onclick="nextStep(2)">Próximo</button>
+                            <button type="button" class="btn-prev" onclick="nextStep(1)">Anterior</button>
+                            <button type="button" class="btn-next" onclick="nextStep(3)">Próximo</button>
                         </div>
                     </div>
 
-                    <!-- Passo 2: Foto -->
-                    <div class="form-step" id="step2">
+                    <!-- Passo 3: Foto -->
+                    <div class="form-step" id="step3">
                         <h2 style="margin-bottom: 1.5rem;">Sua Foto</h2>
                         <label>Sua Melhor Foto (Opcional)</label>
                         <div class="file-upload-wrapper">
@@ -498,13 +682,13 @@ Auth::requireLogin();
                         </div>
 
                         <div class="btn-group">
-                            <button type="button" class="btn-prev" onclick="nextStep(1)">Anterior</button>
-                            <button type="button" class="btn-next" onclick="nextStep(3)">Próximo</button>
+                            <button type="button" class="btn-prev" onclick="nextStep(2)">Anterior</button>
+                            <button type="button" class="btn-next" onclick="nextStep(4)">Próximo</button>
                         </div>
                     </div>
 
-                    <!-- Passo 3: Experiência -->
-                    <div class="form-step" id="step3">
+                    <!-- Passo 4: Experiência -->
+                    <div class="form-step" id="step4">
                         <h2 style="margin-bottom: 1.5rem;">Experiência Profissional</h2>
                         <div id="experienceContainer">
                             <div class="dynamic-field">
@@ -556,13 +740,13 @@ Auth::requireLogin();
                             Experiência</button>
 
                         <div class="btn-group">
-                            <button type="button" class="btn-prev" onclick="nextStep(2)">Anterior</button>
-                            <button type="button" class="btn-next" onclick="nextStep(4)">Próximo</button>
+                            <button type="button" class="btn-prev" onclick="nextStep(3)">Anterior</button>
+                            <button type="button" class="btn-next" onclick="nextStep(5)">Próximo</button>
                         </div>
                     </div>
 
-                    <!-- Passo 4: Formação -->
-                    <div class="form-step" id="step4">
+                    <!-- Passo 5: Formação -->
+                    <div class="form-step" id="step5">
                         <h2 style="margin-bottom: 1.5rem;">Educação</h2>
                         <div id="educationContainer">
                             <div class="dynamic-field">
@@ -596,13 +780,13 @@ Auth::requireLogin();
                         <button type="button" class="add-more" onclick="addEducation()">+ Adicionar Formação</button>
 
                         <div class="btn-group">
-                            <button type="button" class="btn-prev" onclick="nextStep(3)">Anterior</button>
-                            <button type="button" class="btn-next" onclick="nextStep(5)">Próximo</button>
+                            <button type="button" class="btn-prev" onclick="nextStep(4)">Anterior</button>
+                            <button type="button" class="btn-next" onclick="nextStep(6)">Próximo</button>
                         </div>
                     </div>
 
-                    <!-- Passo 5: Habilidades e Modelo -->
-                    <div class="form-step" id="step5">
+                    <!-- Passo 6: Habilidades e Estilo -->
+                    <div class="form-step" id="step6">
                         <h2 style="margin-bottom: 1.5rem;">Habilidades e Estilo</h2>
                         <div class="suggestion-header">
                             <label style="margin-bottom: 0;">Habilidades (separadas por vírgula)</label>
@@ -613,23 +797,6 @@ Auth::requireLogin();
                         <span class="field-tip">Liste ferramentas, tecnologias ou competências que você domina. Ex:
                             Excel
                             Avançado, Punção Venosa, Java, Liderança de Equipe...</span>
-
-                        <label>Modelo do Currículo</label>
-                        <select name="template_id" required>
-                            <?php if (isset($_GET['niche']) && $_GET['niche'] === 'tech'): ?>
-                                <option value="tech">Dark Mode (Original)</option>
-                                <option value="tech_modern">Modern Blue Gradient</option>
-                                <option value="tech_minimal">Minimalist Professional</option>
-                            <?php elseif (isset($_GET['niche']) && $_GET['niche'] === 'health'): ?>
-                                <option value="health">Teal Basic (Original)</option>
-                                <option value="health_professional">Healthcare Leader (Deep Teal)</option>
-                                <option value="health_clean">Clean Medical (Minimalist)</option>
-                            <?php else: ?>
-                                <option value="tech">TI - Dark Mode</option>
-                                <option value="health">Saúde - Teal Basic</option>
-                            <?php endif; ?>
-                        </select>
-                        <span class="field-tip">Escolha o modelo que mais combina com sua área de atuação.</span>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
                             <div>
@@ -649,7 +816,7 @@ Auth::requireLogin();
                         </div>
 
                         <div class="btn-group">
-                            <button type="button" class="btn-prev" onclick="nextStep(4)">Anterior</button>
+                            <button type="button" class="btn-prev" onclick="nextStep(5)">Anterior</button>
                             <button type="submit" class="btn-submit">Gerar Currículo</button>
                         </div>
 
@@ -809,24 +976,45 @@ Auth::requireLogin();
             let expCount = 1;
             let eduCount = 1;
 
+            function selectTemplate(id, el) {
+                // Update hidden input
+                document.getElementById('templateInput').value = id;
+                
+                // Update UI state
+                document.querySelectorAll('.template-card').forEach(card => card.classList.remove('selected'));
+                el.classList.add('selected');
+                
+                // Sync preview immediately
+                triggerUpdate();
+            }
+
             function nextStep(step) {
                 const currentStepEl = document.querySelector('.form-step.active');
                 const currentStepNum = parseInt(currentStepEl.id.replace('step', ''));
 
-                // Só valida se estiver tentando avançar
-                if (step > currentStepNum) {
-                    const inputs = currentStepEl.querySelectorAll('input, select, textarea');
-                    let valid = true;
-                    for (let input of inputs) {
-                        if (!input.checkValidity()) {
-                            input.reportValidity();
-                            valid = false;
-                            break;
-                        }
+                // Basic validation for required fields in the current step
+                const inputs = currentStepEl.querySelectorAll('input[required], textarea[required], select[required]');
+                let valid = true;
+                inputs.forEach(input => {
+                    if (!input.value) {
+                        input.style.borderColor = '#ef4444';
+                        valid = false;
+                    } else {
+                        input.style.borderColor = 'rgba(255, 255, 255, 0.1)';
                     }
-                    if (!valid) return;
+                });
+
+                if (!valid && step > currentStepNum) {
+                    alert('Por favor, preencha todos os campos obrigatórios.');
+                    return;
                 }
 
+                showStep(step);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                triggerUpdate();
+            }
+
+            function showStep(step) {
                 document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
                 document.getElementById('step' + step).classList.add('active');
 
