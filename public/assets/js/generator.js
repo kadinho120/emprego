@@ -373,6 +373,12 @@ initSortable('educationContainer');
 
 // Photo Preview
 const photoInput = document.getElementById('photoInput');
+const uploadBtn = document.getElementById('uploadBtn');
+
+if (uploadBtn && photoInput) {
+    uploadBtn.addEventListener('click', () => photoInput.click());
+}
+
 if (photoInput) {
     photoInput.addEventListener('change', function (e) {
         const file = e.target.files[0];
