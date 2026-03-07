@@ -77,6 +77,24 @@ const suggestionsData = {
     }
 };
 
+function toggleMobilePreview() {
+    const modal = document.getElementById('mobilePreviewModal');
+    const isOpening = modal.style.display !== 'flex';
+    modal.style.display = isOpening ? 'flex' : 'none';
+
+    if (isOpening) {
+        syncMobilePreview();
+    }
+}
+
+function syncMobilePreview() {
+    const mainIframe = document.getElementById('previewIframe');
+    const mobileIframe = document.getElementById('mobilePreviewIframe');
+    if (mainIframe && mobileIframe) {
+        mobileIframe.src = mainIframe.src;
+    }
+}
+
 let currentTargetField = null;
 
 function openSuggestions(type, btn) {

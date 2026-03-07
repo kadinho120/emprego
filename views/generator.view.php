@@ -16,6 +16,19 @@
 <body>
 
     <div class="container">
+        <!-- Floating Preview Trigger (Mobile only) -->
+        <button type="button" class="mobile-preview-trigger" onclick="toggleMobilePreview()">👁️</button>
+
+        <!-- Mobile Preview Modal -->
+        <div id="mobilePreviewModal" class="preview-modal">
+            <div class="preview-modal-header">
+                <h3>Prévia em Tempo Real</h3>
+                <button type="button" class="btn-suggestion" onclick="toggleMobilePreview()">Fechar</button>
+            </div>
+            <div class="preview-modal-content">
+                <iframe id="mobilePreviewIframe" class="preview-iframe"></iframe>
+            </div>
+        </div>
         <div class="form-wrapper">
             <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem; padding: 0 1rem;">
                 <?php if (App\Auth::isLoggedIn()): ?>
