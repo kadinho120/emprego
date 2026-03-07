@@ -299,6 +299,46 @@ class ResumeRenderer
                     .item-desc { margin-top: 10px; color: #475569; }
                     .skills-box { background: white; border: 2px solid {$p}; padding: 20px; border-radius: 15px; color: {$p}; font-weight: 800; }
                 ";
+            case 'tech_creative':
+                $p = $primaryColor ?? '#f59e0b';
+                return "
+                    .resume-page { background: #f8fafc; border: 15px solid #0f172a; }
+                    body { font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #1e293b; margin: 0; padding: 0; }
+                    .header { background: #0f172a; color: white; padding: 40px; border-bottom: 8px solid {$p}; }
+                    .header-text { width: 100%; text-align: left; }
+                    .name { font-size: 36pt; font-weight: 900; color: {$p}; letter-spacing: -1px; margin: 0; }
+                    .contact { font-size: 10pt; color: #94a3b8; margin-top: 10px; font-family: monospace; }
+                    .photo-container { float: right; width: 120px; height: 160px; border: 4px solid {$p}; border-radius: 10px; margin-top: -80px; background: white; }
+                    .photo { width: 100%; height: 100%; object-fit: cover; }
+                    .content-wrapper { padding: 30px 40px; }
+                    .section-title { font-size: 16pt; font-weight: 900; color: #0f172a; margin-top: 25px; margin-bottom: 15px; border-left: 10px solid {$p}; padding-left: 15px; text-transform: uppercase; background: #f1f5f9; padding-top: 5px; padding-bottom: 5px; page-break-after: avoid; }
+                    .section-item { margin-bottom: 20px; page-break-inside: avoid; }
+                    .company { font-weight: 900; color: #0f172a; font-size: 1.2em; }
+                    .date { color: {$p}; font-weight: 800; font-family: monospace; }
+                    .item-sub { color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+                    .item-desc { color: #334155; margin-top: 5px; border-top: 1px dashed {$p}; padding-top: 10px; }
+                    .skills-box { display: flex; flex-wrap: wrap; gap: 8px; font-weight: 800; color: #0f172a; }
+                ";
+            case 'health_executive':
+                $p = $primaryColor ?? '#1e293b';
+                return "
+                    .resume-page { background: white; border-top: 20px solid {$p}; }
+                    body { font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #334155; margin: 0; padding: 0; }
+                    .header { padding: 50px 40px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+                    .name { font-size: 30pt; font-weight: 400; color: {$p}; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
+                    .contact { font-size: 10pt; color: #64748b; margin-top: 15px; letter-spacing: 1px; }
+                    .photo-container { width: 90px; height: 120px; margin: 0 auto 20px auto; border: 1px solid #e2e8f0; padding: 5px; }
+                    .photo { width: 100%; height: 100%; object-fit: cover; }
+                    .content-wrapper { padding: 40px 60px; }
+                    .section-title { font-size: 13pt; font-weight: 700; color: {$p}; margin-top: 30px; margin-bottom: 20px; text-align: center; letter-spacing: 3px; text-transform: uppercase; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; page-break-after: avoid; }
+                    .section-item { margin-bottom: 30px; page-break-inside: avoid; }
+                    .company { font-weight: 700; color: #1e293b; font-size: 1.1em; }
+                    .date { color: #94a3b8; font-style: italic; }
+                    .item-header { border-bottom: 1px solid #f8fafc; padding-bottom: 5px; margin-bottom: 10px; }
+                    .item-sub { color: {$p}; font-weight: 600; font-size: 1em; }
+                    .item-desc { font-style: normal; color: #475569; padding-top: 5px; }
+                    .skills-box { text-align: center; font-style: italic; color: {$p}; border: 1px double #e2e8f0; padding: 20px; background: #fcfdfe; }
+                ";
             case 'tech_minimal':
                 $p = $primaryColor ?? '#111827';
                 return "

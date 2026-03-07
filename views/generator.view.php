@@ -120,6 +120,22 @@
                                         <div class="template-name">Minimalist Professional</div>
                                     </div>
                                 </div>
+                                <div class="template-card <?php echo $initialTemplate === 'tech_creative' ? 'selected' : ''; ?>"
+                                    onclick="selectTemplate('tech_creative', this, 'tech')">
+                                    <div class="selected-badge">✓</div>
+                                    <div class="template-preview">
+                                        <div
+                                            style="background: #f8fafc; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 10px; border: 5px solid #0f172a; gap: 5px;">
+                                            <div
+                                                style="background: #0f172a; height: 25px; width: 100%; margin: -10px -10px 5px -10px; border-bottom: 3px solid #f59e0b;">
+                                            </div>
+                                            <div style="background: #e2e8f0; height: 8px; width: 80%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="template-info">
+                                        <div class="template-name">Tech - Creative</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -159,6 +175,24 @@
                                     </div>
                                     <div class="template-info">
                                         <div class="template-name">Clean Medical</div>
+                                    </div>
+                                </div>
+                                <div class="template-card <?php echo $initialTemplate === 'health_executive' ? 'selected' : ''; ?>"
+                                    onclick="selectTemplate('health_executive', this, 'health')">
+                                    <div class="selected-badge">✓</div>
+                                    <div class="template-preview">
+                                        <div
+                                            style="background: white; width: 100%; height: 100%; border-top: 8px solid #1e293b; display: flex; flex-direction: column; align-items: center; padding: 10px;">
+                                            <div
+                                                style="background: #1e293b; height: 10px; width: 50%; margin-top: 10px;">
+                                            </div>
+                                            <div
+                                                style="background: #f1f5f9; height: 6px; width: 80%; margin-top: 10px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="template-info">
+                                        <div class="template-name">Executive Health</div>
                                     </div>
                                 </div>
                             </div>
