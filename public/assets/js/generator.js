@@ -377,6 +377,7 @@ function updatePreview() {
                 if (newDoc.title) doc.title = newDoc.title;
 
                 // Sync to mobile preview if open
+                const mobileModal = document.getElementById('mobilePreviewModal');
                 if (mobileModal && !mobileModal.classList.contains('hidden')) {
                     syncMobilePreview();
                 }

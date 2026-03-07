@@ -82,7 +82,7 @@
     <div class="flex flex-col lg:flex-row min-h-screen">
         <!-- Sidebar Form Area -->
         <div
-            class="w-full lg:w-[450px] xl:w-[500px] flex-shrink-0 bg-slate-900/30 lg:border-r border-white/5 flex flex-col pt-8">
+            class="w-full lg:w-[450px] xl:w-[500px] flex-shrink-0 bg-slate-900/30 lg:border-r border-white/5 flex flex-col pt-8 lg:h-screen lg:overflow-y-auto">
             <div class="px-6 md:px-10 flex justify-between items-center mb-8">
                 <div
                     class="text-xl font-extrabold bg-gradient-to-r from-white to-indigo-400 bg-clip-text text-transparent">
@@ -112,7 +112,7 @@
                         <input type="hidden" name="resume_id" value="<?php echo $resumeData['id']; ?>">
                     <?php endif; ?>
                     <!-- Passo 1: Seleção de Modelo -->
-                    <div class="form-step activespace-y-8" id="step1">
+                    <div class="form-step space-y-8" id="step1">
                         <div>
                             <h2 class="text-2xl font-bold mb-2">Escolha seu Modelo</h2>
                             <p class="text-sm text-slate-400">Selecione o layout que mais combina com seu perfil
@@ -132,71 +132,84 @@
                             value="<?php echo htmlspecialchars($initialTemplate); ?>" required>
 
                         <!-- Templates Container -->
-                        <div class="grid grid-cols-2 gap-4">
-                            <!-- Template Cards will be visually updated but keep their IDs/logic -->
-                            <!-- Tech Templates -->
-                            <div class="template-group <?php echo $currentNiche === 'tech' ? '' : 'hidden'; ?>"
-                                id="niche-tech-container">
                         <div class="space-y-6">
                             <!-- Niche: Tech -->
-                            <div class="template-group <?php echo $niche === 'tech' ? '' : 'hidden'; ?>" id="niche-tech-container">
+                            <div class="template-group <?php echo $currentNiche === 'tech' ? '' : 'hidden'; ?>"
+                                id="niche-tech-container">
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="group relative glass-card p-3 rounded-2xl cursor-pointer border-2 transition-all overflow-hidden <?php echo $initialTemplate === 'tech' ? 'border-primary ring-2 ring-primary/20' : 'border-white/5'; ?>"
                                         onclick="selectTemplate('tech', this, 'tech')">
-                                        <div class="aspect-[4/5] bg-[#0f172a] rounded-xl overflow-hidden p-4 space-y-2 relative">
+                                        <div
+                                            class="aspect-[4/5] bg-[#0f172a] rounded-xl overflow-hidden p-4 space-y-2 relative">
                                             <div class="bg-indigo-500 h-3 w-2/3 rounded-full"></div>
                                             <div class="bg-slate-800 h-1.5 w-full rounded-full"></div>
                                             <div class="bg-slate-800 h-1.5 w-full rounded-full"></div>
                                             <div class="bg-slate-800 h-1.5 w-4/5 rounded-full"></div>
-                                            <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] to-transparent opacity-40"></div>
+                                            <div
+                                                class="absolute inset-0 bg-gradient-to-t from-[#0f172a] to-transparent opacity-40">
+                                            </div>
                                         </div>
                                         <div class="mt-3 text-center">
-                                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-white transition-colors">TI - Dark Mode</span>
+                                            <span
+                                                class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-white transition-colors">TI
+                                                - Dark Mode</span>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="group relative glass-card p-3 rounded-2xl cursor-pointer border-2 transition-all overflow-hidden <?php echo $initialTemplate === 'tech_modern' ? 'border-primary ring-2 ring-primary/20' : 'border-white/5'; ?>"
                                         onclick="selectTemplate('tech_modern', this, 'tech')">
-                                        <div class="aspect-[4/5] bg-indigo-600 rounded-xl overflow-hidden p-4 space-y-2 relative">
+                                        <div
+                                            class="aspect-[4/5] bg-indigo-600 rounded-xl overflow-hidden p-4 space-y-2 relative">
                                             <div class="bg-white h-3 w-2/3 rounded-full"></div>
                                             <div class="bg-white/20 h-1.5 w-full rounded-full"></div>
                                             <div class="bg-white/20 h-1.5 w-full rounded-full"></div>
                                             <div class="bg-white/20 h-1.5 w-4/5 rounded-full"></div>
-                                            <div class="absolute inset-0 bg-gradient-to-t from-indigo-700 to-transparent opacity-40"></div>
+                                            <div
+                                                class="absolute inset-0 bg-gradient-to-t from-indigo-700 to-transparent opacity-40">
+                                            </div>
                                         </div>
                                         <div class="mt-3 text-center">
-                                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-white transition-colors">Modern Blue</span>
+                                            <span
+                                                class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-white transition-colors">Modern
+                                                Blue</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Niche: Health -->
-                            <div class="template-group <?php echo $niche === 'health' ? '' : 'hidden'; ?>" id="niche-health-container">
+                            <div class="template-group <?php echo $currentNiche === 'health' ? '' : 'hidden'; ?>"
+                                id="niche-health-container">
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="group relative glass-card p-3 rounded-2xl cursor-pointer border-2 transition-all overflow-hidden <?php echo $initialTemplate === 'health' ? 'border-primary ring-2 ring-primary/20' : 'border-white/5'; ?>"
                                         onclick="selectTemplate('health', this, 'health')">
-                                        <div class="aspect-[4/5] bg-rose-50 rounded-xl overflow-hidden p-4 space-y-2 relative">
+                                        <div
+                                            class="aspect-[4/5] bg-rose-50 rounded-xl overflow-hidden p-4 space-y-2 relative">
                                             <div class="bg-rose-500 h-3 w-2/3 rounded-full"></div>
                                             <div class="bg-rose-200 h-1.5 w-full rounded-full"></div>
                                             <div class="bg-rose-200 h-1.5 w-full rounded-full"></div>
                                             <div class="bg-rose-200 h-1.5 w-4/5 rounded-full"></div>
                                         </div>
                                         <div class="mt-3 text-center">
-                                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-white transition-colors">Rose Healthcare</span>
+                                            <span
+                                                class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-white transition-colors">Rose
+                                                Healthcare</span>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="group relative glass-card p-3 rounded-2xl cursor-pointer border-2 transition-all overflow-hidden <?php echo $initialTemplate === 'health_standard' ? 'border-primary ring-2 ring-primary/20' : 'border-white/5'; ?>"
                                         onclick="selectTemplate('health_standard', this, 'health')">
-                                        <div class="aspect-[4/5] bg-white rounded-xl overflow-hidden p-4 space-y-2 border border-slate-100 relative">
+                                        <div
+                                            class="aspect-[4/5] bg-white rounded-xl overflow-hidden p-4 space-y-2 border border-slate-100 relative">
                                             <div class="bg-emerald-600 h-3 w-2/3 rounded-full"></div>
                                             <div class="bg-slate-100 h-1.5 w-full rounded-full"></div>
                                             <div class="bg-slate-100 h-1.5 w-full rounded-full"></div>
                                             <div class="bg-slate-100 h-1.5 w-4/5 rounded-full"></div>
                                         </div>
                                         <div class="mt-3 text-center">
-                                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-white transition-colors">Standard Hospitalar</span>
+                                            <span
+                                                class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-white transition-colors">Standard
+                                                Hospitalar</span>
                                         </div>
                                     </div>
                                 </div>
@@ -269,7 +282,7 @@
                     </div>
 
                     <!-- Passo 3: Foto -->
-                    <div class="form-stephidden space-y-6" id="step3">
+                    <div class="form-step hidden space-y-6" id="step3">
                         <h2 class="text-2xl font-bold mb-6">Sua Foto</h2>
 
                         <div class="space-y-4">
