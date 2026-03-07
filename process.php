@@ -2,6 +2,7 @@
 require_once __DIR__ . '/vendor/autoload.php';
 
 use App\Config\Database;
+use App\Auth;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
@@ -75,8 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // 2. Insert Resume Main Info
-        if (session_status() === PHP_SESSION_NONE)
-            session_start();
+        Auth::init();
         $userId = $_SESSION['user_id'] ?? null;
         if (!is_numeric($userId))
             $userId = null;

@@ -4,6 +4,9 @@ require_once __DIR__ . '/vendor/autoload.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Config\Database;
+use App\Auth;
+
+Auth::requireLogin();
 
 $resumeId = $_GET['id'] ?? null;
 if (!$resumeId)
