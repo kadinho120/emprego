@@ -7,22 +7,58 @@
     <title>Meus Currículos - ApproveMax</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="public/assets/css/dashboard-desktop.css" media="screen and (min-width: 768px)">
-    <link rel="stylesheet" href="public/assets/css/dashboard-mobile.css" media="screen and (max-width: 767px)">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply bg-[#0f172a] text-slate-200 antialiased;
+            }
+        }
+        @layer components {
+            .glass-card {
+                @apply bg-slate-800/50 backdrop-blur-xl border border-white/10;
+            }
+            .btn-base {
+                @apply px-4 py-2 rounded-xl font-bold transition-all active:scale-[0.98] text-sm text-center;
+            }
+            .btn-primary {
+                @apply btn-base bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20;
+            }
+            .btn-outline {
+                @apply btn-base bg-slate-800/50 border border-white/10 hover:bg-slate-700/50 text-slate-200;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container">
-        <header class="header">
-            <div class="logo">ApproveMax</div>
-            <div style="display: flex; gap: 1rem;">
-                <a href="index.php" class="btn btn-outline">🏠 Home</a>
-                <a href="generator.php" class="btn btn-primary">Criar Novo Currículo</a>
-                <a href="logout.php" class="btn btn-outline" style="color: #f87171;">Sair</a>
+    <div class="max-w-7xl mx-auto px-4 py-6 md:py-10">
+        <header class="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
+            <div
+                class="text-2xl font-extrabold bg-gradient-to-r from-white to-indigo-400 bg-clip-text text-transparent">
+                ApproveMax</div>
+            <div class="flex flex-wrap justify-center gap-3">
+                <a href="index.php" class="btn-outline flex items-center gap-2">🏠 Home</a>
+                <a href="generator.php" class="btn-primary">Criar Novo Currículo</a>
+                <a href="logout.php" class="btn-outline text-red-400 border-red-500/20 hover:bg-red-500/10">Sair</a>
             </div>
         </header>
 
-        <h1 style="margin-bottom: 2rem; font-size: 2rem;">Meus Currículos</h1>
+        <h1 class="text-3xl md:text-4xl font-extrabold mb-8 text-center md:text-left">Meus Currículos</h1>
 
         <?php if (isset($_GET['success'])): ?>
             <div
@@ -39,50 +75,50 @@
         <?php endif; ?>
 
         <?php if (empty($resumes)): ?>
-            <div class="empty-state">
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Você ainda não gerou nenhum currículo.</p>
-                <a href="generator.php" class="btn btn-primary">Começar Agora</a>
+            <div class="glass-card rounded-[2rem] p-12 text-center">
+                <p class="text-slate-400 mb-8">Você ainda não gerou nenhum currículo.</p>
+                <a href="generator.php" class="btn-primary inline-block">Começar Agora</a>
             </div>
         <?php else: ?>
-            <div class="grid">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <?php foreach ($resumes as $resume): ?>
-                    <div class="resume-card">
-                        <div class="resume-info">
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                                <h3>
+                    <div class="glass-card p-6 rounded-3xl hover:border-indigo-500/30 transition-all flex flex-col">
+                        <div class="flex-grow mb-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-xl font-bold truncate pr-4">
                                     <?php echo htmlspecialchars($resume['full_name']); ?>
                                 </h3>
                                 <span
-                                    style="font-size: 0.75rem; color: var(--text-muted); background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;">
-                                    👁️
-                                    <?php echo (int) $resume['views']; ?>
+                                    class="text-xs font-bold text-slate-400 bg-slate-900/50 px-2 py-1 rounded-lg flex items-center gap-1 shrink-0">
+                                    👁️ <?php echo (int) $resume['views']; ?>
                                 </span>
                             </div>
-                            <p>
-                                <?php echo date('d/m/Y H:i', strtotime($resume['created_at'])); ?>
-                            </p>
-                            <p
-                                style="margin-top: 5px; color: var(--primary); font-weight: 600; text-transform: uppercase; font-size: 0.75rem;">
-                                <?php echo htmlspecialchars($resume['template_id']); ?>
-                            </p>
+                            <div class="flex flex-col gap-1">
+                                <p class="text-sm text-slate-400">
+                                    <?php echo date('d/m/Y H:i', strtotime($resume['created_at'])); ?>
+                                </p>
+                                <p class="text-xs font-bold text-indigo-400 uppercase tracking-wider">
+                                    <?php echo htmlspecialchars($resume['template_id']); ?>
+                                </p>
+                            </div>
                         </div>
-                        <div class="resume-actions">
-                            <a href="generate-pdf.php?id=<?php echo $resume['id']; ?>" target="_blank" class="btn btn-outline"
-                                style="background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.3);">PDF</a>
-                            <a href="export-word.php?id=<?php echo $resume['id']; ?>" class="btn btn-outline"
-                                style="border-color: rgba(96, 165, 250, 0.3); color: #60a5fa;">Word</a>
-                            <a href="#" onclick="openAtsModal(<?php echo $resume['id']; ?>)" class="btn btn-outline"
-                                style="border-color: rgba(245, 158, 11, 0.3); color: #f59e0b;">ATS</a>
+
+                        <div class="grid grid-cols-2 gap-2 mt-auto">
+                            <a href="generate-pdf.php?id=<?php echo $resume['id']; ?>" target="_blank"
+                                class="btn-outline bg-indigo-500/5 border-indigo-500/20 text-indigo-300">PDF</a>
+                            <a href="export-word.php?id=<?php echo $resume['id']; ?>"
+                                class="btn-outline bg-blue-500/5 border-blue-500/20 text-blue-300">Word</a>
+                            <a href="#" onclick="openAtsModal(<?php echo $resume['id']; ?>)"
+                                class="btn-outline bg-amber-500/5 border-amber-500/20 text-amber-300">ATS</a>
                             <a href="#"
                                 onclick="copyLink('<?php echo (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\') . '/cv.php?slug=' . $resume['slug']; ?>')"
-                                class="btn btn-outline" style="border-color: rgba(16, 185, 129, 0.2); color: #10b981;">Link</a>
-                            <a href="generator.php?id=<?php echo $resume['id']; ?>" class="btn btn-outline"
-                                style="border-color: var(--primary); color: var(--primary);">Editar</a>
-                            <a href="duplicate-resume.php?id=<?php echo $resume['id']; ?>" class="btn btn-outline">Duplicar</a>
+                                class="btn-outline bg-emerald-500/5 border-emerald-500/20 text-emerald-300">Link</a>
+                            <a href="generator.php?id=<?php echo $resume['id']; ?>"
+                                class="btn-outline border-indigo-500/40 text-indigo-400">Editar</a>
+                            <a href="duplicate-resume.php?id=<?php echo $resume['id']; ?>" class="btn-outline">Duplicar</a>
                             <a href="delete-resume.php?id=<?php echo $resume['id']; ?>"
                                 onclick="return confirm('Tem certeza que deseja excluir este currículo? Esta ação não pode ser desfeita.')"
-                                class="btn btn-outline"
-                                style="color: #f87171; border-color: rgba(248, 113, 113, 0.2); background: rgba(248, 113, 113, 0.05);">Excluir</a>
+                                class="btn-outline col-span-2 text-red-400 border-red-500/20 hover:bg-red-500/10">Excluir</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -90,31 +126,45 @@
         <?php endif; ?>
     </div>
 
-    <div id="atsModal" class="modal">
-        <div class="modal-content">
-            <h2 style="margin-bottom: 1rem; color: #f59e0b;">Análise de IA (ATS)</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Cole abaixo a descrição da
-                vaga para ver quão bem seu currículo se adapta aos requisitos.</p>
+    <div id="atsModal"
+        class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div class="glass-card p-8 md:p-10 rounded-[2.5rem] max-w-2xl w-full relative overflow-hidden">
+            <h2 class="text-2xl font-extrabold mb-4 text-amber-400">Análise de IA (ATS)</h2>
+            <p class="text-slate-400 text-sm mb-6">Cole abaixo a descrição da vaga para ver quão bem seu currículo se
+                adapta aos requisitos.</p>
 
             <input type="hidden" id="atsResumeId">
             <textarea id="jobDescription"
-                style="width: 100%; height: 150px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; padding: 1rem; margin-bottom: 1rem;"
+                class="w-full h-40 bg-slate-900/50 border border-white/10 rounded-2xl p-4 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all placeholder:text-slate-600 mb-6"
                 placeholder="Cole aqui a descrição da vaga..."></textarea>
 
-            <div style="display: flex; gap: 1rem;">
-                <button onclick="analyzeAts()" class="btn btn-primary" id="btnAnalyze"
-                    style="flex: 1; background: #f59e0b;">Analisar Agora</button>
-                <button onclick="closeAtsModal()" class="btn btn-outline" style="flex: 1;">Fechar</button>
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <button onclick="analyzeAts()" class="btn-primary bg-amber-600 hover:bg-amber-700 shadow-amber-500/20"
+                    id="btnAnalyze">Analisar Agora</button>
+                <button onclick="closeAtsModal()" class="btn-outline">Fechar</button>
             </div>
 
-            <div id="atsResult" class="ats-result">
-                <div class="score-badge" id="atsScore">0%</div>
-                <p style="font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 700;">Palavras-chave encontradas:</p>
-                <div id="atsMatches" style="margin-bottom: 1rem;"></div>
+            <div id="atsResult" class="hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div class="flex items-center gap-6 mb-6 p-4 glass-card rounded-2xl">
+                    <div class="w-20 h-20 rounded-full border-4 border-amber-500/30 flex items-center justify-center text-2xl font-black text-amber-400"
+                        id="atsScore">0%</div>
+                    <div>
+                        <p class="font-bold text-slate-200">Compatibilidade Geral</p>
+                        <p class="text-xs text-slate-400">Baseado em palavras-chave e requisitos.</p>
+                    </div>
+                </div>
 
-                <p style="font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 700; color: #f87171;">Palavras-chave
-                    ausentes (Dica: adicione-as!):</p>
-                <div id="atsMissing"></div>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-sm font-bold text-slate-200 mb-2">Palavras-chave encontradas:</p>
+                        <div id="atsMatches" class="flex flex-wrap gap-2 text-xs"></div>
+                    </div>
+
+                    <div>
+                        <p class="text-sm font-bold text-red-400 mb-2 font-black">Palavras-chave ausentes:</p>
+                        <div id="atsMissing" class="flex flex-wrap gap-2 text-xs"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
