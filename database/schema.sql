@@ -13,6 +13,8 @@ CREATE TABLE IF NOT EXISTS resumes (
     template_id VARCHAR(50) DEFAULT 'modern',
     full_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
+    primary_color VARCHAR(20) DEFAULT '#6366f1',
+    font_family VARCHAR(50) DEFAULT 'jakarta',
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     phone VARCHAR(50),
     city VARCHAR(100),

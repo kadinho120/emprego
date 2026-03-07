@@ -79,6 +79,10 @@ class Database
                 $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE CASCADE");
                 $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS slug VARCHAR(255) UNIQUE");
                 $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS views INTEGER DEFAULT 0");
+                $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS primary_color VARCHAR(20) DEFAULT '#6366f1'");
+                $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS font_family VARCHAR(50) DEFAULT 'jakarta'");
+                $this->conn->exec("ALTER TABLE experiences ADD COLUMN IF NOT EXISTS sort_order INTEGER DEFAULT 0");
+                $this->conn->exec("ALTER TABLE education ADD COLUMN IF NOT EXISTS sort_order INTEGER DEFAULT 0");
             } catch (PDOException $e) {
                 // Ignore migration errors (usually means columns already exist)
             }

@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $_POST['full_name']))) . '-' . uniqid();
 
-        $stmt = $db->prepare("INSERT INTO resumes (full_name, email, phone, city, state, photo_path, summary, template_id, user_id, slug) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $db->prepare("INSERT INTO resumes (full_name, email, phone, city, state, photo_path, summary, template_id, user_id, slug, primary_color, font_family) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $_POST['full_name'],
             $_POST['email'],
@@ -94,14 +94,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_POST['summary'],
             $_POST['template_id'],
             $userId,
-            $slug
+            $slug,
+            $_POST['primary_color'] ?? '#6366f1',
+            $_POST['font_family'] ?? 'jakarta'
         ]);
         $resumeId = $db->lastInsertId();
 
         // 2. Insert Experience
         if (!empty($_POST['experience'])) {
-            $stmtExp = $db->prepare("INSERT INTO experiences (resume_id, company, position, start_date, end_date, description) VALUES (?, ?, ?, ?, ?, ?)");
-            foreach ($_POST['experience'] as $exp) {
+            $stmtExp = $db->prepare("INSERT INTO experiences (resume_id, company, position, start_date, end_date, description, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            foreach ($_POST['experience'] as $index => $exp) {
                 if (!empty($exp['company'])) {
                     $stmtExp->execute([
                         $resumeId,
@@ -109,7 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $exp['position'],
                         $exp['start_date'],
                         $exp['end_date'],
-                        $exp['description']
+                        $exp['description'],
+                        $index
                     ]);
                 }
             }
@@ -117,14 +120,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // 3. Insert Education
         if (!empty($_POST['education'])) {
-            $stmtEdu = $db->prepare("INSERT INTO education (resume_id, institution, degree, graduation_date) VALUES (?, ?, ?, ?)");
-            foreach ($_POST['education'] as $edu) {
+            $stmtEdu = $db->prepare("INSERT INTO education (resume_id, institution, degree, graduation_date, sort_order) VALUES (?, ?, ?, ?, ?)");
+            foreach ($_POST['education'] as $index => $edu) {
                 if (!empty($edu['institution'])) {
                     $stmtEdu->execute([
                         $resumeId,
                         $edu['institution'],
                         $edu['degree'],
-                        $edu['graduation_date']
+                        $edu['graduation_date'],
+                        $index
                     ]);
                 }
             }

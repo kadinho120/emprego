@@ -34,46 +34,24 @@ try {
     }
 
     // 2. Duplicate Resume
-    $stmtInsert = $db->prepare("INSERT INTO resumes (template_id, full_name, email, user_id, phone, city, state, photo_path, linkedin, website, summary, slug) 
-                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id");
-
     $newSlug = ($original['slug'] ? $original['slug'] . '-copy-' . time() : null);
-
-    $stmtInsert->execute([
-        $original['template_id'],
-        $original['full_name'] . ' (Cópia)',
-        $original['email'],
-        $userId,
-        $original['phone'],
-        $original['city'],
-        $original['state'],
-        $original['photo_path'],
-        $original['linkedin'],
-        $original['website'],
-        $original['summary'],
-        $newSlug
-    ]);
+    $stmtInsert = $db->prepare("INSERT INTO resumes (template_id, full_name, email, user_id, phone, city, state, photo_path, linkedin, website, summary, slug, primary_color, font_family)
+                                SELECT template_id, CONCAT(full_name, ' (Cópia)'), email, ?, phone, city, state, photo_path, linkedin, website, summary, ?, primary_color, font_family
+                                FROM resumes WHERE id = ? RETURNING id");
+    $stmtInsert->execute([$userId, $newSlug, $resumeId]);
     $newId = $stmtInsert->fetchColumn();
 
     // 3. Duplicate Experiences
-    $stmtExp = $db->prepare("SELECT * FROM experiences WHERE resume_id = ?");
-    $stmtExp->execute([$resumeId]);
-    $experiences = $stmtExp->fetchAll();
-
-    $stmtInsertExp = $db->prepare("INSERT INTO experiences (resume_id, company, position, start_date, end_date, description, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    foreach ($experiences as $exp) {
-        $stmtInsertExp->execute([$newId, $exp['company'], $exp['position'], $exp['start_date'], $exp['end_date'], $exp['description'], $exp['sort_order']]);
-    }
+    $stmtExp = $db->prepare("INSERT INTO experiences (resume_id, company, position, start_date, end_date, description, sort_order)
+                             SELECT ?, company, position, start_date, end_date, description, sort_order
+                             FROM experiences WHERE resume_id = ?");
+    $stmtExp->execute([$newId, $resumeId]);
 
     // 4. Duplicate Education
-    $stmtEdu = $db->prepare("SELECT * FROM education WHERE resume_id = ?");
-    $stmtEdu->execute([$resumeId]);
-    $education = $stmtEdu->fetchAll();
-
-    $stmtInsertEdu = $db->prepare("INSERT INTO education (resume_id, institution, degree, field_of_study, graduation_date, sort_order) VALUES (?, ?, ?, ?, ?, ?)");
-    foreach ($education as $edu) {
-        $stmtInsertEdu->execute([$newId, $edu['institution'], $edu['degree'], $edu['field_of_study'], $edu['graduation_date'], $edu['sort_order']]);
-    }
+    $stmtEdu = $db->prepare("INSERT INTO education (resume_id, institution, degree, field_of_study, graduation_date, sort_order)
+                             SELECT ?, institution, degree, field_of_study, graduation_date, sort_order
+                             FROM education WHERE resume_id = ?");
+    $stmtEdu->execute([$newId, $resumeId]);
 
     // 5. Duplicate Skills
     $stmtSkills = $db->prepare("SELECT * FROM skills WHERE resume_id = ?");

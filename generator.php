@@ -14,6 +14,7 @@ Auth::requireLogin();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <style>
         :root {
             --primary: #6366f1;
@@ -39,9 +40,53 @@ Auth::requireLogin();
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-container {
+                display: none;
+            }
+        }
+
+        .preview-container {
+            position: sticky;
+            top: 2rem;
+            background: white;
+            border-radius: 24px;
+            height: calc(100vh - 4rem);
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .preview-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .drag-handle {
+            cursor: move;
+            color: var(--text-muted);
+            margin-right: 10px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .sortable-ghost {
+            opacity: 0.4;
+            background: var(--primary) !important;
         }
 
         .form-card {
@@ -353,6 +398,7 @@ Auth::requireLogin();
                     Conta</a>
             <?php endif; ?>
         </div>
+        <div class="form-wrapper">
         <div class="form-card">
             <div style="display: flex; justify-content: center; margin-bottom: 2rem;">
                 <div class="logo"
@@ -454,6 +500,13 @@ Auth::requireLogin();
                     <h2 style="margin-bottom: 1.5rem;">Experiência Profissional</h2>
                     <div id="experienceContainer">
                         <div class="dynamic-field">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div class="drag-handle">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 8h16M4 16h16" />
+                                    </svg>
+                                </div>
+                            </div>
                             <label>Empresa</label>
                             <input type="text" name="experience[0][company]">
                             <span class="field-tip">Nome da empresa ou hospital onde trabalhou.</span>
@@ -501,6 +554,13 @@ Auth::requireLogin();
                     <h2 style="margin-bottom: 1.5rem;">Educação</h2>
                     <div id="educationContainer">
                         <div class="dynamic-field">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div class="drag-handle">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 8h16M4 16h16" />
+                                    </svg>
+                                </div>
+                            </div>
                             <label>Instituição</label>
                             <input type="text" name="education[0][institution]" required>
                             <span class="field-tip">Escola, Faculdade ou Centro Tecnológico.</span>
@@ -552,6 +612,22 @@ Auth::requireLogin();
                         <?php endif; ?>
                     </select>
                     <span class="field-tip">Escolha o modelo que mais combina com sua área de atuação.</span>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                        <div>
+                            <label>Cor Principal</label>
+                            <input type="color" name="primary_color" value="#6366f1" style="height: 50px; padding: 5px;">
+                        </div>
+                        <div>
+                            <label>Fonte</label>
+                            <select name="font_family">
+                                <option value="jakarta">Plus Jakarta Sans</option>
+                                <option value="inter">Inter</option>
+                                <option value="roboto">Roboto</option>
+                                <option value="outfit">Outfit</option>
+                            </select>
+                        </div>
+                    </div>
 
                     <div class="btn-group">
                         <button type="button" class="btn-prev" onclick="nextStep(4)">Anterior</button>
@@ -725,7 +801,14 @@ Auth::requireLogin();
             const container = document.getElementById('experienceContainer');
             const html = `
             <div class="dynamic-field">
-                <button type="button" class="btn-remove" onclick="removeField(this)">Remover</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div class="drag-handle">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 8h16M4 16h16" />
+                        </svg>
+                    </div>
+                    <button type="button" class="btn-remove" onclick="removeField(this)">Remover</button>
+                </div>
                 <label>Empresa</label>
                 <input type="text" name="experience[${expCount}][company]">
                 <span class="field-tip">Nome da empresa ou hospital onde trabalhou.</span>
@@ -763,7 +846,14 @@ Auth::requireLogin();
             const container = document.getElementById('educationContainer');
             const html = `
             <div class="dynamic-field">
-                <button type="button" class="btn-remove" onclick="removeField(this)">Remover</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div class="drag-handle">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 8h16M4 16h16" />
+                        </svg>
+                    </div>
+                    <button type="button" class="btn-remove" onclick="removeField(this)">Remover</button>
+                </div>
                 <label>Instituição</label>
                 <input type="text" name="education[${eduCount}][institution]" required>
                 <span class="field-tip">Escola, Faculdade ou Centro Tecnológico.</span>
@@ -806,6 +896,49 @@ Auth::requireLogin();
             });
         }
 
+        // Live Preview Logic
+        const form = document.getElementById('resumeForm');
+        const previewIframe = document.getElementById('previewIframe');
+
+        function updatePreview() {
+            const formData = new FormData(form);
+            fetch('live-preview-api.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(html => {
+                const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
+                doc.open();
+                doc.write(html);
+                doc.close();
+            })
+            .catch(err => console.error('Preview error:', err));
+        }
+
+        // Debounce preview updates
+        let timeout = null;
+        form.addEventListener('input', () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(updatePreview, 1000);
+        });
+
+        // Initial preview
+        setTimeout(updatePreview, 500);
+
+        // SortableJS initialization
+        function initSortable(id) {
+            new Sortable(document.getElementById(id), {
+                animation: 150,
+                handle: '.drag-handle',
+                ghostClass: 'sortable-ghost',
+                onEnd: updatePreview
+            });
+        }
+
+        initSortable('experienceContainer');
+        initSortable('educationContainer');
+
         // Photo Preview
         document.getElementById('photoInput').addEventListener('change', function (e) {
             const file = e.target.files[0];
@@ -819,6 +952,7 @@ Auth::requireLogin();
                     document.getElementById('photoPreview').style.display = 'block';
                     btnText.textContent = 'Foto selecionada: ' + file.name;
                     btn.style.borderColor = 'var(--primary)';
+                    updatePreview(); // Update preview with new photo (base64 if handled or placeholder)
                 };
                 reader.readAsDataURL(file);
             }
@@ -826,6 +960,11 @@ Auth::requireLogin();
 
         applyDateMasks();
     </script>
+
+    <div class="preview-container">
+        <iframe id="previewIframe" class="preview-iframe"></iframe>
+    </div>
+    </div> <!-- .form-wrapper -->
 
 </body>
 

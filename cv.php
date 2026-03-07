@@ -32,11 +32,11 @@ try {
     $db->prepare("UPDATE resumes SET views = views + 1 WHERE id = ?")->execute([$resume['id']]);
 
     // Fetch related data
-    $stmtExp = $db->prepare("SELECT * FROM experiences WHERE resume_id = ? ORDER BY sort_order ASC, id DESC");
+    $stmtExp = $db->prepare("SELECT * FROM experiences WHERE resume_id = ? ORDER BY sort_order ASC, id ASC");
     $stmtExp->execute([$resume['id']]);
     $experiences = $stmtExp->fetchAll();
 
-    $stmtEdu = $db->prepare("SELECT * FROM education WHERE resume_id = ? ORDER BY sort_order ASC, id DESC");
+    $stmtEdu = $db->prepare("SELECT * FROM education WHERE resume_id = ? ORDER BY sort_order ASC, id ASC");
     $stmtEdu->execute([$resume['id']]);
     $education = $stmtEdu->fetchAll();
 
