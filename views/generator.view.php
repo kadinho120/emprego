@@ -174,6 +174,37 @@
                                                 Blue</span>
                                         </div>
                                     </div>
+                                    <div class="group relative glass-card p-3 rounded-2xl cursor-pointer border-2 transition-all overflow-hidden <?php echo $initialTemplate === 'tech_minimal' ? 'border-primary ring-2 ring-primary/20' : 'border-white/5'; ?>"
+                                        onclick="selectTemplate('tech_minimal', this, 'tech')">
+                                        <div
+                                            class="aspect-[4/5] bg-white rounded-xl overflow-hidden p-4 space-y-2 border border-slate-100 relative">
+                                            <div class="bg-slate-900 h-3 w-2/3 rounded-full"></div>
+                                            <div class="bg-slate-100 h-1.5 w-full rounded-full"></div>
+                                            <div class="bg-slate-100 h-1.5 w-full rounded-full"></div>
+                                            <div class="bg-slate-100 h-1.5 w-4/5 rounded-full"></div>
+                                        </div>
+                                        <div class="mt-3 text-center">
+                                            <span
+                                                class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-white transition-colors">Minimal
+                                                B&W</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="group relative glass-card p-3 rounded-2xl cursor-pointer border-2 transition-all overflow-hidden <?php echo $initialTemplate === 'tech_creative' ? 'border-primary ring-2 ring-primary/20' : 'border-white/5'; ?>"
+                                        onclick="selectTemplate('tech_creative', this, 'tech')">
+                                        <div
+                                            class="aspect-[4/5] bg-slate-950 rounded-xl overflow-hidden p-4 space-y-2 border-l-4 border-amber-500 relative">
+                                            <div class="bg-amber-500 h-3 w-2/3 rounded-full"></div>
+                                            <div class="bg-white/10 h-1.5 w-full rounded-full"></div>
+                                            <div class="bg-white/10 h-1.5 w-full rounded-full"></div>
+                                            <div class="bg-white/10 h-1.5 w-4/5 rounded-full"></div>
+                                        </div>
+                                        <div class="mt-3 text-center">
+                                            <span
+                                                class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-white transition-colors">Creative
+                                                Amber</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -197,19 +228,52 @@
                                         </div>
                                     </div>
 
-                                    <div class="group relative glass-card p-3 rounded-2xl cursor-pointer border-2 transition-all overflow-hidden <?php echo $initialTemplate === 'health_standard' ? 'border-primary ring-2 ring-primary/20' : 'border-white/5'; ?>"
-                                        onclick="selectTemplate('health_standard', this, 'health')">
+                                    <div class="group relative glass-card p-3 rounded-2xl cursor-pointer border-2 transition-all overflow-hidden <?php echo $initialTemplate === 'health_professional' ? 'border-primary ring-2 ring-primary/20' : 'border-white/5'; ?>"
+                                        onclick="selectTemplate('health_professional', this, 'health')">
                                         <div
-                                            class="aspect-[4/5] bg-white rounded-xl overflow-hidden p-4 space-y-2 border border-slate-100 relative">
-                                            <div class="bg-emerald-600 h-3 w-2/3 rounded-full"></div>
-                                            <div class="bg-slate-100 h-1.5 w-full rounded-full"></div>
-                                            <div class="bg-slate-100 h-1.5 w-full rounded-full"></div>
-                                            <div class="bg-slate-100 h-1.5 w-4/5 rounded-full"></div>
+                                            class="aspect-[4/5] bg-blue-900 rounded-xl overflow-hidden p-4 space-y-2 relative">
+                                            <div class="bg-white h-3 w-2/3 rounded-full"></div>
+                                            <div class="bg-white/20 h-1.5 w-full rounded-full"></div>
+                                            <div class="bg-white/20 h-1.5 w-full rounded-full"></div>
+                                            <div class="bg-white/20 h-1.5 w-4/5 rounded-full"></div>
                                         </div>
                                         <div class="mt-3 text-center">
                                             <span
-                                                class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-white transition-colors">Standard
-                                                Hospitalar</span>
+                                                class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-white transition-colors">Blue
+                                                Professional</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="group relative glass-card p-3 rounded-2xl cursor-pointer border-2 transition-all overflow-hidden <?php echo $initialTemplate === 'health_clean' ? 'border-primary ring-2 ring-primary/20' : 'border-white/5'; ?>"
+                                        onclick="selectTemplate('health_clean', this, 'health')">
+                                        <div
+                                            class="aspect-[4/5] bg-white rounded-xl overflow-hidden p-4 space-y-2 border border-emerald-100 relative text-center">
+                                            <div class="w-12 h-12 bg-emerald-500 rounded-full mx-auto mb-2 opacity-20">
+                                            </div>
+                                            <div class="bg-emerald-600 h-3 w-2/3 mx-auto rounded-full"></div>
+                                            <div class="bg-slate-100 h-1.5 w-full rounded-full"></div>
+                                            <div class="bg-slate-100 h-1.5 w-full rounded-full"></div>
+                                        </div>
+                                        <div class="mt-3 text-center">
+                                            <span
+                                                class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-white transition-colors">Emerald
+                                                Clean</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="group relative glass-card p-3 rounded-2xl cursor-pointer border-2 transition-all overflow-hidden <?php echo $initialTemplate === 'health_executive' ? 'border-primary ring-2 ring-primary/20' : 'border-white/5'; ?>"
+                                        onclick="selectTemplate('health_executive', this, 'health')">
+                                        <div
+                                            class="aspect-[4/5] bg-slate-50 rounded-xl overflow-hidden p-4 space-y-2 border-t-8 border-slate-900 relative">
+                                            <div class="bg-slate-900 h-3 w-2/3 mx-auto rounded-full"></div>
+                                            <div class="bg-slate-200 h-1.5 w-full rounded-full"></div>
+                                            <div class="bg-slate-200 h-1.5 w-full rounded-full"></div>
+                                            <div class="bg-slate-200 h-1.5 w-4/5 rounded-full"></div>
+                                        </div>
+                                        <div class="mt-3 text-center">
+                                            <span
+                                                class="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-white transition-colors">Executive
+                                                Slate</span>
                                         </div>
                                     </div>
                                 </div>
