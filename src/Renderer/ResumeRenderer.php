@@ -90,9 +90,56 @@ class ResumeRenderer
                 .item-header { margin-bottom: 3px; overflow: hidden; }
                 .item-desc { margin-top: 3px; text-align: justify; }
                 .section-title { page-break-after: avoid; }
+
+                /* Floating Action Button (FAB) */
+                .fab-container {
+                    position: fixed;
+                    bottom: 30px;
+                    right: 30px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    z-index: 1000;
+                }
+                .fab-btn {
+                    background-color: " . ($primaryColor ?? '#4f46e5') . ";
+                    color: white;
+                    padding: 12px 24px;
+                    border-radius: 50px;
+                    text-decoration: none;
+                    font-weight: 600;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    transition: transform 0.2s, background-color 0.2s;
+                }
+                .fab-btn:hover {
+                    transform: translateY(-2px);
+                    filter: brightness(1.1);
+                }
+                .fab-btn svg { width: 20px; height: 20px; }
+
+                @media print {
+                    .fab-container { display: none; }
+                }
+                body.is-iframe .fab-container,
+                body.is-pdf .fab-container {
+                    display: none;
+                }
             </style>
         </head>
         <body class='" . ($isPdf ? 'is-pdf' : (isset($_GET['iframe']) ? 'is-iframe' : '')) . "' style='margin: 0; padding: 0;'>
+            " . (!$isPdf && !isset($_GET['iframe']) && !empty($resume['id']) ? "
+            <div class='fab-container'>
+                <a href='generate-pdf.php?id={$resume['id']}' class='fab-btn'>
+                    <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='currentColor'>
+                        <path stroke-linecap='round' stroke-linejoin='round' d='M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3' />
+                    </svg>
+                    Baixar PDF
+                </a>
+            </div>
+            " : "") . "
             <div class='resume-page'>
                 <div class='header'>
                 " . (!empty($resume['photo_path']) ? (
