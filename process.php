@@ -78,6 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (session_status() === PHP_SESSION_NONE)
             session_start();
         $userId = $_SESSION['user_id'] ?? null;
+        if (!is_numeric($userId))
+            $userId = null;
 
         $stmt = $db->prepare("INSERT INTO resumes (full_name, email, phone, city, state, photo_path, summary, template_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([

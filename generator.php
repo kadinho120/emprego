@@ -212,6 +212,60 @@ Auth::requireLogin();
             display: block;
         }
 
+        /* Custom File Upload */
+        .file-upload-wrapper {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .file-upload-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 2rem;
+            background: rgba(15, 23, 42, 0.4);
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .file-upload-btn:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .file-upload-btn svg {
+            width: 32px;
+            height: 32px;
+            color: var(--primary);
+            opacity: 0.8;
+        }
+
+        .file-upload-btn span {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .file-upload-btn small {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        #photoInput {
+            position: absolute;
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+
         /* Suggestion Styles */
         .suggestion-header {
             display: flex;
@@ -368,10 +422,21 @@ Auth::requireLogin();
                 <!-- Passo 2: Foto -->
                 <div class="form-step" id="step2">
                     <h2 style="margin-bottom: 1.5rem;">Sua Foto</h2>
-                    <label>Foto (Opcional)</label>
-                    <input type="file" name="photo" id="photoInput" accept="image/*">
-                    <span class="field-tip">A foto será cortada automaticamente para 3:4. Prefira fotos com fundo neutro
-                        e boa iluminação.</span>
+                    <label>Sua Melhor Foto (Opcional)</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" name="photo" id="photoInput" accept="image/*">
+                        <label for="photoInput" class="file-upload-btn" id="uploadBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+                            </svg>
+                            <span>Clique para selecionar uma foto</span>
+                            <small>Sua foto será cortada automaticamente para 3:4</small>
+                        </label>
+                    </div>
 
                     <div id="photoPreview" style="margin-top: 1rem; display: none;">
                         <img id="previewImg" src=""
@@ -744,12 +809,17 @@ Auth::requireLogin();
         // Photo Preview
         document.getElementById('photoInput').addEventListener('change', function (e) {
             const file = e.target.files[0];
+            const btn = document.getElementById('uploadBtn');
+            const btnText = btn.querySelector('span');
+
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function (e) {
-                    document.getElementById('previewImg').src = e.target.result;
+                reader.onload = function (event) {
+                    document.getElementById('previewImg').src = event.target.result;
                     document.getElementById('photoPreview').style.display = 'block';
-                }
+                    btnText.textContent = 'Foto selecionada: ' + file.name;
+                    btn.style.borderColor = 'var(--primary)';
+                };
                 reader.readAsDataURL(file);
             }
         });
