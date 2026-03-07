@@ -1023,13 +1023,26 @@ Auth::requireLogin();
                 if (file) {
                     const reader = new FileReader();
                     reader.onload = function (event) {
-                        const base64 = event.target.result;
-                        document.getElementById('previewImg').src = base64;
-                        document.getElementById('photoBase64').value = base64;
-                        document.getElementById('photoPreview').style.display = 'block';
-                        btnText.textContent = 'Foto selecionada: ' + file.name;
-                        btn.style.borderColor = 'var(--primary)';
-                        triggerUpdate();
+                        const img = new Image();
+                        img.onload = function () {
+                            const canvas = document.createElement('canvas');
+                            const MAX_WIDTH = 400; // Sufficient for resume photo
+                            const scale = MAX_WIDTH / img.width;
+                            canvas.width = MAX_WIDTH;
+                            canvas.height = img.height * scale;
+
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                            const base64 = canvas.toDataURL('image/jpeg', 0.7);
+                            document.getElementById('previewImg').src = base64;
+                            document.getElementById('photoBase64').value = base64;
+                            document.getElementById('photoPreview').style.display = 'block';
+                            btnText.textContent = 'Foto selecionada: ' + file.name;
+                            btn.style.borderColor = 'var(--primary)';
+                            triggerUpdate();
+                        };
+                        img.src = event.target.result;
                     };
                     reader.readAsDataURL(file);
                 }

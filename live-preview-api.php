@@ -2,8 +2,9 @@
 require_once __DIR__ . '/vendor/autoload.php';
 use App\Renderer\ResumeRenderer;
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    die("Apenas POST permitido.");
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST)) {
+    // If post is empty (likely due to payload size limit), don't render or show warnings
+    exit;
 }
 
 // Convert POST data into the format expected by the renderer
@@ -17,7 +18,7 @@ $resume = [
     'template_id' => $_POST['template_id'] ?? 'tech',
     'primary_color' => $_POST['primary_color'] ?? null,
     'font_family' => $_POST['font_family'] ?? 'jakarta',
-    'photo_path' => $_POST['photo_base64'] ?: ($_POST['photo_path'] ?? null)
+    'photo_path' => !empty($_POST['photo_base64']) ? $_POST['photo_base64'] : ($_POST['photo_path'] ?? null)
 ];
 
 $experiences = [];
