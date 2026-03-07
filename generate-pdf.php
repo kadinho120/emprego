@@ -16,8 +16,12 @@ try {
     $db = Database::getInstance();
 
     // Fetch Resume Data with ownership check
+    $currentUserId = $_SESSION['user_id'] ?? 0;
+    if (!is_numeric($currentUserId))
+        $currentUserId = 0; // Fallback for 'admin' string
+
     $stmt = $db->prepare("SELECT * FROM resumes WHERE id = ? AND (user_id = ? OR 'admin' = ?)");
-    $stmt->execute([$resumeId, $_SESSION['user_id'] ?? 0, $_SESSION['user_role'] ?? '']);
+    $stmt->execute([$resumeId, $currentUserId, $_SESSION['user_role'] ?? '']);
     $resume = $stmt->fetch();
 
     if (!$resume)
