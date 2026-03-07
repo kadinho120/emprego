@@ -17,7 +17,7 @@ $resume = [
     'template_id' => $_POST['template_id'] ?? 'tech',
     'primary_color' => $_POST['primary_color'] ?? null,
     'font_family' => $_POST['font_family'] ?? 'jakarta',
-    'photo_path' => $_POST['photo_path'] ?? null
+    'photo_path' => $_POST['photo_base64'] ?: ($_POST['photo_path'] ?? null)
 ];
 
 $experiences = [];

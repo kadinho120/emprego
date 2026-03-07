@@ -472,6 +472,7 @@ Auth::requireLogin();
                         <h2 style="margin-bottom: 1.5rem;">Sua Foto</h2>
                         <label>Sua Melhor Foto (Opcional)</label>
                         <div class="file-upload-wrapper">
+                            <input type="hidden" name="photo_base64" id="photoBase64">
                             <input type="file" name="photo" id="photoInput" accept="image/*">
                             <label for="photoInput" class="file-upload-btn" id="uploadBtn">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -774,6 +775,7 @@ Auth::requireLogin();
                     div.onclick = () => {
                         currentTargetField.value = text;
                         closeSuggestions();
+                        triggerUpdate(); // Sync preview immediately
                     };
                     list.appendChild(div);
                 });
@@ -1002,11 +1004,13 @@ Auth::requireLogin();
                 if (file) {
                     const reader = new FileReader();
                     reader.onload = function (event) {
-                        document.getElementById('previewImg').src = event.target.result;
+                        const base64 = event.target.result;
+                        document.getElementById('previewImg').src = base64;
+                        document.getElementById('photoBase64').value = base64;
                         document.getElementById('photoPreview').style.display = 'block';
                         btnText.textContent = 'Foto selecionada: ' + file.name;
                         btn.style.borderColor = 'var(--primary)';
-                        updatePreview(); // Update preview with new photo (base64 if handled or placeholder)
+                        triggerUpdate();
                     };
                     reader.readAsDataURL(file);
                 }

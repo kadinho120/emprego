@@ -64,11 +64,17 @@ class ResumeRenderer
         </head>
         <body style='margin: 0; padding: 0;'>
             <div class='header'>
-                " . (!empty($resume['photo_path']) && file_exists(__DIR__ . "/../../" . $resume['photo_path']) ? "
-                <div class='photo-container'>
-                    <img src='data:image/" . pathinfo($resume['photo_path'], PATHINFO_EXTENSION) . ";base64," . base64_encode(file_get_contents(__DIR__ . "/../../" . $resume['photo_path'])) . "' class='photo'>
-                </div>
-                " : "") . "
+                " . (!empty($resume['photo_path']) ? (
+                strpos($resume['photo_path'], 'data:') === 0 ? "
+                    <div class='photo-container'>
+                        <img src='{$resume['photo_path']}' class='photo'>
+                    </div>
+                    " : (file_exists(__DIR__ . "/../../" . $resume['photo_path']) ? "
+                    <div class='photo-container'>
+                        <img src='data:image/" . pathinfo($resume['photo_path'], PATHINFO_EXTENSION) . ";base64," . base64_encode(file_get_contents(__DIR__ . "/../../" . $resume['photo_path'])) . "' class='photo'>
+                    </div>
+                    " : "")
+            ) : "") . "
                 <div class='header-text'>
                     <div class='name'>{$resume['full_name']}</div>
                     <div class='contact'>
