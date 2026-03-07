@@ -385,8 +385,8 @@ function updatePreview() {
                 if (newDoc.title) doc.title = newDoc.title;
 
                 // Sync to mobile preview if open
-                const mobileModal = document.getElementById('mobilePreviewModal');
-                if (mobileModal && !mobileModal.classList.contains('hidden')) {
+                const mobileModalEl = document.getElementById('mobilePreviewModal');
+                if (mobileModalEl && !mobileModalEl.classList.contains('hidden')) {
                     syncMobilePreview();
                 }
             }
