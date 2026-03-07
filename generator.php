@@ -936,9 +936,30 @@ Auth::requireLogin();
                     .then(response => response.text())
                     .then(html => {
                         const doc = previewIframe.contentDocument || previewIframe.contentWindow.document;
-                        doc.open();
-                        doc.write(html);
-                        doc.close();
+                        const parser = new DOMParser();
+                        const newDoc = parser.parseFromString(html, 'text/html');
+
+                        if (!doc.body || !doc.head.innerHTML.trim()) {
+                            // First load
+                            doc.open();
+                            doc.write(html);
+                            doc.close();
+                        } else {
+                            // Update body
+                            doc.body.innerHTML = newDoc.body.innerHTML;
+                            doc.body.className = newDoc.body.className;
+                            doc.body.style.cssText = newDoc.body.style.cssText;
+
+                            // Update styles
+                            const newStyle = newDoc.querySelector('style');
+                            const oldStyle = doc.querySelector('style');
+                            if (newStyle && oldStyle) {
+                                oldStyle.textContent = newStyle.textContent;
+                            }
+
+                            // Update title if needed
+                            if (newDoc.title) doc.title = newDoc.title;
+                        }
                     })
                     .catch(err => {
                         if (err.name === 'AbortError') return;
@@ -950,7 +971,7 @@ Auth::requireLogin();
             let timeout = null;
             const triggerUpdate = () => {
                 clearTimeout(timeout);
-                timeout = setTimeout(updatePreview, 400);
+                timeout = setTimeout(updatePreview, 500);
             };
 
             form.addEventListener('input', triggerUpdate);
