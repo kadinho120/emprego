@@ -450,12 +450,16 @@ require_once __DIR__ . '/vendor/autoload.php';
                     <label>Modelo do Currículo</label>
                     <select name="template_id" required>
                         <?php if (isset($_GET['niche']) && $_GET['niche'] === 'tech'): ?>
-                            <option value="tech">TI & Desenvolvimento (Sénior/Fullstack)</option>
+                            <option value="tech">Dark Mode (Original)</option>
+                            <option value="tech_modern">Modern Blue Gradient</option>
+                            <option value="tech_minimal">Minimalist Professional</option>
                         <?php elseif (isset($_GET['niche']) && $_GET['niche'] === 'health'): ?>
-                            <option value="health">Saúde (Enfermeiros/Técnicos)</option>
+                            <option value="health">Teal Basic (Original)</option>
+                            <option value="health_professional">Healthcare Leader (Deep Teal)</option>
+                            <option value="health_clean">Clean Medical (Minimalist)</option>
                         <?php else: ?>
-                            <option value="tech">TI & Desenvolvimento (Sénior/Fullstack)</option>
-                            <option value="health">Saúde (Enfermeiros/Técnicos)</option>
+                            <option value="tech">TI - Dark Mode</option>
+                            <option value="health">Saúde - Teal Basic</option>
                         <?php endif; ?>
                     </select>
                     <span class="field-tip">Escolha o modelo que mais combina com sua área de atuação.</span>
