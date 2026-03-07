@@ -272,6 +272,9 @@ $resumes = $stmt->fetchAll();
                                 class="btn btn-outline"
                                 style="flex: 1 1 30%; text-align: center; border-color: rgba(16, 185, 129, 0.2); color: #10b981;">🔗
                                 Link</a>
+                            <a href="generator.php?id=<?php echo $resume['id']; ?>" class="btn btn-outline"
+                                style="flex: 1 1 30%; text-align: center; border-color: var(--primary); color: var(--primary);">✏️
+                                Editar</a>
                             <a href="duplicate-resume.php?id=<?php echo $resume['id']; ?>" class="btn btn-outline"
                                 style="flex: 1 1 30%; text-align: center;">👯 Duplicar</a>
                             <a href="delete-resume.php?id=<?php echo $resume['id']; ?>"

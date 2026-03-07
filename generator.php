@@ -1,7 +1,59 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 use App\Auth;
+use App\Config\Database;
+
 Auth::requireLogin();
+Auth::init();
+
+$db = Database::getInstance();
+$userId = $_SESSION['user_id'];
+$userRole = $_SESSION['user_role'] ?? 'user';
+
+$resumeData = null;
+$experiencesData = [];
+$educationData = [];
+$skillsData = "";
+
+if (isset($_GET['id'])) {
+    $resumeId = (int) $_GET['id'];
+
+    if ($userRole === 'admin') {
+        $stmt = $db->prepare("SELECT * FROM resumes WHERE id = ?");
+        $stmt->execute([$resumeId]);
+    } else {
+        $stmt = $db->prepare("SELECT * FROM resumes WHERE id = ? AND user_id = ?");
+        $stmt->execute([$resumeId, $userId]);
+    }
+
+    $resumeData = $stmt->fetch();
+
+    if ($resumeData) {
+        $stmt = $db->prepare("SELECT * FROM experiences WHERE resume_id = ? ORDER BY sort_order ASC, id ASC");
+        $stmt->execute([$resumeId]);
+        $experiencesData = $stmt->fetchAll();
+        if (empty($experiencesData))
+            $experiencesData = [[]]; // At least one for the form
+
+        $stmt = $db->prepare("SELECT * FROM education WHERE resume_id = ? ORDER BY sort_order ASC, id ASC");
+        $stmt->execute([$resumeId]);
+        $educationData = $stmt->fetchAll();
+        if (empty($educationData))
+            $educationData = [[]]; // At least one for the form
+
+        $stmt = $db->prepare("SELECT * FROM skills WHERE resume_id = ?");
+        $stmt->execute([$resumeId]);
+        $skillsList = $stmt->fetchAll();
+        $skillsData = implode(', ', array_column($skillsList, 'skill_name'));
+    }
+}
+
+if (!$resumeData) {
+    $experiencesData = [[]];
+    $educationData = [[]];
+}
+
+$initialTemplate = $resumeData['template_id'] ?? ((isset($_GET['niche']) && $_GET['niche'] === 'tech') ? 'tech' : ((isset($_GET['niche']) && $_GET['niche'] === 'health') ? 'health' : 'tech'));
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -500,20 +552,27 @@ Auth::requireLogin();
                 </div>
 
                 <form id="resumeForm" action="process.php" method="POST" enctype="multipart/form-data">
+                    <?php if ($resumeData): ?>
+                        <input type="hidden" name="resume_id" value="<?php echo $resumeData['id']; ?>">
+                    <?php endif; ?>
                     <!-- Passo 1: Seleção de Modelo -->
                     <div class="form-step active" id="step1">
                         <h2 style="margin-bottom: 0.5rem;">Escolha seu Modelo</h2>
-                        <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">Selecione o layout que
+                        <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">Selecione o layout
+                            que
                             mais combina com seu perfil profissional.</p>
 
-                        <input type="hidden" name="template_id" id="templateInput" value="<?php echo (isset($_GET['niche']) && $_GET['niche'] === 'tech') ? 'tech' : ((isset($_GET['niche']) && $_GET['niche'] === 'health') ? 'health' : 'tech'); ?>" required>
+                        <input type="hidden" name="template_id" id="templateInput"
+                            value="<?php echo htmlspecialchars($initialTemplate); ?>" required>
 
                         <div class="template-grid">
                             <?php if (isset($_GET['niche']) && $_GET['niche'] === 'tech'): ?>
-                                <div class="template-card selected" onclick="selectTemplate('tech', this)">
+                                <div class="template-card <?php echo $initialTemplate === 'tech' ? 'selected' : ''; ?>"
+                                    onclick="selectTemplate('tech', this)">
                                     <div class="selected-badge">✓</div>
                                     <div class="template-preview">
-                                        <div style="background: #0f172a; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 10px; gap: 5px;">
+                                        <div
+                                            style="background: #0f172a; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 10px; gap: 5px;">
                                             <div style="background: var(--primary); height: 20px; width: 60%;"></div>
                                             <div style="background: #1e293b; height: 10px; width: 100%;"></div>
                                             <div style="background: #1e293b; height: 10px; width: 100%;"></div>
@@ -526,9 +585,11 @@ Auth::requireLogin();
                                 <div class="template-card" onclick="selectTemplate('tech_modern', this)">
                                     <div class="selected-badge">✓</div>
                                     <div class="template-preview">
-                                        <div style="background: #4f46e5; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 10px; gap: 5px;">
+                                        <div
+                                            style="background: #4f46e5; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 10px; gap: 5px;">
                                             <div style="background: white; height: 20px; width: 60%;"></div>
-                                            <div style="background: rgba(255,255,255,0.2); height: 10px; width: 100%;"></div>
+                                            <div style="background: rgba(255,255,255,0.2); height: 10px; width: 100%;">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="template-info">
@@ -538,7 +599,8 @@ Auth::requireLogin();
                                 <div class="template-card" onclick="selectTemplate('tech_minimal', this)">
                                     <div class="selected-badge">✓</div>
                                     <div class="template-preview">
-                                        <div style="background: white; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 10px; border: 1px solid #ddd; gap: 5px;">
+                                        <div
+                                            style="background: white; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 10px; border: 1px solid #ddd; gap: 5px;">
                                             <div style="background: #111827; height: 15px; width: 70%;"></div>
                                             <div style="background: #eee; height: 8px; width: 100%;"></div>
                                         </div>
@@ -548,16 +610,20 @@ Auth::requireLogin();
                                     </div>
                                 </div>
                             <?php elseif (isset($_GET['niche']) && $_GET['niche'] === 'health'): ?>
-                                <div class="template-card selected" onclick="selectTemplate('health', this)">
+                                <div class="template-card <?php echo $initialTemplate === 'health' ? 'selected' : ''; ?>"
+                                    onclick="selectTemplate('health', this)">
                                     <div class="selected-badge">✓</div>
                                     <div class="template-preview">
-                                        <div style="background: #f0fdfa; width: 100%; height: 100%; display: flex; flex-direction: column; border-bottom: 5px solid #0d9488;"></div>
+                                        <div
+                                            style="background: #f0fdfa; width: 100%; height: 100%; display: flex; flex-direction: column; border-bottom: 5px solid #0d9488;">
+                                        </div>
                                     </div>
                                     <div class="template-info">
                                         <div class="template-name">Health - Teal Basic</div>
                                     </div>
                                 </div>
-                                <div class="template-card" onclick="selectTemplate('health_professional', this)">
+                                <div class="template-card <?php echo $initialTemplate === 'health_professional' ? 'selected' : ''; ?>"
+                                    onclick="selectTemplate('health_professional', this)">
                                     <div class="selected-badge">✓</div>
                                     <div class="template-preview">
                                         <div style="background: #1e3a8a; width: 100%; height: 100%;"></div>
@@ -566,10 +632,13 @@ Auth::requireLogin();
                                         <div class="template-name">Healthcare Leader</div>
                                     </div>
                                 </div>
-                                <div class="template-card" onclick="selectTemplate('health_clean', this)">
+                                <div class="template-card <?php echo $initialTemplate === 'health_clean' ? 'selected' : ''; ?>"
+                                    onclick="selectTemplate('health_clean', this)">
                                     <div class="selected-badge">✓</div>
                                     <div class="template-preview">
-                                        <div style="background: white; width: 100%; height: 100%; border-bottom: 1px solid #eee;"></div>
+                                        <div
+                                            style="background: white; width: 100%; height: 100%; border-bottom: 1px solid #eee;">
+                                        </div>
                                     </div>
                                     <div class="template-info">
                                         <div class="template-name">Clean Medical</div>
@@ -588,7 +657,9 @@ Auth::requireLogin();
                                 <div class="template-card" onclick="selectTemplate('health', this)">
                                     <div class="selected-badge">✓</div>
                                     <div class="template-preview">
-                                        <div style="background: #f0fdfa; width: 100%; height: 100%; border-bottom: 5px solid #0d9488;"></div>
+                                        <div
+                                            style="background: #f0fdfa; width: 100%; height: 100%; border-bottom: 5px solid #0d9488;">
+                                        </div>
                                     </div>
                                     <div class="template-info">
                                         <div class="template-name">Saúde - Teal Basic</div>
@@ -607,7 +678,8 @@ Auth::requireLogin();
                     <div class="form-step" id="step2">
                         <h2 style="margin-bottom: 1.5rem;">Dados Pessoais</h2>
                         <label>Nome Completo</label>
-                        <input type="text" name="full_name" required placeholder="João Silva">
+                        <input type="text" name="full_name" required placeholder="João Silva"
+                            value="<?php echo htmlspecialchars($resumeData['full_name'] ?? ''); ?>">
                         <span class="field-tip">Use seu nome completo e oficial. Evite apelidos.</span>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
@@ -620,7 +692,7 @@ Auth::requireLogin();
                             <div>
                                 <label>Telefone</label>
                                 <input type="text" name="phone" id="phone" placeholder="(11) 99999-9999" maxlength="15"
-                                    required>
+                                    required value="<?php echo htmlspecialchars($resumeData['phone'] ?? ''); ?>">
                                 <span class="field-tip">Coloque seu número principal com o DDD.</span>
                             </div>
                         </div>
@@ -628,12 +700,14 @@ Auth::requireLogin();
                         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
                             <div>
                                 <label>Cidade</label>
-                                <input type="text" name="city" placeholder="São Paulo" required>
+                                <input type="text" name="city" placeholder="São Paulo" required
+                                    value="<?php echo htmlspecialchars($resumeData['city'] ?? ''); ?>">
                                 <span class="field-tip">Onde você mora atualmente?</span>
                             </div>
                             <div>
                                 <label>Estado (UF)</label>
-                                <input type="text" name="state" placeholder="SP" required>
+                                <input type="text" name="state" placeholder="SP" required
+                                    value="<?php echo htmlspecialchars($resumeData['state'] ?? ''); ?>">
                                 <span class="field-tip">Ex: SP, RJ, ES...</span>
                             </div>
                         </div>
@@ -645,7 +719,7 @@ Auth::requireLogin();
                                 Sugestões</button>
                         </div>
                         <textarea name="summary" rows="4" placeholder="Fale um pouco sobre sua carreira..."
-                            required></textarea>
+                            required><?php echo htmlspecialchars($resumeData['summary'] ?? ''); ?></textarea>
                         <span class="field-tip">Escreva 3 ou 4 linhas sobre sua carreira e seu maior diferencial. Isso é
                             a
                             primeira coisa que o contratante lê.</span>
@@ -663,21 +737,24 @@ Auth::requireLogin();
                         <div class="file-upload-wrapper">
                             <input type="hidden" name="photo_base64" id="photoBase64">
                             <input type="file" name="photo" id="photoInput" accept="image/*">
-                            <label for="photoInput" class="file-upload-btn" id="uploadBtn">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
-                                </svg>
-                                <span>Clique para selecionar uma foto</span>
-                                <small>Sua foto será cortada automaticamente para 3:4</small>
-                            </label>
+                            <input type="hidden" name="photo_base64" id="photoBase64">
+                            <button type="button" class="btn-upload" id="uploadBtn" <?php echo ($resumeData && $resumeData['photo_path']) ? 'style="border-color: var(--primary);"' : ''; ?>>
+                                📸
+                                <span><?php echo ($resumeData && $resumeData['photo_path']) ? 'Trocar Foto' : 'Escolher Foto'; ?></span>
+                            </button>
                         </div>
+                        <input type="hidden" name="photo_path"
+                            value="<?php echo htmlspecialchars($resumeData['photo_path'] ?? ''); ?>">
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 1rem;">
+                            Dica: Uma foto profissional aumenta suas chances em 70%.
+                        </p>
 
-                        <div id="photoPreview" style="margin-top: 1rem; display: none;">
-                            <img id="previewImg" src=""
+                        <div id="photoPreview"
+                            style="display: <?php echo ($resumeData && $resumeData['photo_path']) ? 'block' : 'none'; ?>; margin-top: 1.5rem; text-align: center;">
+                            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.5rem;">
+                                Visualização:</p>
+                            <img id="previewImg"
+                                src="<?php echo ($resumeData && $resumeData['photo_path']) ? $resumeData['photo_path'] : ''; ?>"
                                 style="width: 150px; height: 200px; object-fit: cover; border-radius: 12px; border: 2px solid var(--primary);">
                         </div>
 
@@ -691,50 +768,61 @@ Auth::requireLogin();
                     <div class="form-step" id="step4">
                         <h2 style="margin-bottom: 1.5rem;">Experiência Profissional</h2>
                         <div id="experienceContainer">
-                            <div class="dynamic-field">
-                                <div
-                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                                    <div class="drag-handle">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2">
-                                            <path d="M4 8h16M4 16h16" />
-                                        </svg>
+                            <?php foreach ($experiencesData as $index => $exp): ?>
+                                <div class="dynamic-field">
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                        <div class="drag-handle">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M4 8h16M4 16h16" />
+                                            </svg>
+                                        </div>
+                                        <?php if ($index > 0): ?>
+                                            <button type="button" class="btn-remove"
+                                                onclick="removeField(this)">Remover</button>
+                                        <?php endif; ?>
                                     </div>
-                                </div>
-                                <label>Empresa</label>
-                                <input type="text" name="experience[0][company]">
-                                <span class="field-tip">Nome da empresa ou hospital onde trabalhou.</span>
+                                    <label>Empresa</label>
+                                    <input type="text" name="experience[<?php echo $index; ?>][company]"
+                                        value="<?php echo htmlspecialchars($exp['company'] ?? ''); ?>">
+                                    <span class="field-tip">Nome da empresa ou hospital onde trabalhou.</span>
 
-                                <label>Cargo</label>
-                                <input type="text" name="experience[0][position]">
-                                <span class="field-tip">Seu título oficial (Ex: Enfermeiro Obstetra, Desenvolvedor
-                                    Backend).</span>
+                                    <label>Cargo</label>
+                                    <input type="text" name="experience[<?php echo $index; ?>][position]"
+                                        value="<?php echo htmlspecialchars($exp['position'] ?? ''); ?>">
+                                    <span class="field-tip">Seu título oficial (Ex: Enfermeiro Obstetra, Desenvolvedor
+                                        Backend).</span>
 
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                                    <div>
-                                        <label>Início</label>
-                                        <input type="text" name="experience[0][start_date]" class="date-mask"
-                                            placeholder="MM/AAAA" maxlength="7">
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                        <div>
+                                            <label>Início</label>
+                                            <input type="text" name="experience[<?php echo $index; ?>][start_date]"
+                                                class="date-mask" placeholder="MM/AAAA" maxlength="7"
+                                                value="<?php echo htmlspecialchars($exp['start_date'] ?? ''); ?>">
+                                        </div>
+                                        <div>
+                                            <label>Fim</label>
+                                            <input type="text" name="experience[<?php echo $index; ?>][end_date]"
+                                                class="date-mask" placeholder="Atual" maxlength="7"
+                                                value="<?php echo htmlspecialchars($exp['end_date'] ?? ''); ?>">
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label>Fim</label>
-                                        <input type="text" name="experience[0][end_date]" class="date-mask"
-                                            placeholder="Atual" maxlength="7">
-                                    </div>
-                                </div>
-                                <span class="field-tip">Use o formato Mês/Ano (Ex: 05/2020). Se ainda trabalhar lá,
-                                    escreva
-                                    "Atual" no campo Fim.</span>
+                                    <span class="field-tip">Use o formato Mês/Ano (Ex: 05/2020). Se ainda trabalhar lá,
+                                        escreva
+                                        "Atual" no campo Fim.</span>
 
-                                <div class="suggestion-header">
-                                    <label style="margin-bottom: 0;">Descrição</label>
-                                    <button type="button" class="btn-suggestion"
-                                        onclick="openSuggestions('experience', this)">✨ Ver Sugestões</button>
+                                    <div class="suggestion-header">
+                                        <label style="margin-bottom: 0;">Descrição</label>
+                                        <button type="button" class="btn-suggestion"
+                                            onclick="openSuggestions('experience', this)">✨ Ver Sugestões</button>
+                                    </div>
+                                    <textarea name="experience[<?php echo $index; ?>][description]"
+                                        rows="3"><?php echo htmlspecialchars($exp['description'] ?? ''); ?></textarea>
+                                    <span class="field-tip">O que você fazia no dia a dia? Cite 2 ou 3 tarefas
+                                        importantes.</span>
                                 </div>
-                                <textarea name="experience[0][description]" rows="3"></textarea>
-                                <span class="field-tip">O que você fazia no dia a dia? Cite 2 ou 3 tarefas importantes.
-                                    Dica: Use palavras como "Realizei", "Fui responsável por", "Liderei".</span>
-                            </div>
+                            <?php endforeach; ?>
                         </div>
                         <button type="button" class="add-more" onclick="addExperience()">+ Adicionar
                             Experiência</button>
@@ -749,33 +837,43 @@ Auth::requireLogin();
                     <div class="form-step" id="step5">
                         <h2 style="margin-bottom: 1.5rem;">Educação</h2>
                         <div id="educationContainer">
-                            <div class="dynamic-field">
-                                <div
-                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                                    <div class="drag-handle">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2">
-                                            <path d="M4 8h16M4 16h16" />
-                                        </svg>
+                            <?php foreach ($educationData as $index => $edu): ?>
+                                <div class="dynamic-field">
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                        <div class="drag-handle">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M4 8h16M4 16h16" />
+                                            </svg>
+                                        </div>
+                                        <?php if ($index > 0): ?>
+                                            <button type="button" class="btn-remove"
+                                                onclick="removeField(this)">Remover</button>
+                                        <?php endif; ?>
                                     </div>
+                                    <label>Instituição</label>
+                                    <input type="text" name="education[<?php echo $index; ?>][institution]" required
+                                        value="<?php echo htmlspecialchars($edu['institution'] ?? ''); ?>">
+                                    <span class="field-tip">Escola, Faculdade ou Centro Tecnológico.</span>
+
+                                    <label>Curso/Grau</label>
+                                    <input type="text" name="education[<?php echo $index; ?>][degree]" required
+                                        value="<?php echo htmlspecialchars($edu['degree'] ?? ''); ?>">
+                                    <span class="field-tip">Ex: Graduação, Técnico, MBA, Ensino Médio...</span>
+
+                                    <label>Área de Estudo</label>
+                                    <input type="text" name="education[<?php echo $index; ?>][field_of_study]" required
+                                        value="<?php echo htmlspecialchars($edu['field_of_study'] ?? ''); ?>">
+                                    <span class="field-tip">Ex: Enfermagem, Ciência da Computação, Administração...</span>
+
+                                    <label>Conclusão</label>
+                                    <input type="text" name="education[<?php echo $index; ?>][graduation_date]"
+                                        class="date-mask" placeholder="MM/AAAA" maxlength="7" required
+                                        value="<?php echo htmlspecialchars($edu['graduation_date'] ?? ''); ?>">
+                                    <span class="field-tip">Data em que se formou ou previsão de formatura.</span>
                                 </div>
-                                <label>Instituição</label>
-                                <input type="text" name="education[0][institution]" required>
-                                <span class="field-tip">Escola, Faculdade ou Centro Tecnológico.</span>
-
-                                <label>Curso/Grau</label>
-                                <input type="text" name="education[0][degree]" required>
-                                <span class="field-tip">Ex: Graduação, Técnico, MBA, Ensino Médio...</span>
-
-                                <label>Área de Estudo</label>
-                                <input type="text" name="education[0][field_of_study]" required>
-                                <span class="field-tip">Ex: Enfermagem, Ciência da Computação, Administração...</span>
-
-                                <label>Conclusão</label>
-                                <input type="text" name="education[0][graduation_date]" class="date-mask"
-                                    placeholder="MM/AAAA" maxlength="7" required>
-                                <span class="field-tip">Data em que se formou ou previsão de formatura.</span>
-                            </div>
+                            <?php endforeach; ?>
                         </div>
                         <button type="button" class="add-more" onclick="addEducation()">+ Adicionar Formação</button>
 
@@ -793,7 +891,8 @@ Auth::requireLogin();
                             <button type="button" class="btn-suggestion" onclick="openSuggestions('skills', this)">✨ Ver
                                 Sugestões</button>
                         </div>
-                        <input type="text" name="skills" placeholder="PHP, PostgreSQL, Docker, UX Design" required>
+                        <input type="text" name="skills" placeholder="PHP, PostgreSQL, Docker, UX Design" required
+                            value="<?php echo htmlspecialchars($skillsData); ?>">
                         <span class="field-tip">Liste ferramentas, tecnologias ou competências que você domina. Ex:
                             Excel
                             Avançado, Punção Venosa, Java, Liderança de Equipe...</span>
@@ -801,16 +900,17 @@ Auth::requireLogin();
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
                             <div>
                                 <label>Cor Principal</label>
-                                <input type="color" name="primary_color" value="#6366f1"
+                                <input type="color" name="primary_color"
+                                    value="<?php echo htmlspecialchars($resumeData['primary_color'] ?? '#6366f1'); ?>"
                                     style="height: 50px; padding: 5px;">
                             </div>
                             <div>
                                 <label>Fonte</label>
                                 <select name="font_family">
-                                    <option value="jakarta">Plus Jakarta Sans</option>
-                                    <option value="inter">Inter</option>
-                                    <option value="roboto">Roboto</option>
-                                    <option value="outfit">Outfit</option>
+                                    <option value="jakarta" <?php echo ($resumeData && ($resumeData['font_family'] ?? '') === 'jakarta') ? 'selected' : ''; ?>>Plus Jakarta Sans</option>
+                                    <option value="inter" <?php echo ($resumeData && ($resumeData['font_family'] ?? '') === 'inter') ? 'selected' : ''; ?>>Inter</option>
+                                    <option value="roboto" <?php echo ($resumeData && ($resumeData['font_family'] ?? '') === 'roboto') ? 'selected' : ''; ?>>Roboto</option>
+                                    <option value="outfit" <?php echo ($resumeData && ($resumeData['font_family'] ?? '') === 'outfit') ? 'selected' : ''; ?>>Outfit</option>
                                 </select>
                             </div>
                         </div>
@@ -973,17 +1073,17 @@ Auth::requireLogin();
                 document.getElementById('suggestionModal').style.display = 'none';
             }
 
-            let expCount = 1;
-            let eduCount = 1;
+            let expCount = <?php echo count($experiencesData); ?>;
+            let eduCount = <?php echo count($educationData); ?>;
 
             function selectTemplate(id, el) {
                 // Update hidden input
                 document.getElementById('templateInput').value = id;
-                
+
                 // Update UI state
                 document.querySelectorAll('.template-card').forEach(card => card.classList.remove('selected'));
                 el.classList.add('selected');
-                
+
                 // Sync preview immediately
                 triggerUpdate();
             }

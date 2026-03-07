@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $db->beginTransaction();
 
         // 1. Handle Photo Upload
-        $photoPath = null;
+        $photoPath = $_POST['photo_path'] ?? null;
         if (!empty($_FILES['photo']['name'])) {
             $uploadDir = __DIR__ . '/uploads/';
             if (!is_dir($uploadDir)) {
@@ -75,35 +75,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // 2. Insert Resume Main Info
+        // 2. Insert/Update Resume Main Info
         Auth::init();
         $userId = $_SESSION['user_id'] ?? null;
+        $userRole = $_SESSION['user_role'] ?? 'user';
         if (!is_numeric($userId))
             $userId = null;
 
-        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $_POST['full_name']))) . '-' . uniqid();
+        $resumeId = $_POST['resume_id'] ?? null;
 
-        $stmt = $db->prepare("INSERT INTO resumes (full_name, email, phone, city, state, photo_path, summary, template_id, user_id, slug, primary_color, font_family) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $_POST['full_name'],
-            $_POST['email'],
-            $_POST['phone'],
-            $_POST['city'],
-            $_POST['state'],
-            $photoPath,
-            $_POST['summary'],
-            $_POST['template_id'],
-            $userId,
-            $slug,
-            $_POST['primary_color'] ?? '#6366f1',
-            $_POST['font_family'] ?? 'jakarta'
-        ]);
-        $resumeId = $db->lastInsertId();
+        if ($resumeId) {
+            // Verify ownership
+            if ($userRole !== 'admin') {
+                $stmtVerify = $db->prepare("SELECT id FROM resumes WHERE id = ? AND user_id = ?");
+                $stmtVerify->execute([$resumeId, $userId]);
+                if (!$stmtVerify->fetch()) {
+                    throw new Exception("Acesso negado.");
+                }
+            }
+
+            // Update Resume
+            $stmt = $db->prepare("UPDATE resumes SET full_name = ?, email = ?, phone = ?, city = ?, state = ?, photo_path = ?, summary = ?, template_id = ?, primary_color = ?, font_family = ? WHERE id = ?");
+            $stmt->execute([
+                $_POST['full_name'],
+                $_POST['email'],
+                $_POST['phone'],
+                $_POST['city'],
+                $_POST['state'],
+                $photoPath,
+                $_POST['summary'],
+                $_POST['template_id'],
+                $_POST['primary_color'] ?? '#6366f1',
+                $_POST['font_family'] ?? 'jakarta',
+                $resumeId
+            ]);
+
+            // Clear sub-records (we re-insert them below)
+            $stmtDelExp = $db->prepare("DELETE FROM experiences WHERE resume_id = ?");
+            $stmtDelExp->execute([$resumeId]);
+
+            $stmtDelEdu = $db->prepare("DELETE FROM education WHERE resume_id = ?");
+            $stmtDelEdu->execute([$resumeId]);
+
+            $stmtDelSkills = $db->prepare("DELETE FROM skills WHERE resume_id = ?");
+            $stmtDelSkills->execute([$resumeId]);
+        } else {
+            // New Resume
+            $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $_POST['full_name']))) . '-' . uniqid();
+
+            $stmt = $db->prepare("INSERT INTO resumes (full_name, email, phone, city, state, photo_path, summary, template_id, user_id, slug, primary_color, font_family) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([
+                $_POST['full_name'],
+                $_POST['email'],
+                $_POST['phone'],
+                $_POST['city'],
+                $_POST['state'],
+                $photoPath,
+                $_POST['summary'],
+                $_POST['template_id'],
+                $userId,
+                $slug,
+                $_POST['primary_color'] ?? '#6366f1',
+                $_POST['font_family'] ?? 'jakarta'
+            ]);
+            $resumeId = $db->lastInsertId();
+        }
 
         // 2. Insert Experience
         if (!empty($_POST['experience'])) {
             $stmtExp = $db->prepare("INSERT INTO experiences (resume_id, company, position, start_date, end_date, description, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            foreach ($_POST['experience'] as $index => $exp) {
+            $expOrder = 0;
+            foreach ($_POST['experience'] as $exp) {
                 if (!empty($exp['company'])) {
                     $stmtExp->execute([
                         $resumeId,
@@ -112,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $exp['start_date'],
                         $exp['end_date'],
                         $exp['description'],
-                        $index
+                        $expOrder++
                     ]);
                 }
             }
@@ -121,7 +163,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 3. Insert Education
         if (!empty($_POST['education'])) {
             $stmtEdu = $db->prepare("INSERT INTO education (resume_id, institution, degree, field_of_study, graduation_date, sort_order) VALUES (?, ?, ?, ?, ?, ?)");
-            foreach ($_POST['education'] as $index => $edu) {
+            $eduOrder = 0;
+            foreach ($_POST['education'] as $edu) {
                 if (!empty($edu['institution'])) {
                     $stmtEdu->execute([
                         $resumeId,
@@ -129,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $edu['degree'],
                         $edu['field_of_study'] ?? '',
                         $edu['graduation_date'],
-                        $index
+                        $eduOrder++
                     ]);
                 }
             }
