@@ -61,15 +61,24 @@ class Database
         if (file_exists($schemaPath)) {
             $sql = file_get_contents($schemaPath);
             try {
+                // Execute schema.sql (contains multiple statements)
                 $this->conn->exec($sql);
+            } catch (PDOException $e) {
+                // If it fails (e.g. part of it already exists), we continue to migrations
+            }
 
-                // Migrations: Add city and state if they don't exist
+            try {
+                // Specific migrations for existing databases
                 $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS city VARCHAR(100)");
                 $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS state VARCHAR(50)");
                 $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS photo_path VARCHAR(255)");
+
+                // Ensure users table exists before adding FK
+                $this->conn->exec("CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, email VARCHAR(255) UNIQUE NOT NULL, password_hash VARCHAR(255), role VARCHAR(20) DEFAULT 'user', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
+
                 $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE CASCADE");
             } catch (PDOException $e) {
-                // Ignore errors
+                // Ignore migration errors (usually means columns already exist)
             }
         }
     }

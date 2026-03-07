@@ -1,3 +1,12 @@
+-- Users Table (Must be first for Foreign Keys)
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255),
+    role VARCHAR(20) DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Resumes Table
 CREATE TABLE IF NOT EXISTS resumes (
     id SERIAL PRIMARY KEY,
@@ -44,13 +53,4 @@ CREATE TABLE IF NOT EXISTS skills (
     resume_id INTEGER REFERENCES resumes(id) ON DELETE CASCADE,
     skill_name VARCHAR(255) NOT NULL,
     category VARCHAR(100)
-);
-
--- Users Table
-CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255),
-    role VARCHAR(20) DEFAULT 'user',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
