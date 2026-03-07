@@ -14,11 +14,6 @@
 
     .logo {
         font-size: 1.2rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, var(--primary), var(--accent));
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
     }
 
     .hero {
@@ -132,6 +127,10 @@
     .niche-card {
         padding: 1.5rem;
         border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
 
     .niche-icon {

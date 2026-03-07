@@ -62,8 +62,16 @@
     }
 
     .template-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 1.5rem;
+    }
+
+    .template-item {
+        border-radius: 16px;
+        background: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1rem;
     }
 
     .btn-group {

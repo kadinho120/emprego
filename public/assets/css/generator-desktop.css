@@ -138,17 +138,15 @@
         transition: all 0.3s;
     }
 
-    input:focus,
-    textarea:focus {
-        border-color: var(--primary);
-        outline: none;
-        background: rgba(255, 255, 255, 0.05);
-    }
-
     .btn-group {
         display: flex;
         justify-content: space-between;
         margin-top: 2rem;
+    }
+
+    .btn-next,
+    .btn-prev {
+        width: auto;
     }
 
     .btn-next,
