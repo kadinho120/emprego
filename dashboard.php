@@ -162,6 +162,20 @@ $resumes = $stmt->fetchAll();
 
         <h1 style="margin-bottom: 2rem; font-size: 2rem;">Meus Currículos</h1>
 
+        <?php if (isset($_GET['success'])): ?>
+            <div
+                style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); color: #4ade80; padding: 1rem; border-radius: 12px; margin-bottom: 2rem; font-size: 0.9rem;">
+                <?php echo htmlspecialchars($_GET['success']); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['error'])): ?>
+            <div
+                style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #f87171; padding: 1rem; border-radius: 12px; margin-bottom: 2rem; font-size: 0.9rem;">
+                <?php echo htmlspecialchars($_GET['error']); ?>
+            </div>
+        <?php endif; ?>
+
         <?php if (empty($resumes)): ?>
             <div class="empty-state">
                 <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Você ainda não gerou nenhum currículo.</p>
@@ -186,6 +200,10 @@ $resumes = $stmt->fetchAll();
                         <div class="resume-actions">
                             <a href="generate-pdf.php?id=<?php echo $resume['id']; ?>" target="_blank" class="btn btn-outline"
                                 style="flex: 1; text-align: center;">Visualizar PDF</a>
+                            <a href="delete-resume.php?id=<?php echo $resume['id']; ?>"
+                                onclick="return confirm('Tem certeza que deseja excluir este currículo? Esta ação não pode ser desfeita.')"
+                                class="btn btn-outline"
+                                style="color: #f87171; border-color: rgba(248, 113, 113, 0.2); background: rgba(248, 113, 113, 0.05);">Excluir</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
