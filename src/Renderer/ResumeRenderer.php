@@ -30,13 +30,14 @@ class ResumeRenderer
 
         $eduHtml = '';
         foreach ($education as $edu) {
+            $study = !empty($edu['field_of_study']) ? " - " . $edu['field_of_study'] : "";
             $eduHtml .= "
             <div class='section-item'>
                 <div class='item-header'>
                     <span class='company'>{$edu['institution']}</span>
                     <span class='date'>{$edu['graduation_date']}</span>
                 </div>
-                <div class='item-sub'>{$edu['degree']}</div>
+                <div class='item-sub'>{$edu['degree']}{$study}</div>
             </div>";
         }
 

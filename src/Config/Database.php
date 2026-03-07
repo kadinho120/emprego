@@ -83,6 +83,8 @@ class Database
                 $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS font_family VARCHAR(50) DEFAULT 'jakarta'");
                 $this->conn->exec("ALTER TABLE experiences ADD COLUMN IF NOT EXISTS sort_order INTEGER DEFAULT 0");
                 $this->conn->exec("ALTER TABLE education ADD COLUMN IF NOT EXISTS sort_order INTEGER DEFAULT 0");
+                $this->conn->exec("ALTER TABLE education ADD COLUMN IF NOT EXISTS field_of_study VARCHAR(255)");
+                $this->conn->exec("ALTER TABLE skills ADD COLUMN IF NOT EXISTS category VARCHAR(100)");
             } catch (PDOException $e) {
                 // Ignore migration errors (usually means columns already exist)
             }

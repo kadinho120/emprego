@@ -65,6 +65,7 @@ try {
 
     header('Location: dashboard.php?success=Currículo duplicado com sucesso');
 } catch (Exception $e) {
-    header('Location: dashboard.php?error=Erro ao duplicar: ' . $e->getMessage());
+    $errorMsg = str_replace(["\r", "\n"], ' ', $e->getMessage());
+    header('Location: dashboard.php?error=Erro ao duplicar: ' . urlencode($errorMsg));
 }
 exit;
