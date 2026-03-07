@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS resumes (
     linkedin VARCHAR(255),
     website VARCHAR(255),
     summary TEXT,
+    slug VARCHAR(255) UNIQUE,
+    views INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

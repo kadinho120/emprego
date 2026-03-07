@@ -77,6 +77,8 @@ class Database
                 $this->conn->exec("CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, email VARCHAR(255) UNIQUE NOT NULL, password_hash VARCHAR(255), role VARCHAR(20) DEFAULT 'user', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
 
                 $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE CASCADE");
+                $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS slug VARCHAR(255) UNIQUE");
+                $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS views INTEGER DEFAULT 0");
             } catch (PDOException $e) {
                 // Ignore migration errors (usually means columns already exist)
             }

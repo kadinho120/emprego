@@ -187,9 +187,13 @@ $resumes = $stmt->fetchAll();
                 <?php foreach ($resumes as $resume): ?>
                     <div class="resume-card">
                         <div class="resume-info">
-                            <h3>
-                                <?php echo htmlspecialchars($resume['full_name']); ?>
-                            </h3>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <h3><?php echo htmlspecialchars($resume['full_name']); ?></h3>
+                                <span
+                                    style="font-size: 0.75rem; color: var(--text-muted); background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;">
+                                    👁️ <?php echo (int) $resume['views']; ?>
+                                </span>
+                            </div>
                             <p>
                                 <?php echo date('d/m/Y H:i', strtotime($resume['created_at'])); ?>
                             </p>
@@ -200,7 +204,13 @@ $resumes = $stmt->fetchAll();
                         </div>
                         <div class="resume-actions">
                             <a href="generate-pdf.php?id=<?php echo $resume['id']; ?>" target="_blank" class="btn btn-outline"
-                                style="flex: 1; text-align: center;">Visualizar PDF</a>
+                                style="flex: 1; text-align: center;">PDF</a>
+                            <a href="#"
+                                onclick="copyLink('<?php echo (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\') . '/cv.php?slug=' . $resume['slug']; ?>')"
+                                class="btn btn-outline"
+                                style="flex: 1; text-align: center; border-color: rgba(16, 185, 129, 0.2); color: #10b981;">Link</a>
+                            <a href="duplicate-resume.php?id=<?php echo $resume['id']; ?>" class="btn btn-outline"
+                                style="flex: 1; text-align: center;">Duplicar</a>
                             <a href="delete-resume.php?id=<?php echo $resume['id']; ?>"
                                 onclick="return confirm('Tem certeza que deseja excluir este currículo? Esta ação não pode ser desfeita.')"
                                 class="btn btn-outline"
@@ -211,6 +221,17 @@ $resumes = $stmt->fetchAll();
             </div>
         <?php endif; ?>
     </div>
+
+    <script>
+        function copyLink(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Link copiado para a área de transferência!');
+            }).catch(err => {
+                console.error('Erro ao copiar link: ', err);
+                alert('Erro ao copiar link. Tente copiar manualmente.');
+            });
+        }
+    </script>
 </body>
 
 </html>
