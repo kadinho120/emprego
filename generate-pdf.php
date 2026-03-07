@@ -59,7 +59,7 @@ $dompdf = new Dompdf($options);
 $fontSize = 11;
 $lineHeight = 1.35;
 
-$html = ResumeRenderer::render($resume, $experiences, $education, $skills, $fontSize, $lineHeight);
+$html = ResumeRenderer::render($resume, $experiences, $education, $skills, $fontSize, $lineHeight, true);
 $dompdf->loadHtml($html);
 $dompdf->setPaper('A4', 'portrait');
 $dompdf->render();

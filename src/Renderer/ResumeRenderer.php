@@ -4,7 +4,7 @@ namespace App\Renderer;
 
 class ResumeRenderer
 {
-    public static function render($resume, $experiences, $education, $skills, $fontSize = 11, $lineHeight = 1.35)
+    public static function render($resume, $experiences, $education, $skills, $fontSize = 11, $lineHeight = 1.35, $isPdf = false)
     {
         $template = $resume['template_id'] ?? 'modern';
         $primaryColor = $resume['primary_color'] ?? null;
@@ -68,10 +68,12 @@ class ResumeRenderer
                     padding: 1cm 1.5cm;
                     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
                 }
-                body.is-iframe .resume-page {
-                    margin: 0 auto;
+                body.is-iframe .resume-page,
+                body.is-pdf .resume-page {
+                    margin: 0;
                     box-shadow: none;
                     width: 100%;
+                    padding: 0;
                 }
                 @media print {
                     body { background: none; }
@@ -90,7 +92,7 @@ class ResumeRenderer
                 .section-title { page-break-after: avoid; }
             </style>
         </head>
-        <body class='" . (isset($_GET['iframe']) ? 'is-iframe' : '') . "' style='margin: 0; padding: 0;'>
+        <body class='" . ($isPdf ? 'is-pdf' : (isset($_GET['iframe']) ? 'is-iframe' : '')) . "' style='margin: 0; padding: 0;'>
             <div class='resume-page'>
                 <div class='header'>
                 " . (!empty($resume['photo_path']) ? (
