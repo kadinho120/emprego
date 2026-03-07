@@ -7,9 +7,9 @@
 
     .header {
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
+        flex-direction: column;
         align-items: center;
+        gap: 1rem;
         margin-bottom: 2rem;
     }
 
@@ -23,9 +23,19 @@
     }
 
     .header div[style*="display: flex"] {
-        flex-direction: row;
-        width: auto;
-        gap: 0.5rem;
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        gap: 0.5rem !important;
+    }
+
+    .header .btn {
+        flex: 1;
+        min-width: 80px;
+        padding: 0.5rem;
+        font-size: 0.7rem;
     }
 
     .btn {
@@ -60,15 +70,16 @@
     }
 
     .resume-actions {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0.5rem;
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 0.5rem !important;
     }
 
     .resume-actions .btn {
-        width: auto;
-        padding: 0.5rem 0.2rem;
-        font-size: 0.75rem;
+        width: 100% !important;
+        padding: 0.5rem 0.2rem !important;
+        font-size: 0.75rem !important;
+        margin: 0 !important;
     }
 
     .modal-content {
