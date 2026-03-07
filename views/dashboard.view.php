@@ -7,7 +7,8 @@
     <title>Meus Currículos - ApproveMax</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="public/assets/css/dashboard.css">
+    <link rel="stylesheet" href="public/assets/css/dashboard-desktop.css" media="screen and (min-width: 768px)">
+    <link rel="stylesheet" href="public/assets/css/dashboard-mobile.css" media="screen and (max-width: 767px)">
 </head>
 
 <body>

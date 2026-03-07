@@ -1,0 +1,89 @@
+@import 'common.css';
+
+@media (max-width: 767px) {
+    body {
+        padding: 1rem;
+    }
+
+    .header {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff, var(--primary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .header div[style*="display: flex"] {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.5rem !important;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 0.6rem;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+        font-size: 0.8rem;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: white;
+    }
+
+    .btn-outline {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-main);
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .resume-card {
+        padding: 1.25rem;
+        border-radius: 16px;
+    }
+
+    .resume-actions {
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+
+    .resume-actions .btn {
+        flex: 1 1 30%;
+        padding: 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .modal-content {
+        padding: 1.5rem;
+        width: 95%;
+        border-radius: 20px;
+    }
+
+    h1 {
+        font-size: 1.5rem !important;
+        margin-top: 1rem;
+        text-align: center;
+    }
+
+    .tag {
+        padding: 3px 8px;
+        font-size: 0.7rem;
+    }
+}

@@ -1,0 +1,24 @@
+:root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --bg: #0f172a;
+    --card-bg: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #10b981;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    overflow-x: hidden;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg);
+    color: var(--text-main);
+    line-height: 1.6;
+}

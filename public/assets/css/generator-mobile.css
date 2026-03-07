@@ -1,0 +1,140 @@
+@import 'common.css';
+
+@media (max-width: 767px) {
+    body {
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    .container {
+        display: block;
+        padding: 1rem;
+    }
+
+    .form-wrapper {
+        width: 100%;
+        padding: 0;
+    }
+
+    .preview-container {
+        display: none;
+        /* Preview hidden on mobile, use modal */
+    }
+
+    .form-card {
+        padding: 1.25rem;
+        border-radius: 16px;
+        margin-bottom: 4rem;
+    }
+
+    /* Step Indicator Mobile (Grid to avoid scroll) */
+    .step-indicator {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 0.5rem;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+        width: 100%;
+        position: relative;
+    }
+
+    .step-indicator::before {
+        display: none;
+    }
+
+    .step-dot {
+        flex-shrink: 0;
+        width: 30px;
+        height: 30px;
+        font-size: 0.75rem;
+        margin: 0 auto;
+        background: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .step-dot.active {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+
+    .template-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .btn-group {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .btn-next,
+    .btn-prev {
+        width: 100%;
+        text-align: center;
+        padding: 0.9rem;
+    }
+
+    /* Floating Preview Trigger */
+    .mobile-preview-trigger {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        background: var(--primary);
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+        z-index: 9999;
+        border: none;
+        font-size: 1.25rem;
+        cursor: pointer;
+    }
+
+    /* Mobile Preview Overlay */
+    .preview-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--bg);
+        z-index: 10000;
+        display: none;
+        flex-direction: column;
+    }
+
+    .preview-modal-header {
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--card-bg);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .preview-modal-content {
+        flex: 1;
+        overflow: hidden;
+        background: #f1f5f9;
+    }
+
+    .preview-modal .preview-iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    /* Suggestions List */
+    .suggestion-item {
+        padding: 0.75rem;
+        font-size: 0.85rem;
+    }
+}

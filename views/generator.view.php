@@ -9,7 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="public/assets/css/generator.css">
+    <link rel="stylesheet" href="public/assets/css/generator-desktop.css" media="screen and (min-width: 768px)">
+    <link rel="stylesheet" href="public/assets/css/generator-mobile.css" media="screen and (max-width: 767px)">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 </head>
 
