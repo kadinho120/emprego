@@ -921,12 +921,17 @@ Auth::requireLogin();
             // Live Preview Logic
             const form = document.getElementById('resumeForm');
             const previewIframe = document.getElementById('previewIframe');
+            let abortController = null;
 
             function updatePreview() {
+                if (abortController) abortController.abort();
+                abortController = new AbortController();
+
                 const formData = new FormData(form);
                 fetch('live-preview-api.php', {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    signal: abortController.signal
                 })
                     .then(response => response.text())
                     .then(html => {
@@ -935,18 +940,24 @@ Auth::requireLogin();
                         doc.write(html);
                         doc.close();
                     })
-                    .catch(err => console.error('Preview error:', err));
+                    .catch(err => {
+                        if (err.name === 'AbortError') return;
+                        console.error('Preview error:', err);
+                    });
             }
 
             // Debounce preview updates
             let timeout = null;
-            form.addEventListener('input', () => {
+            const triggerUpdate = () => {
                 clearTimeout(timeout);
-                timeout = setTimeout(updatePreview, 1000);
-            });
+                timeout = setTimeout(updatePreview, 400);
+            };
+
+            form.addEventListener('input', triggerUpdate);
+            form.addEventListener('change', triggerUpdate);
 
             // Initial preview
-            setTimeout(updatePreview, 500);
+            setTimeout(updatePreview, 300);
 
             // SortableJS initialization
             function initSortable(id) {
