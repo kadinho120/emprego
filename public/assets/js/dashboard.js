@@ -9,12 +9,15 @@ function copyLink(url) {
 
 function openAtsModal(id) {
     document.getElementById('atsResumeId').value = id;
-    document.getElementById('atsModal').style.display = 'flex';
-    document.getElementById('atsResult').style.display = 'none';
+    const modal = document.getElementById('atsModal');
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+    document.getElementById('atsResult').classList.add('hidden');
     document.getElementById('jobDescription').value = '';
 }
 
 function closeAtsModal() {
+    document.getElementById('atsModal').classList.add('hidden');
     document.getElementById('atsModal').style.display = 'none';
 }
 
@@ -43,12 +46,14 @@ function analyzeAts() {
             document.getElementById('atsScore').innerText = data.score + '%';
 
             const matchesDiv = document.getElementById('atsMatches');
-            matchesDiv.innerHTML = data.matches.map(m => `<span class="tag tag-match">${m}</span>`).join('');
+            matchesDiv.innerHTML = data.matches.map(m => `<span class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded-lg">${m}</span>`).join('');
 
             const missingDiv = document.getElementById('atsMissing');
-            missingDiv.innerHTML = data.missing.map(m => `<span class="tag tag-missing">${m}</span>`).join('');
+            missingDiv.innerHTML = data.missing.map(m => `<span class="bg-red-500/10 border border-red-500/20 text-red-400 px-3 py-1.5 rounded-lg font-bold">${m}</span>`).join('');
 
-            document.getElementById('atsResult').style.display = 'block';
+            const resDiv = document.getElementById('atsResult');
+            resDiv.classList.remove('hidden');
+            resDiv.style.display = 'block';
         })
         .catch(err => alert('Erro na análise: ' + err.message))
         .finally(() => {

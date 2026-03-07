@@ -79,11 +79,15 @@ const suggestionsData = {
 
 function toggleMobilePreview() {
     const modal = document.getElementById('mobilePreviewModal');
-    const isOpening = modal.style.display !== 'flex';
-    modal.style.display = isOpening ? 'flex' : 'none';
+    const isOpening = modal.classList.contains('hidden');
 
     if (isOpening) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
         syncMobilePreview();
+    } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
     }
 }
 
@@ -105,39 +109,41 @@ function openSuggestions(type, btn) {
     if (type === 'skills') {
         currentTargetField = document.querySelector('input[name="skills"]');
     } else {
-        currentTargetField = btn.closest('.suggestion-header').nextElementSibling || btn.closest('.dynamic-field').querySelector('textarea');
-        if (btn.closest('.dynamic-field')) {
-            currentTargetField = btn.parentElement.nextElementSibling;
-        }
+        // Find the nearest textarea within the current step or dynamic field
+        const parent = btn.closest('.dynamic-field') || btn.closest('.form-step');
+        currentTargetField = parent.querySelector('textarea');
     }
 
     const list = document.getElementById('suggestionsList');
     list.innerHTML = '';
 
-    const selectedNiche = niche || 'tech'; // Default to tech if niche not set
+    const selectedNiche = niche || 'tech';
     const items = suggestionsData[selectedNiche] ? suggestionsData[selectedNiche][type] : suggestionsData['tech'][type];
 
     items.forEach(text => {
         const div = document.createElement('div');
-        div.className = 'suggestion-item';
+        div.className = 'glass-card p-4 rounded-2xl cursor-pointer hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all text-sm text-slate-300';
         div.innerText = text;
         div.onclick = () => {
             currentTargetField.value = text;
             closeSuggestions();
-            triggerUpdate(); // Sync preview immediately
+            triggerUpdate();
         };
         list.appendChild(div);
     });
 
-    document.getElementById('suggestionModal').style.display = 'flex';
+    const modal = document.getElementById('suggestionModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
 }
 
 function closeSuggestions() {
-    document.getElementById('suggestionModal').style.display = 'none';
+    const modal = document.getElementById('suggestionModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
 }
 
 function selectTemplate(id, el, niche = null) {
-    // Update hidden input
     document.getElementById('templateInput').value = id;
 
     if (niche) {
@@ -145,48 +151,58 @@ function selectTemplate(id, el, niche = null) {
     }
 
     // Update UI
-    document.querySelectorAll('.template-card').forEach(card => {
-        card.classList.remove('selected');
+    document.querySelectorAll('.template-group div[onclick^="selectTemplate"]').forEach(card => {
+        card.classList.remove('border-primary', 'ring-2', 'ring-primary/20');
+        card.classList.add('border-white/5');
     });
-    el.classList.add('selected');
+    el.classList.add('border-primary', 'ring-2', 'ring-primary/20');
+    el.classList.remove('border-white/5');
 
-    // Trigger preview
     triggerUpdate();
 }
 
-function switchNiche(niche) {
-    // Update Tabs
-    document.querySelectorAll('.niche-tab').forEach(tab => {
-        tab.classList.remove('active');
-        if (tab.getAttribute('data-niche') === niche) {
-            tab.classList.add('active');
+function switchNiche(nicheSelected) {
+    // Update Tabs UI
+    const buttons = document.querySelectorAll('button[onclick^="switchNiche"]');
+    buttons.forEach(btn => {
+        if (btn.getAttribute('onclick').includes(`'${nicheSelected}'`)) {
+            btn.classList.add('bg-indigo-600', 'text-white', 'shadow-lg');
+            btn.classList.remove('text-slate-400', 'hover:text-white');
+        } else {
+            btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-lg');
+            btn.classList.add('text-slate-400', 'hover:text-white');
         }
     });
 
     // Update Content
-    document.querySelectorAll('.niche-content').forEach(content => {
-        content.classList.remove('active');
+    document.querySelectorAll('.template-group').forEach(content => {
+        content.classList.add('hidden');
     });
-    document.getElementById(`niche-${niche}-container`).classList.add('active');
+    document.getElementById(`niche-${nicheSelected}-container`).classList.remove('hidden');
+
+    // Update hidden input
+    document.getElementById('nicheInput').value = nicheSelected;
 }
 
-function nextStep(step) {
-    const currentStepEl = document.querySelector('.form-step.active');
-    const currentStepNum = parseInt(currentStepEl.id.replace('step', ''));
-
-    // Basic validation for required fields in the current step
+function testValidation(currentStepEl) {
     const inputs = currentStepEl.querySelectorAll('input[required], textarea[required], select[required]');
     let valid = true;
     inputs.forEach(input => {
         if (!input.value) {
-            input.style.borderColor = '#ef4444';
+            input.classList.add('!border-red-500/50', 'ring-2', 'ring-red-500/20');
             valid = false;
         } else {
-            input.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            input.classList.remove('!border-red-500/50', 'ring-2', 'ring-red-500/20');
         }
     });
+    return valid;
+}
 
-    if (!valid && step > currentStepNum) {
+function nextStep(step) {
+    const currentStepEl = document.querySelector('.form-step:not(.hidden)');
+    const currentStepNum = parseInt(currentStepEl.id.replace('step', ''));
+
+    if (step > currentStepNum && !testValidation(currentStepEl)) {
         alert('Por favor, preencha todos os campos obrigatórios.');
         return;
     }
@@ -197,53 +213,54 @@ function nextStep(step) {
 }
 
 function showStep(step) {
-    document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
-    document.getElementById('step' + step).classList.add('active');
+    document.querySelectorAll('.form-step').forEach(s => s.classList.add('hidden'));
+    document.getElementById('step' + step).classList.remove('hidden');
 
     document.querySelectorAll('.step-dot').forEach(d => {
-        if (parseInt(d.dataset.step) <= step) d.classList.add('active');
-        else d.classList.remove('active');
+        const dStep = parseInt(d.dataset.step);
+        d.classList.remove('active', 'completed');
+        if (dStep === step) d.classList.add('active');
+        else if (dStep < step) d.classList.add('completed');
     });
 }
 
 function addExperience() {
     const container = document.getElementById('experienceContainer');
     const html = `
-<div class="dynamic-field">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-        <div class="drag-handle">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 8h16M4 16h16" />
-            </svg>
+<div class="dynamic-field glass-card p-6 rounded-3xl space-y-4 group transition-all hover:border-white/20 relative animate-in slide-in-from-bottom-4 duration-300">
+    <div class="flex justify-between items-center">
+        <div class="drag-handle text-slate-500 cursor-move p-1 hover:text-white transition-colors">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h16M4 16h16" /></svg>
         </div>
-        <button type="button" class="btn-remove" onclick="removeField(this)">Remover</button>
+        <button type="button" class="text-xs font-bold text-red-400 hover:text-red-300 transition-colors" onclick="removeField(this)">Remover</button>
     </div>
-    <label>Empresa</label>
-    <input type="text" name="experience[${expCount}][company]">
-    <span class="field-tip">Nome da empresa ou hospital onde trabalhou.</span>
-
-    <label>Cargo</label>
-    <input type="text" name="experience[${expCount}][position]">
-    <span class="field-tip">Seu título oficial (Ex: Enfermeiro Obstetra, Desenvolvedor Backend).</span>
-
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-        <div>
-            <label>Início</label>
-            <input type="text" name="experience[${expCount}][start_date]" class="date-mask" placeholder="MM/AAAA" maxlength="7">
+    <div class="space-y-4">
+        <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Empresa</label>
+            <input type="text" name="experience[${expCount}][company]" class="form-input !py-2.5 !px-3 text-sm" placeholder="Nome da Empresa">
         </div>
-        <div>
-            <label>Fim</label>
-            <input type="text" name="experience[${expCount}][end_date]" class="date-mask" placeholder="Atual" maxlength="7">
+        <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Cargo</label>
+            <input type="text" name="experience[${expCount}][position]" class="form-input !py-2.5 !px-3 text-sm" placeholder="Seu Cargo">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+                <label class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Início</label>
+                <input type="text" name="experience[${expCount}][start_date]" class="form-input !py-2.5 !text-center date-mask" placeholder="MM/AAAA" maxlength="7">
+            </div>
+            <div class="space-y-2">
+                <label class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Fim</label>
+                <input type="text" name="experience[${expCount}][end_date]" class="form-input !py-2.5 !text-center date-mask" placeholder="Atual" maxlength="7">
+            </div>
+        </div>
+        <div class="space-y-2">
+            <div class="flex justify-between items-center px-1">
+                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Descrição</label>
+                <button type="button" class="text-[10px] font-bold text-indigo-400 hover:text-white transition-colors" onclick="openSuggestions('experience', this)">✨ Ver Sugestões</button>
+            </div>
+            <textarea name="experience[${expCount}][description]" rows="3" class="form-input text-sm resize-none"></textarea>
         </div>
     </div>
-    <span class="field-tip">Use o formato Mês/Ano (Ex: 05/2020). Se ainda trabalhar lá, escreva "Atual" no campo Fim.</span>
-
-    <div class="suggestion-header">
-        <label style="margin-bottom: 0;">Descrição</label>
-        <button type="button" class="btn-suggestion" onclick="openSuggestions('experience', this)">✨ Ver Sugestões</button>
-    </div>
-    <textarea name="experience[${expCount}][description]" rows="3"></textarea>
-    <span class="field-tip">O que você fazia no dia a dia? Cite 2 ou 3 tarefas importantes.</span>
 </div>
 `;
     container.insertAdjacentHTML('beforeend', html);
@@ -254,30 +271,34 @@ function addExperience() {
 function addEducation() {
     const container = document.getElementById('educationContainer');
     const html = `
-<div class="dynamic-field">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-        <div class="drag-handle">
+<div class="dynamic-field glass-card p-6 rounded-3xl space-y-4 group transition-all hover:border-white/20 relative animate-in slide-in-from-bottom-4 duration-300">
+    <div class="flex justify-between items-center">
+        <div class="drag-handle text-slate-500 cursor-move p-1 hover:text-white transition-colors">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4 8h16M4 16h16" />
             </svg>
         </div>
-        <button type="button" class="btn-remove" onclick="removeField(this)">Remover</button>
+        <button type="button" class="text-xs font-bold text-red-400 hover:text-red-300 transition-colors" onclick="removeField(this)">Remover</button>
     </div>
-    <label>Instituição</label>
-    <input type="text" name="education[${eduCount}][institution]" required>
-    <span class="field-tip">Escola, Faculdade ou Centro Tecnológico.</span>
-
-    <label>Curso/Grau</label>
-    <input type="text" name="education[${eduCount}][degree]" required>
-    <span class="field-tip">Ex: Graduação, Técnico, MBA, Ensino Médio...</span>
-
-    <label>Área de Estudo</label>
-    <input type="text" name="education[${eduCount}][field_of_study]" required>
-    <span class="field-tip">Ex: Enfermagem, Ciência da Computação, Administração...</span>
-
-    <label>Conclusão</label>
-    <input type="text" name="education[${eduCount}][graduation_date]" class="date-mask" placeholder="MM/AAAA" maxlength="7" required>
-    <span class="field-tip">Data em que se formou ou previsão de formatura.</span>
+    <div class="space-y-4">
+        <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Instituição</label>
+            <input type="text" name="education[${eduCount}][institution]" class="form-input !py-2.5 !px-3 text-sm" required placeholder="Nome da Instituição">
+        </div>
+        <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Curso/Grau</label>
+            <input type="text" name="education[${eduCount}][degree]" class="form-input !py-2.5 !px-3 text-sm" required placeholder="Ex: Graduação, Técnico">
+        </div>
+        <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Área de Estudo</label>
+            <input type="text" name="education[${eduCount}][field_of_study]" class="form-input !py-2.5 !px-3 text-sm" required placeholder="Ex: Enfermagem">
+        </div>
+        <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Conclusão</label>
+            <input type="text" name="education[${eduCount}][graduation_date]"
+                class="form-input !py-2.5 !text-center date-mask" placeholder="MM/AAAA" maxlength="7" required>
+        </div>
+    </div>
 </div>
 `;
     container.insertAdjacentHTML('beforeend', html);
@@ -356,8 +377,7 @@ function updatePreview() {
                 if (newDoc.title) doc.title = newDoc.title;
 
                 // Sync to mobile preview if open
-                const mobileModal = document.getElementById('mobilePreviewModal');
-                if (mobileModal && mobileModal.style.display === 'flex') {
+                if (mobileModal && !mobileModal.classList.contains('hidden')) {
                     syncMobilePreview();
                 }
             }
@@ -430,9 +450,10 @@ if (photoInput) {
                     const base64 = canvas.toDataURL('image/jpeg', 0.7);
                     document.getElementById('previewImg').src = base64;
                     document.getElementById('photoBase64').value = base64;
-                    document.getElementById('photoPreview').style.display = 'block';
+                    document.getElementById('photoPreview').classList.remove('hidden');
+
                     btnText.textContent = 'Foto selecionada: ' + file.name;
-                    btn.style.borderColor = 'var(--primary)';
+                    btn.classList.add('border-indigo-500/50', 'bg-indigo-500/10');
                     triggerUpdate();
                 };
                 img.src = event.target.result;
