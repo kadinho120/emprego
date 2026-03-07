@@ -15,7 +15,9 @@ $resume = [
     'state' => $_POST['state'] ?? '',
     'summary' => $_POST['summary'] ?? '',
     'template_id' => $_POST['template_id'] ?? 'tech',
-    'photo_path' => $_POST['photo_path'] ?? null // We'll handle photo preview separately if needed
+    'primary_color' => $_POST['primary_color'] ?? null,
+    'font_family' => $_POST['font_family'] ?? 'jakarta',
+    'photo_path' => $_POST['photo_path'] ?? null
 ];
 
 $experiences = [];
@@ -37,6 +39,7 @@ if (!empty($_POST['education'])) {
         $education[] = [
             'institution' => $edu['institution'] ?? '',
             'degree' => $edu['degree'] ?? '',
+            'field_of_study' => $edu['field_of_study'] ?? '',
             'graduation_date' => $edu['graduation_date'] ?? ''
         ];
     }

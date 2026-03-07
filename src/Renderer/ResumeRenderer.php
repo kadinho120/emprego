@@ -42,7 +42,7 @@ class ResumeRenderer
         }
 
         // Define CSS based on template
-        $css = self::getTemplateCss($template, $fontSize, $lineHeight);
+        $css = self::getTemplateCss($template, $primaryColor, $fontSize, $lineHeight);
 
         $html = "
         <!DOCTYPE html>
@@ -113,7 +113,7 @@ class ResumeRenderer
         return $html;
     }
 
-    private static function getTemplateCss($template, $fontSize, $lineHeight)
+    private static function getTemplateCss($template, $primaryColor, $fontSize, $lineHeight)
     {
         switch ($template) {
             case 'health':

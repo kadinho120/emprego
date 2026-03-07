@@ -382,23 +382,23 @@ Auth::requireLogin();
 <body>
 
     <div class="container">
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem; padding: 0 1rem;">
-            <?php if (Auth::isLoggedIn()): ?>
-                <div style="display: flex; gap: 1.5rem; align-items: center;">
-                    <a href="dashboard.php"
-                        style="color: var(--text-main); text-decoration: none; font-size: 0.9rem; font-weight: 600;">Meus
-                        Currículos</a>
-                    <a href="logout.php"
-                        style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600;">Sair</a>
-                </div>
-            <?php else: ?>
-                <a href="logout.php"
-                    style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: color 0.3s;"
-                    onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">Sair da
-                    Conta</a>
-            <?php endif; ?>
-        </div>
         <div class="form-wrapper">
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem; padding: 0 1rem;">
+                <?php if (Auth::isLoggedIn()): ?>
+                    <div style="display: flex; gap: 1.5rem; align-items: center;">
+                        <a href="dashboard.php"
+                            style="color: var(--text-main); text-decoration: none; font-size: 0.9rem; font-weight: 600;">Meus
+                            Currículos</a>
+                        <a href="logout.php"
+                            style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600;">Sair</a>
+                    </div>
+                <?php else: ?>
+                    <a href="logout.php"
+                        style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: color 0.3s;"
+                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">Sair da
+                        Conta</a>
+                <?php endif; ?>
+            </div>
             <div class="form-card">
                 <div style="display: flex; justify-content: center; margin-bottom: 2rem;">
                     <div class="logo"
@@ -649,6 +649,10 @@ Auth::requireLogin();
                     </div>
                 </form>
             </div>
+        </div> <!-- .form-wrapper -->
+
+        <div class="preview-container">
+            <iframe id="previewIframe" class="preview-iframe"></iframe>
         </div>
 
         <!-- Suggestion Modal -->
@@ -978,11 +982,7 @@ Auth::requireLogin();
 
             applyDateMasks();
         </script>
-
-        <div class="preview-container">
-            <iframe id="previewIframe" class="preview-iframe"></iframe>
-        </div>
-    </div> <!-- .form-wrapper -->
+    </div> <!-- .container -->
 
 </body>
 
