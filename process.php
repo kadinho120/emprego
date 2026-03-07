@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             // Update Resume
-            $stmt = $db->prepare("UPDATE resumes SET full_name = ?, email = ?, phone = ?, city = ?, state = ?, photo_path = ?, summary = ?, template_id = ?, primary_color = ?, font_family = ? WHERE id = ?");
+            $stmt = $db->prepare("UPDATE resumes SET full_name = ?, email = ?, phone = ?, city = ?, state = ?, photo_path = ?, summary = ?, template_id = ?, primary_color = ?, font_family = ?, niche = ? WHERE id = ?");
             $stmt->execute([
                 $_POST['full_name'],
                 $_POST['email'],
@@ -107,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_POST['template_id'],
                 $_POST['primary_color'] ?? '#6366f1',
                 $_POST['font_family'] ?? 'jakarta',
+                $_POST['niche'] ?? 'tech',
                 $resumeId
             ]);
 
@@ -123,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // New Resume
             $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $_POST['full_name']))) . '-' . uniqid();
 
-            $stmt = $db->prepare("INSERT INTO resumes (full_name, email, phone, city, state, photo_path, summary, template_id, user_id, slug, primary_color, font_family) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $db->prepare("INSERT INTO resumes (full_name, email, phone, city, state, photo_path, summary, template_id, user_id, slug, primary_color, font_family, niche) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $_POST['full_name'],
                 $_POST['email'],
@@ -136,7 +137,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $userId,
                 $slug,
                 $_POST['primary_color'] ?? '#6366f1',
-                $_POST['font_family'] ?? 'jakarta'
+                $_POST['font_family'] ?? 'jakarta',
+                $_POST['niche'] ?? 'tech'
             ]);
             $resumeId = $db->lastInsertId();
         }

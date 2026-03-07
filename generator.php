@@ -53,7 +53,8 @@ if (!$resumeData) {
     $educationData = [[]];
 }
 
-$initialTemplate = $resumeData['template_id'] ?? ((isset($_GET['niche']) && $_GET['niche'] === 'tech') ? 'tech' : ((isset($_GET['niche']) && $_GET['niche'] === 'health') ? 'health' : 'tech'));
+$currentNiche = $resumeData['niche'] ?? ($_GET['niche'] ?? 'tech');
+$initialTemplate = $resumeData['template_id'] ?? ($currentNiche === 'health' ? 'health' : 'tech');
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -319,6 +320,61 @@ $initialTemplate = $resumeData['template_id'] ?? ((isset($_GET['niche']) && $_GE
             display: flex;
         }
 
+        .template-card:hover .template-preview {
+            transform: scale(1.02);
+        }
+
+        /* Niche Tabs */
+        .niche-tab {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .niche-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .niche-content {
+            display: none;
+        }
+
+        .niche-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .template-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
         input[name="template_id"] {
             display: none;
         }
@@ -552,6 +608,8 @@ $initialTemplate = $resumeData['template_id'] ?? ((isset($_GET['niche']) && $_GE
                 </div>
 
                 <form id="resumeForm" action="process.php" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="niche" id="nicheInput"
+                        value="<?php echo htmlspecialchars($currentNiche); ?>">
                     <?php if ($resumeData): ?>
                         <input type="hidden" name="resume_id" value="<?php echo $resumeData['id']; ?>">
                     <?php endif; ?>
@@ -559,16 +617,26 @@ $initialTemplate = $resumeData['template_id'] ?? ((isset($_GET['niche']) && $_GE
                     <div class="form-step active" id="step1">
                         <h2 style="margin-bottom: 0.5rem;">Escolha seu Modelo</h2>
                         <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">Selecione o layout
-                            que
-                            mais combina com seu perfil profissional.</p>
+                            que mais combina com seu perfil profissional.</p>
+
+                        <div class="niche-selector-tabs" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                            <button type="button"
+                                class="niche-tab <?php echo $currentNiche === 'tech' ? 'active' : ''; ?>"
+                                data-niche="tech" onclick="switchNiche('tech')">💻 TI & Tecnologia</button>
+                            <button type="button"
+                                class="niche-tab <?php echo $currentNiche === 'health' ? 'active' : ''; ?>"
+                                data-niche="health" onclick="switchNiche('health')">🩺 Saúde & Enfermagem</button>
+                        </div>
 
                         <input type="hidden" name="template_id" id="templateInput"
                             value="<?php echo htmlspecialchars($initialTemplate); ?>" required>
 
-                        <div class="template-grid">
-                            <?php if (isset($_GET['niche']) && $_GET['niche'] === 'tech'): ?>
+                        <!-- Templates Tech -->
+                        <div id="niche-tech-container"
+                            class="niche-content <?php echo $currentNiche === 'tech' ? 'active' : ''; ?>">
+                            <div class="template-grid">
                                 <div class="template-card <?php echo $initialTemplate === 'tech' ? 'selected' : ''; ?>"
-                                    onclick="selectTemplate('tech', this)">
+                                    onclick="selectTemplate('tech', this, 'tech')">
                                     <div class="selected-badge">✓</div>
                                     <div class="template-preview">
                                         <div
@@ -582,7 +650,8 @@ $initialTemplate = $resumeData['template_id'] ?? ((isset($_GET['niche']) && $_GE
                                         <div class="template-name">TI - Dark Mode</div>
                                     </div>
                                 </div>
-                                <div class="template-card" onclick="selectTemplate('tech_modern', this)">
+                                <div class="template-card <?php echo $initialTemplate === 'tech_modern' ? 'selected' : ''; ?>"
+                                    onclick="selectTemplate('tech_modern', this, 'tech')">
                                     <div class="selected-badge">✓</div>
                                     <div class="template-preview">
                                         <div
@@ -596,7 +665,8 @@ $initialTemplate = $resumeData['template_id'] ?? ((isset($_GET['niche']) && $_GE
                                         <div class="template-name">Modern Blue</div>
                                     </div>
                                 </div>
-                                <div class="template-card" onclick="selectTemplate('tech_minimal', this)">
+                                <div class="template-card <?php echo $initialTemplate === 'tech_minimal' ? 'selected' : ''; ?>"
+                                    onclick="selectTemplate('tech_minimal', this, 'tech')">
                                     <div class="selected-badge">✓</div>
                                     <div class="template-preview">
                                         <div
@@ -609,9 +679,15 @@ $initialTemplate = $resumeData['template_id'] ?? ((isset($_GET['niche']) && $_GE
                                         <div class="template-name">Minimalist Professional</div>
                                     </div>
                                 </div>
-                            <?php elseif (isset($_GET['niche']) && $_GET['niche'] === 'health'): ?>
+                            </div>
+                        </div>
+
+                        <!-- Templates Health -->
+                        <div id="niche-health-container"
+                            class="niche-content <?php echo $currentNiche === 'health' ? 'active' : ''; ?>">
+                            <div class="template-grid">
                                 <div class="template-card <?php echo $initialTemplate === 'health' ? 'selected' : ''; ?>"
-                                    onclick="selectTemplate('health', this)">
+                                    onclick="selectTemplate('health', this, 'health')">
                                     <div class="selected-badge">✓</div>
                                     <div class="template-preview">
                                         <div
@@ -623,7 +699,7 @@ $initialTemplate = $resumeData['template_id'] ?? ((isset($_GET['niche']) && $_GE
                                     </div>
                                 </div>
                                 <div class="template-card <?php echo $initialTemplate === 'health_professional' ? 'selected' : ''; ?>"
-                                    onclick="selectTemplate('health_professional', this)">
+                                    onclick="selectTemplate('health_professional', this, 'health')">
                                     <div class="selected-badge">✓</div>
                                     <div class="template-preview">
                                         <div style="background: #1e3a8a; width: 100%; height: 100%;"></div>
@@ -633,7 +709,7 @@ $initialTemplate = $resumeData['template_id'] ?? ((isset($_GET['niche']) && $_GE
                                     </div>
                                 </div>
                                 <div class="template-card <?php echo $initialTemplate === 'health_clean' ? 'selected' : ''; ?>"
-                                    onclick="selectTemplate('health_clean', this)">
+                                    onclick="selectTemplate('health_clean', this, 'health')">
                                     <div class="selected-badge">✓</div>
                                     <div class="template-preview">
                                         <div
@@ -644,28 +720,7 @@ $initialTemplate = $resumeData['template_id'] ?? ((isset($_GET['niche']) && $_GE
                                         <div class="template-name">Clean Medical</div>
                                     </div>
                                 </div>
-                            <?php else: ?>
-                                <div class="template-card selected" onclick="selectTemplate('tech', this)">
-                                    <div class="selected-badge">✓</div>
-                                    <div class="template-preview">
-                                        <div style="background: #0f172a; width: 100%; height: 100%;"></div>
-                                    </div>
-                                    <div class="template-info">
-                                        <div class="template-name">TI - Dark Mode</div>
-                                    </div>
-                                </div>
-                                <div class="template-card" onclick="selectTemplate('health', this)">
-                                    <div class="selected-badge">✓</div>
-                                    <div class="template-preview">
-                                        <div
-                                            style="background: #f0fdfa; width: 100%; height: 100%; border-bottom: 5px solid #0d9488;">
-                                        </div>
-                                    </div>
-                                    <div class="template-info">
-                                        <div class="template-name">Saúde - Teal Basic</div>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
+                            </div>
                         </div>
 
                         <div class="btn-group">
@@ -1076,16 +1131,38 @@ $initialTemplate = $resumeData['template_id'] ?? ((isset($_GET['niche']) && $_GE
             let expCount = <?php echo count($experiencesData); ?>;
             let eduCount = <?php echo count($educationData); ?>;
 
-            function selectTemplate(id, el) {
+            function selectTemplate(id, el, niche = null) {
                 // Update hidden input
                 document.getElementById('templateInput').value = id;
 
-                // Update UI state
-                document.querySelectorAll('.template-card').forEach(card => card.classList.remove('selected'));
+                if (niche) {
+                    document.getElementById('nicheInput').value = niche;
+                }
+
+                // Update UI
+                document.querySelectorAll('.template-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
                 el.classList.add('selected');
 
-                // Sync preview immediately
+                // Trigger preview
                 triggerUpdate();
+            }
+
+            function switchNiche(niche) {
+                // Update Tabs
+                document.querySelectorAll('.niche-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                    if (tab.getAttribute('data-niche') === niche) {
+                        tab.classList.add('active');
+                    }
+                });
+
+                // Update Content
+                document.querySelectorAll('.niche-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(`niche-${niche}-container`).classList.add('active');
             }
 
             function nextStep(step) {
