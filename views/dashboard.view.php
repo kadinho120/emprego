@@ -65,29 +65,23 @@
                                 <?php echo htmlspecialchars($resume['template_id']); ?>
                             </p>
                         </div>
-                        <div class="resume-actions" style="flex-wrap: wrap;">
+                        <div class="resume-actions">
                             <a href="generate-pdf.php?id=<?php echo $resume['id']; ?>" target="_blank" class="btn btn-outline"
-                                style="flex: 1 1 30%; text-align: center; background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.3);">PDF</a>
+                                style="background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.3);">PDF</a>
                             <a href="export-word.php?id=<?php echo $resume['id']; ?>" class="btn btn-outline"
-                                style="flex: 1 1 30%; text-align: center; border-color: rgba(96, 165, 250, 0.3); color: #60a5fa;">Word</a>
+                                style="border-color: rgba(96, 165, 250, 0.3); color: #60a5fa;">Word</a>
                             <a href="#" onclick="openAtsModal(<?php echo $resume['id']; ?>)" class="btn btn-outline"
-                                style="flex: 1 1 30%; text-align: center; border-color: rgba(245, 158, 11, 0.3); color: #f59e0b;">💬
-                                ATS</a>
+                                style="border-color: rgba(245, 158, 11, 0.3); color: #f59e0b;">ATS</a>
                             <a href="#"
                                 onclick="copyLink('<?php echo (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\') . '/cv.php?slug=' . $resume['slug']; ?>')"
-                                class="btn btn-outline"
-                                style="flex: 1 1 30%; text-align: center; border-color: rgba(16, 185, 129, 0.2); color: #10b981;">🔗
-                                Link</a>
+                                class="btn btn-outline" style="border-color: rgba(16, 185, 129, 0.2); color: #10b981;">Link</a>
                             <a href="generator.php?id=<?php echo $resume['id']; ?>" class="btn btn-outline"
-                                style="flex: 1 1 30%; text-align: center; border-color: var(--primary); color: var(--primary);">✏️
-                                Editar</a>
-                            <a href="duplicate-resume.php?id=<?php echo $resume['id']; ?>" class="btn btn-outline"
-                                style="flex: 1 1 30%; text-align: center;">👯 Duplicar</a>
+                                style="border-color: var(--primary); color: var(--primary);">Editar</a>
+                            <a href="duplicate-resume.php?id=<?php echo $resume['id']; ?>" class="btn btn-outline">Duplicar</a>
                             <a href="delete-resume.php?id=<?php echo $resume['id']; ?>"
                                 onclick="return confirm('Tem certeza que deseja excluir este currículo? Esta ação não pode ser desfeita.')"
                                 class="btn btn-outline"
-                                style="flex: 1 1 30%; text-align: center; color: #f87171; border-color: rgba(248, 113, 113, 0.2); background: rgba(248, 113, 113, 0.05);">🗑️
-                                Excluir</a>
+                                style="color: #f87171; border-color: rgba(248, 113, 113, 0.2); background: rgba(248, 113, 113, 0.05);">Excluir</a>
                         </div>
                     </div>
                 <?php endforeach; ?>

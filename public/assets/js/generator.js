@@ -91,7 +91,11 @@ function syncMobilePreview() {
     const mainIframe = document.getElementById('previewIframe');
     const mobileIframe = document.getElementById('mobilePreviewIframe');
     if (mainIframe && mobileIframe) {
-        mobileIframe.src = mainIframe.src;
+        const mainDoc = mainIframe.contentDocument || mainIframe.contentWindow.document;
+        const mobileDoc = mobileIframe.contentDocument || mobileIframe.contentWindow.document;
+        mobileDoc.open();
+        mobileDoc.write(mainDoc.documentElement.outerHTML);
+        mobileDoc.close();
     }
 }
 
@@ -350,6 +354,12 @@ function updatePreview() {
 
                 // Update title if needed
                 if (newDoc.title) doc.title = newDoc.title;
+
+                // Sync to mobile preview if open
+                const mobileModal = document.getElementById('mobilePreviewModal');
+                if (mobileModal && mobileModal.style.display === 'flex') {
+                    syncMobilePreview();
+                }
             }
         })
         .catch(err => {

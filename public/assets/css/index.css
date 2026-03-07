@@ -40,6 +40,7 @@ header {
     font-size: 1.5rem;
     background: linear-gradient(135deg, var(--primary), var(--accent));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -74,6 +75,7 @@ h1 span {
     display: block;
     background: linear-gradient(135deg, var(--primary), #a855f7);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -156,6 +158,7 @@ h1 span {
     font-weight: 800;
     background: linear-gradient(135deg, #fff, var(--primary));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 

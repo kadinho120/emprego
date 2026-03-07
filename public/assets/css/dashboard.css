@@ -13,11 +13,16 @@
     font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
+html {
+    overflow-x: hidden;
+}
+
 body {
     background-color: var(--background);
     color: var(--text-main);
     min-height: 100vh;
     padding: 2rem;
+    overflow-x: hidden;
 }
 
 .container {
