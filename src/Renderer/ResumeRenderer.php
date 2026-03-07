@@ -54,7 +54,35 @@ class ResumeRenderer
             <style>
                 @page { margin: 1cm 1.5cm; }
                 * { box-sizing: border-box; -webkit-print-color-adjust: exact; }
-                body { font-family: " . self::getFontFace($fontFamily) . ", 'DejaVu Sans', sans-serif; }
+                body { 
+                    font-family: " . self::getFontFace($fontFamily) . ", 'DejaVu Sans', sans-serif; 
+                    margin: 0; 
+                    padding: 0;
+                    background-color: #f1f5f9;
+                }
+                .resume-page {
+                    background: white;
+                    width: 210mm;
+                    min-height: 297mm;
+                    margin: 2rem auto;
+                    padding: 1cm 1.5cm;
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                }
+                body.is-iframe .resume-page {
+                    margin: 0 auto;
+                    box-shadow: none;
+                    width: 100%;
+                }
+                @media print {
+                    body { background: none; }
+                    .resume-page { 
+                        margin: 0; 
+                        box-shadow: none; 
+                        width: auto;
+                        min-height: auto;
+                        padding: 0;
+                    }
+                }
                 {$css}
                 .section-item { margin-bottom: 15px; clear: both; page-break-inside: avoid; }
                 .item-header { margin-bottom: 3px; overflow: hidden; }
@@ -62,8 +90,9 @@ class ResumeRenderer
                 .section-title { page-break-after: avoid; }
             </style>
         </head>
-        <body style='margin: 0; padding: 0;'>
-            <div class='header'>
+        <body class='" . (isset($_GET['iframe']) ? 'is-iframe' : '') . "' style='margin: 0; padding: 0;'>
+            <div class='resume-page'>
+                <div class='header'>
                 " . (!empty($resume['photo_path']) ? (
                 strpos($resume['photo_path'], 'data:') === 0 ? "
                     <div class='photo-container'>

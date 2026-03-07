@@ -76,6 +76,11 @@ Auth::requireLogin();
             border: none;
         }
 
+        /* Responsive overrides for the iframe content */
+        #previewIframe {
+            background: #f1f5f9;
+        }
+
         .drag-handle {
             cursor: move;
             color: var(--text-muted);
@@ -930,7 +935,7 @@ Auth::requireLogin();
                 abortController = new AbortController();
 
                 const formData = new FormData(form);
-                fetch('live-preview-api.php', {
+                fetch('live-preview-api.php?iframe=1', {
                     method: 'POST',
                     body: formData,
                     signal: abortController.signal
