@@ -443,3 +443,17 @@ if (photoInput) {
 }
 
 applyDateMasks();
+
+// Mobile Preview Event Listeners
+document.addEventListener('DOMContentLoaded', () => {
+    const trigger = document.getElementById('mobilePreviewTrigger');
+    const closeBtn = document.getElementById('closeMobilePreview');
+
+    if (trigger) {
+        trigger.addEventListener('click', toggleMobilePreview);
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', toggleMobilePreview);
+    }
+});

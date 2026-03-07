@@ -478,11 +478,12 @@ button:hover {
     }
 
     .step-indicator {
-        overflow-x: auto;
-        padding-bottom: 1rem;
-        margin-bottom: 2rem;
-        justify-content: flex-start;
-        gap: 1rem;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 0.5rem;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+        width: 100%;
     }
 
     .step-indicator::before {
@@ -492,9 +493,10 @@ button:hover {
 
     .step-dot {
         flex-shrink: 0;
-        width: 35px;
-        height: 35px;
-        font-size: 0.8rem;
+        width: 30px;
+        height: 30px;
+        font-size: 0.75rem;
+        margin: 0 auto;
     }
 
     .template-grid {
@@ -526,21 +528,22 @@ button:hover {
     /* Floating Preview Button */
     .mobile-preview-trigger {
         position: fixed;
-        bottom: 2rem;
+        bottom: 1.5rem;
         right: 1.5rem;
         background: var(--primary);
         color: white;
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
-        z-index: 1000;
+        z-index: 9999;
         border: none;
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         cursor: pointer;
+        opacity: 0.9;
     }
 
     /* Mobile Preview Overlay */

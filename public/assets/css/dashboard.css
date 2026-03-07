@@ -212,3 +212,26 @@ body {
         font-size: 0.8rem;
     }
 }
+
+@media (max-width: 480px) {
+    .header {
+        padding: 1rem 0.5rem;
+    }
+
+    .header div[style*="display: flex"] {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.5rem !important;
+    }
+
+    .header .btn {
+        width: 100%;
+        font-size: 0.75rem;
+        padding: 0.5rem;
+    }
+
+    h1 {
+        font-size: 1.5rem !important;
+        margin-top: 1rem;
+    }
+}
