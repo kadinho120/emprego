@@ -238,19 +238,23 @@ function addExperience() {
         <div class="space-y-2">
             <label class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Empresa</label>
             <input type="text" name="experience[${expCount}][company]" class="form-input !py-2.5 !px-3 text-sm" placeholder="Nome da Empresa">
+            <p class="text-[10px] text-slate-500 ml-1 italic">Nome oficial da organização.</p>
         </div>
         <div class="space-y-2">
             <label class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Cargo</label>
             <input type="text" name="experience[${expCount}][position]" class="form-input !py-2.5 !px-3 text-sm" placeholder="Seu Cargo">
+            <p class="text-[10px] text-slate-500 ml-1 italic">Ex: Analista de Sistemas, Enfermeiro.</p>
         </div>
         <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
                 <label class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Início</label>
                 <input type="text" name="experience[${expCount}][start_date]" class="form-input !py-2.5 !text-center date-mask" placeholder="MM/AAAA" maxlength="7">
+                <p class="text-[10px] text-slate-500 ml-1 italic text-center">MM/AAAA</p>
             </div>
             <div class="space-y-2">
                 <label class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Fim</label>
                 <input type="text" name="experience[${expCount}][end_date]" class="form-input !py-2.5 !text-center date-mask" placeholder="Atual" maxlength="7">
+                <p class="text-[10px] text-slate-500 ml-1 italic text-center">Vazio p/ 'Atual'</p>
             </div>
         </div>
         <div class="space-y-2">
@@ -283,20 +287,24 @@ function addEducation() {
     <div class="space-y-4">
         <div class="space-y-2">
             <label class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Instituição</label>
-            <input type="text" name="education[${eduCount}][institution]" class="form-input !py-2.5 !px-3 text-sm" required placeholder="Nome da Instituição">
+            <input type="text" name="education[${eduCount}][institution]" class="form-input !py-2.5 !px-3 text-sm" required placeholder="Nome da Faculdade/Escola">
+            <p class="text-[10px] text-slate-500 ml-1 italic">Onde você estudou.</p>
         </div>
         <div class="space-y-2">
             <label class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Curso/Grau</label>
             <input type="text" name="education[${eduCount}][degree]" class="form-input !py-2.5 !px-3 text-sm" required placeholder="Ex: Graduação, Técnico">
+            <p class="text-[10px] text-slate-500 ml-1 italic">Ex: Graduação, Pós, Técnico.</p>
         </div>
         <div class="space-y-2">
             <label class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Área de Estudo</label>
-            <input type="text" name="education[${eduCount}][field_of_study]" class="form-input !py-2.5 !px-3 text-sm" required placeholder="Ex: Enfermagem">
+            <input type="text" name="education[${eduCount}][field_of_study]" class="form-input !py-2.5 !px-3 text-sm" required placeholder="Ex: Enfermagem, Administração">
+            <p class="text-[10px] text-slate-500 ml-1 italic">Seu curso.</p>
         </div>
         <div class="space-y-2">
             <label class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Conclusão</label>
             <input type="text" name="education[${eduCount}][graduation_date]"
                 class="form-input !py-2.5 !text-center date-mask" placeholder="MM/AAAA" maxlength="7" required>
+            <p class="text-[10px] text-slate-500 ml-1 italic text-center">Data esperada ou realizada.</p>
         </div>
     </div>
 </div>

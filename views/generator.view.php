@@ -304,12 +304,16 @@
                                     <input type="email" name="email" class="form-input" required
                                         placeholder="joao@email.com"
                                         value="<?php echo htmlspecialchars($_SESSION['user_email'] ?? ''); ?>">
+                                    <p class="text-[11px] text-slate-500 ml-1 italic">Será usado para contato dos
+                                        recrutadores.</p>
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-sm font-semibold text-slate-300 ml-1">Telefone</label>
                                     <input type="text" name="phone" id="phone" class="form-input"
                                         placeholder="(11) 99999-9999" maxlength="15" required
                                         value="<?php echo htmlspecialchars($resumeData['phone'] ?? ''); ?>">
+                                    <p class="text-[11px] text-slate-500 ml-1 italic">WhatsApp é preferível para
+                                        agilizar o contato.</p>
                                 </div>
                             </div>
 
@@ -318,11 +322,13 @@
                                     <label class="text-sm font-semibold text-slate-300 ml-1">Cidade</label>
                                     <input type="text" name="city" class="form-input" placeholder="São Paulo" required
                                         value="<?php echo htmlspecialchars($resumeData['city'] ?? ''); ?>">
+                                    <p class="text-[11px] text-slate-500 ml-1 italic">Onde você mora hoje.</p>
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-sm font-semibold text-slate-300 ml-1">Estado (UF)</label>
                                     <input type="text" name="state" class="form-input" placeholder="SP" required
                                         value="<?php echo htmlspecialchars($resumeData['state'] ?? ''); ?>">
+                                    <p class="text-[11px] text-slate-500 ml-1 italic">Ex: SP, RJ, MG...</p>
                                 </div>
                             </div>
 
@@ -336,6 +342,8 @@
                                 <textarea name="summary" rows="4" class="form-input resize-none"
                                     placeholder="Fale um pouco sobre sua carreira..."
                                     required><?php echo htmlspecialchars($resumeData['summary'] ?? ''); ?></textarea>
+                                <p class="text-[11px] text-slate-500 ml-1 italic">Destaque suas maiores conquistas em 3
+                                    ou 4 linhas.</p>
                             </div>
                         </div>
 
@@ -417,6 +425,8 @@
                                             <input type="text" name="experience[<?php echo $index; ?>][company]"
                                                 class="form-input !py-2.5 !px-3 text-sm" placeholder="Nome da Empresa"
                                                 value="<?php echo htmlspecialchars($exp['company'] ?? ''); ?>">
+                                            <p class="text-[10px] text-slate-500 ml-1 italic">Nome oficial da organização.
+                                            </p>
                                         </div>
                                         <div class="space-y-2">
                                             <label
@@ -424,6 +434,8 @@
                                             <input type="text" name="experience[<?php echo $index; ?>][position]"
                                                 class="form-input !py-2.5 !px-3 text-sm" placeholder="Seu Cargo"
                                                 value="<?php echo htmlspecialchars($exp['position'] ?? ''); ?>">
+                                            <p class="text-[10px] text-slate-500 ml-1 italic">Ex: Analista de Sistemas,
+                                                Enfermeiro.</p>
                                         </div>
                                         <div class="grid grid-cols-2 gap-4">
                                             <div class="space-y-2">
@@ -433,6 +445,7 @@
                                                     class="form-input !py-2.5 !text-center date-mask" placeholder="MM/AAAA"
                                                     maxlength="7"
                                                     value="<?php echo htmlspecialchars($exp['start_date'] ?? ''); ?>">
+                                                <p class="text-[10px] text-slate-500 ml-1 italic text-center">MM/AAAA</p>
                                             </div>
                                             <div class="space-y-2">
                                                 <label
@@ -441,6 +454,8 @@
                                                     class="form-input !py-2.5 !text-center date-mask" placeholder="Atual"
                                                     maxlength="7"
                                                     value="<?php echo htmlspecialchars($exp['end_date'] ?? ''); ?>">
+                                                <p class="text-[10px] text-slate-500 ml-1 italic text-center">Vazio p/
+                                                    'Atual'</p>
                                             </div>
                                         </div>
                                         <div class="space-y-2">
@@ -495,14 +510,19 @@
                                                 class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Instituição</label>
                                             <input type="text" name="education[<?php echo $index; ?>][institution]"
                                                 class="form-input !py-2.5 !px-3 text-sm" required
+                                                placeholder="Nome da Faculdade/Escola"
                                                 value="<?php echo htmlspecialchars($edu['institution'] ?? ''); ?>">
+                                            <p class="text-[10px] text-slate-500 ml-1 italic">Onde você estudou.</p>
                                         </div>
                                         <div class="space-y-2">
                                             <label
                                                 class="text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">Curso/Grau</label>
                                             <input type="text" name="education[<?php echo $index; ?>][degree]"
                                                 class="form-input !py-2.5 !px-3 text-sm" required
+                                                placeholder="Ex: Graduação, Técnico"
                                                 value="<?php echo htmlspecialchars($edu['degree'] ?? ''); ?>">
+                                            <p class="text-[10px] text-slate-500 ml-1 italic">Ex: Graduação, Pós, Técnico.
+                                            </p>
                                         </div>
                                         <div class="space-y-2">
                                             <label
@@ -510,7 +530,9 @@
                                                 de Estudo</label>
                                             <input type="text" name="education[<?php echo $index; ?>][field_of_study]"
                                                 class="form-input !py-2.5 !px-3 text-sm" required
+                                                placeholder="Ex: Enfermagem, Administração"
                                                 value="<?php echo htmlspecialchars($edu['field_of_study'] ?? ''); ?>">
+                                            <p class="text-[10px] text-slate-500 ml-1 italic">Seu curso.</p>
                                         </div>
                                         <div class="space-y-2">
                                             <label
@@ -519,6 +541,8 @@
                                                 class="form-input !py-2.5 !text-center date-mask" placeholder="MM/AAAA"
                                                 maxlength="7" required
                                                 value="<?php echo htmlspecialchars($edu['graduation_date'] ?? ''); ?>">
+                                            <p class="text-[10px] text-slate-500 ml-1 italic text-center">Data esperada ou
+                                                realizada.</p>
                                         </div>
                                     </div>
                                 </div>
