@@ -79,12 +79,16 @@ class ResumeRenderer
             foreach ($chunks as $pair) {
                 $expHtml .= "<div class='section-row'>";
                 foreach ($pair as $exp) {
+                    $endDate = trim($exp['end_date'] ?? '');
+                    if (empty($endDate) || strtolower($endDate) === 'atual') {
+                        $endDate = 'ATUAL';
+                    }
                     $desc = !empty($exp['description']) ? "<div class='item-desc'>" . nl2br(htmlspecialchars($exp['description'])) . "</div>" : "";
                     $expHtml .= "
                     <div class='section-item'>
                         <div class='item-header'>
                             <span class='company'>{$exp['company']}</span>
-                            <span class='date'>{$exp['start_date']} – {$exp['end_date']}</span>
+                            <span class='date'>{$exp['start_date']} – {$endDate}</span>
                         </div>
                         <div class='item-sub'>{$exp['position']}</div>
                         {$desc}
@@ -94,12 +98,16 @@ class ResumeRenderer
             }
         } else {
             foreach ($experiences as $exp) {
+                $endDate = trim($exp['end_date'] ?? '');
+                if (empty($endDate) || strtolower($endDate) === 'atual') {
+                    $endDate = 'ATUAL';
+                }
                 $desc = !empty($exp['description']) ? "<div class='item-desc'>" . nl2br(htmlspecialchars($exp['description'])) . "</div>" : "";
                 $expHtml .= "
                 <div class='section-item'>
                     <div class='item-header'>
                         <span class='company'>{$exp['company']}</span>
-                        <span class='date'>{$exp['start_date']} – {$exp['end_date']}</span>
+                        <span class='date'>{$exp['start_date']} – {$endDate}</span>
                     </div>
                     <div class='item-sub'>{$exp['position']}</div>
                     {$desc}
