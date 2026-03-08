@@ -71,7 +71,8 @@ class Database
                 // Specific migrations for existing databases
                 $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS city VARCHAR(100)");
                 $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS state VARCHAR(50)");
-                $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS photo_path VARCHAR(255)");
+                $this->conn->exec("ALTER TABLE resumes ADD COLUMN IF NOT EXISTS photo_path TEXT");
+                $this->conn->exec("ALTER TABLE resumes ALTER COLUMN photo_path TYPE TEXT");
 
                 // Ensure users table exists before adding FK
                 $this->conn->exec("CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, email VARCHAR(255) UNIQUE NOT NULL, password_hash VARCHAR(255), role VARCHAR(20) DEFAULT 'user', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");

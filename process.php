@@ -57,21 +57,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $cropped = imagecreatetruecolor(600, 800); // Resolução fixa 3:4
                 imagecopyresampled($cropped, $img, 0, 0, $x, $y, 600, 800, $width, $height);
 
-                if ($fileExtension === 'jpg' || $fileExtension === 'jpeg')
-                    imagejpeg($cropped, $targetFile, 90);
-                elseif ($fileExtension === 'png')
-                    imagepng($cropped, $targetFile);
-                elseif ($fileExtension === 'webp')
-                    imagewebp($cropped, $targetFile);
+                // Capturar imagem processada como Base64
+                ob_start();
+                if ($fileExtension === 'jpg' || $fileExtension === 'jpeg') {
+                    imagejpeg($cropped, null, 90);
+                    $mimeType = 'image/jpeg';
+                } elseif ($fileExtension === 'png') {
+                    imagepng($cropped);
+                    $mimeType = 'image/png';
+                } elseif ($fileExtension === 'webp') {
+                    imagewebp($cropped);
+                    $mimeType = 'image/webp';
+                } else {
+                    imagejpeg($cropped, null, 90);
+                    $mimeType = 'image/jpeg';
+                }
+                $imageData = ob_get_clean();
+                $photoPath = 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
 
                 imagedestroy($img);
                 imagedestroy($cropped);
-                $photoPath = 'uploads/' . $fileName;
             } else {
-                // Fallback: Se o GD não estiver disponível, apenas move o arquivo original
-                if (move_uploaded_file($tmpFile, $targetFile)) {
-                    $photoPath = 'uploads/' . $fileName;
-                }
+                // Fallback: Se o GD não estiver disponível, converte o original para base64
+                $mimeType = $_FILES['photo']['type'] ?? 'image/jpeg';
+                $photoPath = 'data:' . $mimeType . ';base64,' . base64_encode(file_get_contents($tmpFile));
             }
         }
 
