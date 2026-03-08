@@ -79,6 +79,7 @@ class ResumeRenderer
             foreach ($chunks as $pair) {
                 $expHtml .= "<div class='section-row'>";
                 foreach ($pair as $exp) {
+                    $desc = !empty($exp['description']) ? "<div class='item-desc'>" . nl2br(htmlspecialchars($exp['description'])) . "</div>" : "";
                     $expHtml .= "
                     <div class='section-item'>
                         <div class='item-header'>
@@ -86,13 +87,14 @@ class ResumeRenderer
                             <span class='date'>{$exp['start_date']} – {$exp['end_date']}</span>
                         </div>
                         <div class='item-sub'>{$exp['position']}</div>
-                        <div class='item-desc'>" . nl2br($exp['description']) . "</div>
+                        {$desc}
                     </div>";
                 }
-                $expHtml .= "</div>";
+                $expHtml .= "<div style='clear: both;'></div></div>";
             }
         } else {
             foreach ($experiences as $exp) {
+                $desc = !empty($exp['description']) ? "<div class='item-desc'>" . nl2br(htmlspecialchars($exp['description'])) . "</div>" : "";
                 $expHtml .= "
                 <div class='section-item'>
                     <div class='item-header'>
@@ -100,7 +102,7 @@ class ResumeRenderer
                         <span class='date'>{$exp['start_date']} – {$exp['end_date']}</span>
                     </div>
                     <div class='item-sub'>{$exp['position']}</div>
-                    <div class='item-desc'>" . nl2br($exp['description']) . "</div>
+                    {$desc}
                 </div>";
             }
         }
@@ -121,7 +123,7 @@ class ResumeRenderer
                         <div class='item-sub'>{$edu['degree']}{$study}</div>
                     </div>";
                 }
-                $eduHtml .= "</div>";
+                $eduHtml .= "<div style='clear: both;'></div></div>";
             }
         } else {
             foreach ($education as $edu) {
@@ -181,7 +183,7 @@ class ResumeRenderer
                 .section-item { margin-bottom: 8px; page-break-inside: avoid; clear: both; }
                 .autofit-2col .section-item { width: 48%; float: left; margin-right: 4%; min-height: 50px; clear: none; margin-bottom: 12px; }
                 .autofit-2col .section-item:nth-child(2n) { margin-right: 0; }
-                .autofit-2col .section-row { clear: both; overflow: hidden; width: 100%; }
+                .autofit-2col .section-row { clear: both; width: 100%; margin-bottom: 5px; }
                 .autofit-2col .section-title { clear: both; page-break-after: avoid; margin-top: 10px; margin-bottom: 8px; }
                 .section-title { page-break-after: avoid; margin-top: 12px; margin-bottom: 8px; }
                 .item-header { margin-bottom: 1px; overflow: hidden; }
@@ -196,9 +198,9 @@ class ResumeRenderer
                 .autofit-2col .content-wrapper { display: block; clear: both; }
                 .autofit-2col .section-group { width: 100%; float: none; clear: both; }
                 
-                body.is-pdf { overflow: hidden; height: 297mm; }
+                body.is-pdf { overflow: hidden; }
                 .resume-page { overflow: hidden; position: relative; }
-                body.is-pdf .resume-page { height: 297mm; max-height: 297mm; }
+                body.is-pdf .resume-page { height: 296mm; max-height: 296mm; }
 
                 /* Floating Action Button (FAB) */
                 .fab-container {
