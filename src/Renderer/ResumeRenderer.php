@@ -192,9 +192,15 @@ class ResumeRenderer
                 .autofit-2col .section-item { width: 48%; float: left; margin-right: 4%; min-height: 50px; clear: none; margin-bottom: 12px; }
                 .autofit-2col .section-item:nth-child(2n) { margin-right: 0; }
                 .autofit-2col .section-row { clear: both; width: 100%; margin-bottom: 5px; }
+
+                /* Specific fixes for Dompdf stability */
+                body.is-pdf.autofit-2col .section-row { display: table; width: 100.1%; table-layout: fixed; border-spacing: 0; }
+                body.is-pdf.autofit-2col .section-item { display: table-cell; width: 50%; float: none; padding-right: 15px; vertical-align: top; clear: none; }
+                body.is-pdf.autofit-2col .section-item:last-child { padding-right: 0; }
+
                 .autofit-2col .section-title { clear: both; page-break-after: avoid; margin-top: 10px; margin-bottom: 8px; }
                 .section-title { page-break-after: avoid; margin-top: 12px; margin-bottom: 8px; }
-                .item-header { margin-bottom: 1px; overflow: hidden; }
+                .item-header { margin-bottom: 1px; }
                 .item-desc { margin-top: 1px; text-align: justify; font-size: 0.95em; }
 
                 /* Auto-fit Helpers */
@@ -206,9 +212,9 @@ class ResumeRenderer
                 .autofit-2col .content-wrapper { display: block; clear: both; }
                 .autofit-2col .section-group { width: 100%; float: none; clear: both; }
                 
-                body.is-pdf { overflow: hidden; }
+                body.is-pdf { overflow: visible; }
                 .resume-page { overflow: hidden; position: relative; }
-                body.is-pdf .resume-page { height: 296mm; max-height: 296mm; }
+                body.is-pdf .resume-page { height: 297mm; max-height: 297mm; }
 
                 /* Floating Action Button (FAB) */
                 .fab-container {
