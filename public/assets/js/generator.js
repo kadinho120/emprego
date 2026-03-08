@@ -210,6 +210,7 @@ async function generateExperienceWithAI(btn) {
         Com base no cargo "${position}" na empresa "${company}" (Nicho: ${activeNiche === 'tech' ? 'Tecnologia' : 'Saúde'}), gere uma lista de 3 a 4 tópicos de realizações profissionais impactantes.
         
         REGRAS:
+        - Escreva em PRIMEIRA PESSOA (ex: "Liderei", "Desenvolvi", "Implementei").
         - Use verbos de ação.
         - Foque em resultados e conquistas.
         - Não use placeholders como "[...]".
