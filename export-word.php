@@ -12,15 +12,24 @@ $id = $_GET['id'] ?? null;
 if (!$id)
     die("ID não fornecido");
 
+$userId = $_SESSION['user_id'];
+$isAdmin = Auth::isAdmin();
+
 try {
     $db = Database::getInstance();
 
     // Fetch data
-    $stmt = $db->prepare("SELECT * FROM resumes WHERE id = ?");
-    $stmt->execute([$id]);
+    // Fetch data with ownership check
+    if ($isAdmin) {
+        $stmt = $db->prepare("SELECT * FROM resumes WHERE id = ?");
+        $stmt->execute([$id]);
+    } else {
+        $stmt = $db->prepare("SELECT * FROM resumes WHERE id = ? AND user_id = ?");
+        $stmt->execute([$id, $userId]);
+    }
     $resume = $stmt->fetch();
     if (!$resume)
-        die("Currículo não encontrado");
+        die("Currículo não encontrado ou acesso negado");
 
     $stmtExp = $db->prepare("SELECT * FROM experiences WHERE resume_id = ? ORDER BY sort_order ASC, id ASC");
     $stmtExp->execute([$id]);

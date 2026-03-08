@@ -19,9 +19,14 @@ if (!$resumeId) {
 try {
     $db = Database::getInstance();
     
-    // Get Resume Data
-    $stmt = $db->prepare("SELECT * FROM resumes WHERE id = ? AND user_id = ?");
-    $stmt->execute([$resumeId, $_SESSION['user_id']]);
+    // Get Resume Data (Admin bypasses user_id check)
+    if (Auth::isAdmin()) {
+        $stmt = $db->prepare("SELECT * FROM resumes WHERE id = ?");
+        $stmt->execute([$resumeId]);
+    } else {
+        $stmt = $db->prepare("SELECT * FROM resumes WHERE id = ? AND user_id = ?");
+        $stmt->execute([$resumeId, $_SESSION['user_id']]);
+    }
     $resume = $stmt->fetch(\PDO::FETCH_ASSOC);
 
     if (!$resume) {

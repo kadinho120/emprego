@@ -17,6 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $resumeId = $_POST['resume_id'] ?? null;
 $userId = $_SESSION['user_id'];
+$isAdmin = Auth::isAdmin();
+
+// Convert 'admin' string to null for DB compliance
+$dbUserId = $isAdmin ? null : $userId;
 $fullName = $_POST['full_name'] ?? 'Sem Nome';
 $summary = $_POST['summary'] ?? '';
 $niche = $_POST['niche'] ?? 'tech';
@@ -39,18 +43,33 @@ try {
     
     if ($resumeId) {
         // Update existing resume
-        $stmt = $db->prepare("
-            UPDATE resumes 
-            SET full_name = ?, summary = ?, niche = ?, template_id = ?, 
-                phone = ?, city = ?, state = ?, primary_color = ?, 
-                font_family = ?, photo_path = ?, updated_at = CURRENT_TIMESTAMP
-            WHERE id = ? AND user_id = ?
-        ");
-        $stmt->execute([
-            $fullName, $summary, $niche, $templateId, 
-            $phone, $city, $state, $primaryColor, 
-            $fontFamily, $photoPath, $resumeId, $userId
-        ]);
+        if ($isAdmin) {
+            $stmt = $db->prepare("
+                UPDATE resumes 
+                SET full_name = ?, summary = ?, niche = ?, template_id = ?, 
+                    phone = ?, city = ?, state = ?, primary_color = ?, 
+                    font_family = ?, photo_path = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+            ");
+            $stmt->execute([
+                $fullName, $summary, $niche, $templateId, 
+                $phone, $city, $state, $primaryColor, 
+                $fontFamily, $photoPath, $resumeId
+            ]);
+        } else {
+            $stmt = $db->prepare("
+                UPDATE resumes 
+                SET full_name = ?, summary = ?, niche = ?, template_id = ?, 
+                    phone = ?, city = ?, state = ?, primary_color = ?, 
+                    font_family = ?, photo_path = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE id = ? AND user_id = ?
+            ");
+            $stmt->execute([
+                $fullName, $summary, $niche, $templateId, 
+                $phone, $city, $state, $primaryColor, 
+                $fontFamily, $photoPath, $resumeId, $userId
+            ]);
+        }
     } else {
         // Create new resume as draft
         $slug = bin2hex(random_bytes(8));
@@ -63,7 +82,7 @@ try {
             RETURNING id
         ");
         $stmt->execute([
-            $userId, $fullName, $summary, $niche, $templateId, 
+            $dbUserId, $fullName, $summary, $niche, $templateId, 
             $phone, $city, $state, $primaryColor, $fontFamily, 
             $photoPath, $slug
         ]);

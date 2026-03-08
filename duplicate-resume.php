@@ -15,11 +15,8 @@ if (!$resumeId) {
 try {
     $db = Database::getInstance();
     $userId = $_SESSION['user_id'];
-    $userRole = $_SESSION['user_role'] ?? 'user';
-
-    if (!is_numeric($userId)) {
-        $userId = null;
-    }
+    $isAdmin = Auth::isAdmin();
+    $dbUserId = $isAdmin ? null : $userId;
 
     // 1. Fetch original resume
     $stmt = $db->prepare("SELECT * FROM resumes WHERE id = ?");
@@ -32,7 +29,7 @@ try {
     }
 
     // Security check
-    if ($original['user_id'] != $userId && $userRole !== 'admin') {
+    if ($original['user_id'] != $userId && !$isAdmin) {
         header('Location: dashboard.php?error=Acesso negado');
         exit;
     }
@@ -42,7 +39,7 @@ try {
     $stmtInsert = $db->prepare("INSERT INTO resumes (template_id, full_name, email, user_id, phone, city, state, photo_path, linkedin, website, summary, slug, primary_color, font_family)
                                 SELECT template_id, CONCAT(full_name, ' (Cópia)'), email, ?, phone, city, state, photo_path, linkedin, website, summary, ?, primary_color, font_family
                                 FROM resumes WHERE id = ? RETURNING id");
-    $stmtInsert->execute([$userId, $newSlug, $resumeId]);
+    $stmtInsert->execute([$dbUserId, $newSlug, $resumeId]);
     $newId = $stmtInsert->fetchColumn();
 
     // 3. Duplicate Experiences

@@ -28,7 +28,8 @@ try {
     }
 
     // Security Check: Only owner or admin
-    if ($resume['user_id'] != $userId && $userRole !== 'admin') {
+    $isAdmin = Auth::isAdmin();
+    if ($resume['user_id'] != $userId && !$isAdmin) {
         header('Location: dashboard.php?error=Acesso negado');
         exit;
     }
