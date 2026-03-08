@@ -71,30 +71,70 @@ class ResumeRenderer
         }, $skills);
         $skillsText = implode(' • ', $skillsArr);
 
+        $is2Col = in_array('autofit-2col', $autofitClasses);
+        
         $expHtml = '';
-        foreach ($experiences as $exp) {
-            $expHtml .= "
-            <div class='section-item'>
-                <div class='item-header'>
-                    <span class='company'>{$exp['company']}</span>
-                    <span class='date'>{$exp['start_date']} – {$exp['end_date']}</span>
-                </div>
-                <div class='item-sub'>{$exp['position']}</div>
-                <div class='item-desc'>" . nl2br($exp['description']) . "</div>
-            </div>";
+        if ($is2Col) {
+            $chunks = array_chunk($experiences, 2);
+            foreach ($chunks as $pair) {
+                $expHtml .= "<div class='section-row'>";
+                foreach ($pair as $exp) {
+                    $expHtml .= "
+                    <div class='section-item'>
+                        <div class='item-header'>
+                            <span class='company'>{$exp['company']}</span>
+                            <span class='date'>{$exp['start_date']} – {$exp['end_date']}</span>
+                        </div>
+                        <div class='item-sub'>{$exp['position']}</div>
+                        <div class='item-desc'>" . nl2br($exp['description']) . "</div>
+                    </div>";
+                }
+                $expHtml .= "</div>";
+            }
+        } else {
+            foreach ($experiences as $exp) {
+                $expHtml .= "
+                <div class='section-item'>
+                    <div class='item-header'>
+                        <span class='company'>{$exp['company']}</span>
+                        <span class='date'>{$exp['start_date']} – {$exp['end_date']}</span>
+                    </div>
+                    <div class='item-sub'>{$exp['position']}</div>
+                    <div class='item-desc'>" . nl2br($exp['description']) . "</div>
+                </div>";
+            }
         }
 
         $eduHtml = '';
-        foreach ($education as $edu) {
-            $study = !empty($edu['field_of_study']) ? " - " . $edu['field_of_study'] : "";
-            $eduHtml .= "
-            <div class='section-item'>
-                <div class='item-header'>
-                    <span class='company'>{$edu['institution']}</span>
-                    <span class='date'>{$edu['graduation_date']}</span>
-                </div>
-                <div class='item-sub'>{$edu['degree']}{$study}</div>
-            </div>";
+        if ($is2Col) {
+            $chunks = array_chunk($education, 2);
+            foreach ($chunks as $pair) {
+                $eduHtml .= "<div class='section-row'>";
+                foreach ($pair as $edu) {
+                    $study = !empty($edu['field_of_study']) ? " - " . $edu['field_of_study'] : "";
+                    $eduHtml .= "
+                    <div class='section-item'>
+                        <div class='item-header'>
+                            <span class='company'>{$edu['institution']}</span>
+                            <span class='date'>{$edu['graduation_date']}</span>
+                        </div>
+                        <div class='item-sub'>{$edu['degree']}{$study}</div>
+                    </div>";
+                }
+                $eduHtml .= "</div>";
+            }
+        } else {
+            foreach ($education as $edu) {
+                $study = !empty($edu['field_of_study']) ? " - " . $edu['field_of_study'] : "";
+                $eduHtml .= "
+                <div class='section-item'>
+                    <div class='item-header'>
+                        <span class='company'>{$edu['institution']}</span>
+                        <span class='date'>{$edu['graduation_date']}</span>
+                    </div>
+                    <div class='item-sub'>{$edu['degree']}{$study}</div>
+                </div>";
+            }
         }
 
         $html = "
@@ -105,7 +145,7 @@ class ResumeRenderer
             <title>{$resume['full_name']} - Currículo</title>
             " . self::getFontImport($fontFamily) . "
             <style>
-                @page { margin: 0.5cm; }
+                @page { margin: 0.3cm; }
                 * { box-sizing: border-box; -webkit-print-color-adjust: exact; }
                 body { 
                     font-family: " . self::getFontFace($fontFamily) . ", 'DejaVu Sans', sans-serif; 
@@ -116,8 +156,8 @@ class ResumeRenderer
                 .resume-page {
                     width: 210mm;
                     min-height: 297mm;
-                    margin: 1rem auto;
-                    padding: 0.5cm;
+                    margin: 0.5rem auto;
+                    padding: 0.3cm;
                     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
                 }
                 body.is-iframe .resume-page,
@@ -139,8 +179,9 @@ class ResumeRenderer
                 }
                 {$css}
                 .section-item { margin-bottom: 8px; page-break-inside: avoid; clear: both; }
-                .autofit-2col .section-item { width: 49%; float: left; margin-right: 2%; min-height: 50px; clear: none; }
+                .autofit-2col .section-item { width: 48%; float: left; margin-right: 4%; min-height: 50px; clear: none; margin-bottom: 12px; }
                 .autofit-2col .section-item:nth-child(2n) { margin-right: 0; }
+                .autofit-2col .section-row { clear: both; overflow: hidden; width: 100%; }
                 .autofit-2col .section-title { clear: both; page-break-after: avoid; margin-top: 10px; margin-bottom: 8px; }
                 .section-title { page-break-after: avoid; margin-top: 12px; margin-bottom: 8px; }
                 .item-header { margin-bottom: 1px; overflow: hidden; }
