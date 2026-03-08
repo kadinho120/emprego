@@ -139,9 +139,15 @@ function openSuggestions(type, btn) {
 
 async function generateSummaryWithAI(btn) {
     const textarea = btn.closest('.space-y-2').querySelector('textarea');
-    const name = document.querySelector('input[name="full_name"]').value;
+    const nameInput = document.querySelector('input[name="full_name"]');
+    const name = nameInput ? nameInput.value : '';
     const nicheInput = document.getElementById('nicheInput');
     const activeNiche = nicheInput ? nicheInput.value : 'tech';
+
+    if (!textarea) {
+        console.error('Textarea não encontrado');
+        return;
+    }
 
     if (!name) {
         alert('Por favor, preencha seu nome primeiro para que a I.A. tenha contexto.');
@@ -167,7 +173,11 @@ async function generateSummaryWithAI(btn) {
         const aiResponse = await puter.ai.chat(prompt, { model: 'gpt-4o-mini' });
         textarea.value = aiResponse.toString().trim();
         
-        triggerUpdate();
+        if (typeof updatePreview === 'function') {
+            updatePreview();
+        } else if (typeof triggerUpdate === 'function') {
+            triggerUpdate();
+        }
     } catch (err) {
         console.error('Erro ao gerar resumo:', err);
         alert('Erro ao gerar resumo com I.A. Tente novamente.');
