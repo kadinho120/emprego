@@ -82,8 +82,6 @@
             <!-- Passo 2: Login com Senha -->
             <div id="step2-login" class="space-y-6" style="display: none;">
                 <div class="text-center">
-                    <h1 class="text-3xl font-extrabold text-white tracking-tight">ApproveMax</h1>
-                    <p class="text-red-500 font-bold text-xs mt-2">(DEPLOY V3.2 ATIVO)</p>
                     <p class="text-slate-400">Digite sua senha para acessar sua conta.</p>
                 </div>
                 <div class="space-y-2">
