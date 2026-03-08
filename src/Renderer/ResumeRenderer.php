@@ -10,6 +10,58 @@ class ResumeRenderer
         $primaryColor = $resume['primary_color'] ?? null;
         $fontFamily = $resume['font_family'] ?? 'jakarta';
 
+        // --- Server-side Auto-fit Logic (Enforce 1 Page) ---
+        $estLines = 0;
+        // Header approx
+        $estLines += !empty($resume['photo_path']) ? 10 : 6;
+        
+        // Summary
+        if (!empty(trim($resume['summary']))) {
+            $estLines += 2; // Title + Padding
+            $estLines += ceil(strlen($resume['summary']) / 85); 
+        }
+        
+        // Experiences
+        if (!empty($experiences)) {
+            $estLines += 2; // Title
+            foreach ($experiences as $exp) {
+                $estLines += 2; // Company + Position
+                $estLines += ceil(strlen($exp['description']) / 85);
+                $estLines += 1; // Spacing
+            }
+        }
+        
+        // Education
+        if (!empty($education)) {
+            $estLines += 2; // Title
+            foreach ($education as $edu) {
+                $estLines += 2; // Inst + Degree
+                $estLines += 1; // Spacing
+            }
+        }
+        
+        // Skills
+        if (!empty($skills)) {
+            $estLines += 3;
+        }
+
+        $autofitClasses = [];
+        if ($estLines > 45) {
+            $fontSize = max(8.5, $fontSize - (($estLines - 45) * 0.15));
+            $lineHeight = max(1.1, $lineHeight - 0.1);
+            $autofitClasses[] = 'autofit-compressed';
+        }
+        
+        if ($isPdf) {
+            $autofitClasses[] = 'is-pdf';
+        }
+        if (isset($_GET['iframe'])) {
+            $autofitClasses[] = 'is-iframe';
+        }
+
+        // Define CSS based on template
+        $css = self::getTemplateCss($template, $primaryColor, $fontSize, $lineHeight);
+
         $skillsArr = array_map(function ($s) {
             return $s['skill_name'];
         }, $skills);
@@ -40,9 +92,6 @@ class ResumeRenderer
                 <div class='item-sub'>{$edu['degree']}{$study}</div>
             </div>";
         }
-
-        // Define CSS based on template
-        $css = self::getTemplateCss($template, $primaryColor, $fontSize, $lineHeight);
 
         $html = "
         <!DOCTYPE html>
@@ -91,17 +140,19 @@ class ResumeRenderer
                 .section-title { page-break-after: avoid; margin-top: 15px; margin-bottom: 10px; }
 
                 /* Auto-fit Helpers */
-                .autofit-compressed .section-item { margin-bottom: 6px; }
-                .autofit-compressed .section-title { margin-top: 10px; margin-bottom: 5px; }
-                .autofit-compressed .header { padding-top: 15px !important; padding-bottom: 15px !important; margin-bottom: 15px !important; }
+                .autofit-compressed .section-item { margin-bottom: 4px; }
+                .autofit-compressed .section-title { margin-top: 8px; margin-bottom: 4px; }
+                .autofit-compressed .header { padding-top: 10px !important; padding-bottom: 10px !important; margin-bottom: 10px !important; }
+                .autofit-compressed .item-desc { line-height: 1.2; }
                 
                 .autofit-2col .content-wrapper { display: block; }
                 .autofit-2col .section-group { width: 48%; float: left; margin-right: 4%; }
                 .autofit-2col .section-group:nth-child(2n) { margin-right: 0; }
                 .autofit-2col .section-group.full-width { width: 100%; float: none; margin-right: 0; }
                 
-                body.is-pdf { overflow: hidden; }
+                body.is-pdf { overflow: hidden; height: 297mm; }
                 .resume-page { overflow: hidden; position: relative; }
+                body.is-pdf .resume-page { height: 297mm; max-height: 297mm; }
 
                 /* Floating Action Button (FAB) */
                 .fab-container {
@@ -141,7 +192,7 @@ class ResumeRenderer
                 }
             </style>
         </head>
-        <body class='" . ($isPdf ? 'is-pdf' : (isset($_GET['iframe']) ? 'is-iframe' : '')) . "' style='margin: 0; padding: 0;'>
+        <body class='" . implode(' ', $autofitClasses) . "' style='margin: 0; padding: 0;'>
             " . (!$isPdf && !isset($_GET['iframe']) && !empty($resume['id']) ? "
             <div class='fab-container'>
                 <a href='generate-pdf.php?id={$resume['id']}' class='fab-btn'>
