@@ -137,6 +137,46 @@ function openSuggestions(type, btn) {
     modal.classList.add('flex');
 }
 
+async function generateSummaryWithAI(btn) {
+    const textarea = btn.closest('.space-y-2').querySelector('textarea');
+    const name = document.querySelector('input[name="full_name"]').value;
+    const nicheInput = document.getElementById('nicheInput');
+    const activeNiche = nicheInput ? nicheInput.value : 'tech';
+
+    if (!name) {
+        alert('Por favor, preencha seu nome primeiro para que a I.A. tenha contexto.');
+        return;
+    }
+
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '🤖 Gerando...';
+
+    try {
+        const prompt = `
+        Aja como um escritor especializado em currículos de alta conversão.
+        Crie um resumo profissional impactante para um candidato do nicho "${activeNiche === 'tech' ? 'Tecnologia/TI' : 'Saúde/Enfermagem'}".
+        NOME DO CANDIDATO: ${name}
+        
+        O resumo deve ser escrito em primeira pessoa, ter entre 3 e 4 linhas, e destacar competências e compromisso com resultados/qualidade.
+        Não use placeholders como "[Habilidade]", crie um texto fluído e profissional que sirva de base.
+        
+        Responda APENAS com o texto do resumo, sem saudações ou explicações.
+        `;
+
+        const aiResponse = await puter.ai.chat(prompt, { model: 'gpt-4o-mini' });
+        textarea.value = aiResponse.toString().trim();
+        
+        triggerUpdate();
+    } catch (err) {
+        console.error('Erro ao gerar resumo:', err);
+        alert('Erro ao gerar resumo com I.A. Tente novamente.');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
+}
+
 function closeSuggestions() {
     const modal = document.getElementById('suggestionModal');
     modal.classList.add('hidden');
@@ -402,7 +442,57 @@ let timeout = null;
 const triggerUpdate = () => {
     clearTimeout(timeout);
     timeout = setTimeout(updatePreview, 500);
+    triggerAutoSave();
 };
+
+let autoSaveTimeout = null;
+function triggerAutoSave() {
+    clearTimeout(autoSaveTimeout);
+    autoSaveTimeout = setTimeout(autoSave, 2000);
+}
+
+async function autoSave() {
+    console.log('Auto-saving...');
+    const indicator = document.getElementById('saveIndicator');
+    if (indicator) {
+        indicator.innerText = '⏳ Salvando...';
+        indicator.classList.remove('hidden');
+    }
+
+    const formData = new FormData(form);
+    formData.append('is_auto_save', '1');
+
+    try {
+        const response = await fetch('save-draft.php', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            console.log('Draft saved successfully');
+            if (indicator) {
+                indicator.innerText = '✅ Salvo';
+                setTimeout(() => indicator.classList.add('hidden'), 2000);
+            }
+            
+            // If it was a new resume, update the ID in the form
+            if (data.resume_id) {
+                let idInput = form.querySelector('input[name="resume_id"]');
+                if (!idInput) {
+                    idInput = document.createElement('input');
+                    idInput.type = 'hidden';
+                    idInput.name = 'resume_id';
+                    form.appendChild(idInput);
+                }
+                idInput.value = data.resume_id;
+            }
+        }
+    } catch (err) {
+        console.error('Auto-save error:', err);
+        if (indicator) indicator.innerText = '❌ Erro ao salvar';
+    }
+}
 
 if (form) {
     form.addEventListener('input', triggerUpdate);

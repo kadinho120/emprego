@@ -61,6 +61,7 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="https://js.puter.com/v2/"></script>
 </head>
 
 <body>
@@ -94,6 +95,9 @@
                         class="text-xs font-bold text-slate-500 hover:text-red-400 transition-colors">Sair</a>
                 </div>
             </div>
+
+            <!-- Auto-save Indicator -->
+            <div id="saveIndicator" class="hidden px-10 mb-2 text-[10px] font-bold text-indigo-400 transition-all"></div>
 
             <div class="flex-grow px-6 md:px-10 pb-20">
                 <div class="flex justify-center gap-2 mb-10 overflow-x-auto pb-2 scrollbar-none">
@@ -335,9 +339,14 @@
                             <div class="space-y-2">
                                 <div class="flex justify-between items-center px-1">
                                     <label class="text-sm font-semibold text-slate-300">Resumo Profissional</label>
-                                    <button type="button"
-                                        class="text-xs font-bold text-indigo-400 hover:text-white flex items-center gap-1 transition-colors"
-                                        onclick="openSuggestions('summary', this)">✨ Sugestões</button>
+                                    <div class="flex gap-3 items-center">
+                                        <button type="button"
+                                            class="text-xs font-bold text-indigo-400 hover:text-white flex items-center gap-1 transition-colors"
+                                            onclick="openSuggestions('summary', this)">✨ Sugestões</button>
+                                        <button type="button"
+                                            class="text-xs font-bold text-emerald-400 hover:text-white flex items-center gap-1 transition-colors"
+                                            onclick="generateSummaryWithAI(this)">🤖 Gerar com I.A.</button>
+                                    </div>
                                 </div>
                                 <textarea name="summary" rows="4" class="form-input resize-none"
                                     placeholder="Fale um pouco sobre sua carreira..."

@@ -1,71 +1,71 @@
 <?php
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/src/Auth.php';
+require_once __DIR__ . '/src/Config/Database.php';
+
+use App\Auth;
 use App\Config\Database;
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    die(json_encode(['error' => 'Apenas POST permitido']));
-}
+Auth::requireLogin();
+
+header('Content-Type: application/json');
 
 $resumeId = $_POST['resume_id'] ?? null;
-$jobDescription = $_POST['job_description'] ?? '';
 
-if (!$resumeId || empty($jobDescription)) {
-    die(json_encode(['error' => 'Dados incompletos']));
+if (!$resumeId) {
+    echo json_encode(['success' => false, 'error' => 'ID do currículo não fornecido.']);
+    exit;
 }
 
 try {
     $db = Database::getInstance();
+    
+    // Get Resume Data
+    $stmt = $db->prepare("SELECT * FROM resumes WHERE id = ? AND user_id = ?");
+    $stmt->execute([$resumeId, $_SESSION['user_id']]);
+    $resume = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-    // Fetch resume content
-    $stmt = $db->prepare("SELECT summary FROM resumes WHERE id = ?");
+    if (!$resume) {
+        echo json_encode(['success' => false, 'error' => 'Currículo não encontrado.']);
+        exit;
+    }
+
+    // Get Experiences
+    $stmt = $db->prepare("SELECT * FROM experiences WHERE resume_id = ? ORDER BY id ASC");
     $stmt->execute([$resumeId]);
-    $resume = $stmt->fetch();
+    $experiences = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-    $stmtExp = $db->prepare("SELECT description FROM experiences WHERE resume_id = ?");
-    $stmtExp->execute([$resumeId]);
-    $experiences = $stmtExp->fetchAll(PDO::FETCH_COLUMN);
+    // Get Education
+    $stmt = $db->prepare("SELECT * FROM education WHERE resume_id = ? ORDER BY id ASC");
+    $stmt->execute([$resumeId]);
+    $education = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-    $stmtSkills = $db->prepare("SELECT skill_name FROM skills WHERE resume_id = ?");
-    $stmtSkills->execute([$resumeId]);
-    $skills = $stmtSkills->fetchAll(PDO::FETCH_COLUMN);
+    // Get Skills
+    $stmt = $db->prepare("SELECT * FROM skills WHERE resume_id = ? ORDER BY id ASC");
+    $stmt->execute([$resumeId]);
+    $skills = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-    $resumeText = $resume['summary'] . ' ' . implode(' ', $experiences) . ' ' . implode(' ', $skills);
-    $resumeText = strtolower($resumeText);
-
-    // Extract keywords from job description (simple version: top words > 3 chars)
-    $jobWords = preg_split('/\W+/', strtolower($jobDescription), -1, PREG_SPLIT_NO_EMPTY);
-    $stopWords = ['para', 'com', 'uma', 'este', 'esta', 'como', 'pode', 'ser', 'mais', 'pelo', 'sendo', 'sobre', 'entre', 'quando', 'onde', 'quem', 'qual', 'quais'];
-
-    $relevantKeywords = [];
-    foreach ($jobWords as $word) {
-        if (strlen($word) > 3 && !in_array($word, $stopWords)) {
-            $relevantKeywords[$word] = ($relevantKeywords[$word] ?? 0) + 1;
-        }
+    // Prepare full text for AI
+    $resumeContent = "NOME: " . $resume['full_name'] . "\n";
+    $resumeContent .= "RESUMO: " . $resume['summary'] . "\n\n";
+    
+    $resumeContent .= "EXPERIÊNCIAS:\n";
+    foreach ($experiences as $exp) {
+        $resumeContent .= "- " . $exp['position'] . " na " . $exp['company'] . " (" . $exp['start_date'] . " - " . ($exp['end_date'] ?: 'Atual') . "): " . $exp['description'] . "\n";
     }
-
-    arsort($relevantKeywords);
-    $topKeywords = array_slice(array_keys($relevantKeywords), 0, 15);
-
-    $matches = [];
-    $missing = [];
-
-    foreach ($topKeywords as $keyword) {
-        if (strpos($resumeText, $keyword) !== false) {
-            $matches[] = $keyword;
-        } else {
-            $missing[] = $keyword;
-        }
+    
+    $resumeContent .= "\nFORMAÇÃO:\n";
+    foreach ($education as $edu) {
+        $resumeContent .= "- " . $edu['degree'] . " em " . $edu['field_of_study'] . " na " . $edu['institution'] . " (Conclusão: " . $edu['graduation_date'] . ")\n";
     }
-
-    $score = count($topKeywords) > 0 ? round((count($matches) / count($topKeywords)) * 100) : 0;
+    
+    $resumeContent .= "\nHABILIDADES: " . implode(', ', array_column($skills, 'name')) . "\n";
 
     echo json_encode([
-        'score' => $score,
-        'matches' => $matches,
-        'missing' => $missing,
-        'top_keywords' => $topKeywords
+        'success' => true,
+        'resume_text' => $resumeContent,
+        'niche' => $resume['niche']
     ]);
 
-} catch (Exception $e) {
-    echo json_encode(['error' => $e->getMessage()]);
+} catch (\Exception $e) {
+    echo json_encode(['success' => false, 'error' => 'Erro interno: ' . $e->getMessage()]);
 }
