@@ -105,7 +105,7 @@ class ResumeRenderer
             <title>{$resume['full_name']} - Currículo</title>
             " . self::getFontImport($fontFamily) . "
             <style>
-                @page { margin: 1cm 1.5cm; }
+                @page { margin: 0.5cm; }
                 * { box-sizing: border-box; -webkit-print-color-adjust: exact; }
                 body { 
                     font-family: " . self::getFontFace($fontFamily) . ", 'DejaVu Sans', sans-serif; 
@@ -116,8 +116,8 @@ class ResumeRenderer
                 .resume-page {
                     width: 210mm;
                     min-height: 297mm;
-                    margin: 2rem auto;
-                    padding: 1cm 1.5cm;
+                    margin: 1rem auto;
+                    padding: 0.5cm;
                     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
                 }
                 body.is-iframe .resume-page,
@@ -138,13 +138,13 @@ class ResumeRenderer
                     }
                 }
                 {$css}
-                .section-item { margin-bottom: 12px; page-break-inside: avoid; }
-                .autofit-2col .section-item { width: 48%; float: left; margin-right: 2%; min-height: 80px; }
+                .section-item { margin-bottom: 8px; page-break-inside: avoid; clear: both; }
+                .autofit-2col .section-item { width: 49%; float: left; margin-right: 2%; min-height: 50px; clear: none; }
                 .autofit-2col .section-item:nth-child(2n) { margin-right: 0; }
-                .autofit-2col .section-title { clear: both; page-break-after: avoid; margin-top: 15px; margin-bottom: 10px; }
-                .section-title { page-break-after: avoid; margin-top: 15px; margin-bottom: 10px; }
-                .item-header { margin-bottom: 2px; overflow: hidden; }
-                .item-desc { margin-top: 2px; text-align: justify; }
+                .autofit-2col .section-title { clear: both; page-break-after: avoid; margin-top: 10px; margin-bottom: 8px; }
+                .section-title { page-break-after: avoid; margin-top: 12px; margin-bottom: 8px; }
+                .item-header { margin-bottom: 1px; overflow: hidden; }
+                .item-desc { margin-top: 1px; text-align: justify; font-size: 0.95em; }
 
                 /* Auto-fit Helpers */
                 .autofit-compressed .section-item { margin-bottom: 4px; }
@@ -152,10 +152,8 @@ class ResumeRenderer
                 .autofit-compressed .header { padding-top: 10px !important; padding-bottom: 10px !important; margin-bottom: 10px !important; }
                 .autofit-compressed .item-desc { line-height: 1.2; }
                 
-                .autofit-2col .content-wrapper { display: block; }
-                .autofit-2col .section-group { width: 48%; float: left; margin-right: 4%; }
-                .autofit-2col .section-group:nth-child(2n) { margin-right: 0; }
-                .autofit-2col .section-group.full-width { width: 100%; float: none; margin-right: 0; }
+                .autofit-2col .content-wrapper { display: block; clear: both; }
+                .autofit-2col .section-group { width: 100%; float: none; clear: both; }
                 
                 body.is-pdf { overflow: hidden; height: 297mm; }
                 .resume-page { overflow: hidden; position: relative; }
@@ -316,42 +314,42 @@ class ResumeRenderer
                 return "
                     .resume-page { background: white; }
                     body { font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #334155; margin: 0; padding: 0; }
-                    .header { background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); border-left: 10px solid {$p}; padding: 40px; margin-bottom: 30px; border-radius: 0 20px 20px 0; }
-                    .photo-container { float: right; width: 110px; height: 145px; border-radius: 15px; border: 4px solid white; box-shadow: 0 10px 25px rgba(13, 148, 136, 0.2); overflow: hidden; }
+                    .header { background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); border-left: 10px solid {$p}; padding: 20px; margin-bottom: 15px; border-radius: 0 20px 20px 0; }
+                    .photo-container { float: right; width: 90px; height: 120px; border-radius: 12px; border: 3px solid white; box-shadow: 0 10px 25px rgba(13, 148, 136, 0.2); overflow: hidden; }
                     .photo { width: 100%; height: 100%; object-fit: cover; }
-                    .name { font-size: 30pt; font-weight: 800; color: {$p}; margin: 0; letter-spacing: -1px; }
-                    .contact { font-size: 10pt; color: #64748b; margin-top: 10px; display: flex; gap: 10px; }
-                    .header-text { float: left; width: 70%; }
-                    .content-wrapper { padding: 0 40px; }
-                    .section-title { font-size: 12pt; font-weight: 800; color: {$p}; margin-top: 25px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; page-break-after: avoid; }
-                    .section-title::after { content: ''; flex: 1; height: 2px; background: linear-gradient(to right, {$p}, transparent); opacity: 0.3; }
-                    .section-item { margin-bottom: 20px; page-break-inside: avoid; }
-                    .company { font-weight: 700; color: #1e293b; font-size: 1.1em; }
-                    .date { color: {$p}; font-weight: 700; font-size: 0.85em; background: #ccfbf1; padding: 4px 12px; border-radius: 50px; float: right; }
-                    .item-sub { color: #5b21b6; font-weight: 700; margin-top: 4px; display: block; font-style: italic; }
-                    .item-desc { margin-top: 10px; padding-left: 20px; border-left: 2px solid #e2e8f0; color: #475569; }
-                    .skills-box { display: flex; flex-wrap: wrap; gap: 10px; color: {$p}; font-weight: 700; }
+                    .name { font-size: 26pt; font-weight: 800; color: {$p}; margin: 0; letter-spacing: -1px; }
+                    .contact { font-size: 9pt; color: #64748b; margin-top: 5px; display: flex; gap: 8px; }
+                    .header-text { float: left; width: 75%; }
+                    .content-wrapper { padding: 0 10px; }
+                    .section-title { font-size: 11pt; font-weight: 800; color: {$p}; margin-top: 15px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; page-break-after: avoid; }
+                    .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, {$p}, transparent); opacity: 0.3; }
+                    .section-item { margin-bottom: 10px; page-break-inside: avoid; }
+                    .company { font-weight: 700; color: #1e293b; font-size: 1.05em; }
+                    .date { color: {$p}; font-weight: 700; font-size: 0.8em; background: #ccfbf1; padding: 2px 10px; border-radius: 50px; float: right; }
+                    .item-sub { color: #5b21b6; font-weight: 700; margin-top: 2px; display: block; font-style: italic; }
+                    .item-desc { margin-top: 5px; padding-left: 10px; border-left: 2px solid #e2e8f0; color: #475569; }
+                    .skills-box { display: flex; flex-wrap: wrap; gap: 8px; color: {$p}; font-weight: 700; }
                 ";
             case 'health_professional':
                 $p = $primaryColor ?? '#1e3a8a';
                 return "
                     .resume-page { background: white; }
                     body { font-size: {$fontSize}pt; line-height: {$lineHeight}; color: #1e293b; margin: 0; padding: 0; }
-                    .header { background: {$p}; color: white; padding: 50px 40px; margin-bottom: 40px; position: relative; overflow: hidden; }
-                    .header::after { content: ''; position: absolute; top: -50%; right: -10%; width: 300px; height: 300px; background: rgba(255,255,255,0.05); border-radius: 50%; }
+                    .header { background: {$p}; color: white; padding: 30px 25px; margin-bottom: 15px; position: relative; overflow: hidden; }
+                    .header::after { content: ''; position: absolute; top: -50%; right: -10%; width: 200px; height: 200px; background: rgba(255,255,255,0.05); border-radius: 50%; }
                     .header-text { float: left; width: 75%; position: relative; z-index: 10; }
-                    .photo-container { float: right; width: 120px; height: 160px; border: 5px solid rgba(255,255,255,0.2); border-radius: 12px; overflow: hidden; position: relative; z-index: 10; }
+                    .photo-container { float: right; width: 100px; height: 130px; border: 4px solid rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; position: relative; z-index: 10; }
                     .photo { width: 100%; height: 100%; object-fit: cover; }
-                    .name { font-size: 34pt; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: -1px; }
-                    .contact { font-size: 11pt; opacity: 0.8; margin-top: 15px; font-weight: 500; }
-                    .content-wrapper { padding: 0 50px; }
-                    .section-title { font-size: 15pt; font-weight: 800; color: {$p}; border-left: 8px solid {$p}; padding-left: 15px; margin-top: 30px; margin-bottom: 20px; text-transform: uppercase; background: #f8fafc; padding-top: 8px; padding-bottom: 8px; page-break-after: avoid; }
-                    .section-item { margin-bottom: 25px; page-break-inside: avoid; }
-                    .company { font-weight: 800; color: #000; font-size: 1.2em; }
-                    .date { color: #64748b; font-weight: 600; float: right; text-transform: uppercase; font-size: 0.9em; }
-                    .item-sub { color: {$p}; font-weight: 700; margin-bottom: 8px; font-size: 1.1em; display: block; }
-                    .item-desc { color: #334155; padding-left: 20px; border-left: 1px solid #e2e8f0; line-height: 1.6; }
-                    .skills-box { background: #f1f5f9; padding: 25px; border-radius: 12px; border-right: 15px solid {$p}; font-weight: 700; color: {$p}; }
+                    .name { font-size: 28pt; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: -1px; }
+                    .contact { font-size: 10pt; opacity: 0.9; margin-top: 10px; font-weight: 500; }
+                    .content-wrapper { padding: 0 15px; }
+                    .section-title { font-size: 13pt; font-weight: 800; color: {$p}; border-left: 6px solid {$p}; padding-left: 12px; margin-top: 20px; margin-bottom: 15px; text-transform: uppercase; background: #f8fafc; padding-top: 6px; padding-bottom: 6px; page-break-after: avoid; }
+                    .section-item { margin-bottom: 15px; page-break-inside: avoid; }
+                    .company { font-weight: 800; color: #000; font-size: 1.1em; }
+                    .date { color: #64748b; font-weight: 600; float: right; text-transform: uppercase; font-size: 0.85em; }
+                    .item-sub { color: {$p}; font-weight: 700; margin-bottom: 5px; font-size: 1.05em; display: block; }
+                    .item-desc { color: #334155; padding-left: 15px; border-left: 1px solid #e2e8f0; line-height: 1.4; }
+                    .skills-box { background: #f1f5f9; padding: 15px; border-radius: 10px; border-right: 10px solid {$p}; font-weight: 700; color: {$p}; }
                 ";
             case 'health_clean':
                 $p = $primaryColor ?? '#10b981';
