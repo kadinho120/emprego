@@ -52,6 +52,8 @@ $options = new Options();
 $options->set('isHtml5ParserEnabled', true);
 $options->set('isRemoteEnabled', true);
 $options->set('defaultFont', 'DejaVu Sans');
+$options->set('isJavascriptEnabled', true); // dompdf has limited JS support, but we enable it
+$options->set('isFontSubsettingEnabled', true);
 
 $dompdf = new Dompdf($options);
 

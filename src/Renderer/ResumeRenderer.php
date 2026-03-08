@@ -85,10 +85,23 @@ class ResumeRenderer
                     }
                 }
                 {$css}
-                .section-item { margin-bottom: 15px; clear: both; page-break-inside: avoid; }
-                .item-header { margin-bottom: 3px; overflow: hidden; }
-                .item-desc { margin-top: 3px; text-align: justify; }
-                .section-title { page-break-after: avoid; }
+                .section-item { margin-bottom: 12px; clear: both; page-break-inside: avoid; }
+                .item-header { margin-bottom: 2px; overflow: hidden; }
+                .item-desc { margin-top: 2px; text-align: justify; }
+                .section-title { page-break-after: avoid; margin-top: 15px; margin-bottom: 10px; }
+
+                /* Auto-fit Helpers */
+                .autofit-compressed .section-item { margin-bottom: 6px; }
+                .autofit-compressed .section-title { margin-top: 10px; margin-bottom: 5px; }
+                .autofit-compressed .header { padding-top: 15px !important; padding-bottom: 15px !important; margin-bottom: 15px !important; }
+                
+                .autofit-2col .content-wrapper { display: block; }
+                .autofit-2col .section-group { width: 48%; float: left; margin-right: 4%; }
+                .autofit-2col .section-group:nth-child(2n) { margin-right: 0; }
+                .autofit-2col .section-group.full-width { width: 100%; float: none; margin-right: 0; }
+                
+                body.is-pdf { overflow: hidden; }
+                .resume-page { overflow: hidden; position: relative; }
 
                 /* Floating Action Button (FAB) */
                 .fab-container {
@@ -190,6 +203,46 @@ class ResumeRenderer
                 </div>
                 " : "") . "
             </div>
+            
+            <script>
+                function autofit() {
+                    const page = document.querySelector('.resume-page');
+                    const wrapper = document.querySelector('.content-wrapper');
+                    const maxH = 1050; // Aproximadamente A4 em pixels a 96dpi (1122px) menos margens
+                    
+                    let currentFontSize = parseFloat(window.getComputedStyle(document.body).fontSize);
+                    let iterations = 0;
+                    
+                    // Ajuste iterativo de fonte e espaçamento
+                    while (page.scrollHeight > maxH && currentFontSize > 11 && iterations < 10) {
+                        currentFontSize -= 0.5;
+                        document.body.style.fontSize = currentFontSize + 'pt';
+                        iterations++;
+                    }
+                    
+                    if (page.scrollHeight > maxH) {
+                        document.body.classList.add('autofit-compressed');
+                    }
+                    
+                    if (page.scrollHeight > maxH) {
+                        // Se ainda não couber, tenta colunas para Experiência/Educação
+                        // (Apenas se houver espaço lateral suficiente)
+                        // document.body.classList.add('autofit-2col');
+                    }
+
+                    // Forçar ocultação de qualquer estouro para o PDF
+                    if (window.location.search.includes('pdf') || document.body.classList.contains('is-pdf')) {
+                        page.style.height = '297mm';
+                        page.style.overflow = 'hidden';
+                    }
+                }
+                
+                window.onload = autofit;
+                // Também registrar para mudanças de conteúdo (live preview)
+                if (window.parent && window.parent !== window) {
+                   setInterval(autofit, 1000);
+                }
+            </script>
         </body>
         </html>
         ";
