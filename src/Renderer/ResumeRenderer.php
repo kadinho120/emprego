@@ -46,10 +46,14 @@ class ResumeRenderer
         }
 
         $autofitClasses = [];
-        if ($estLines > 45) {
-            $fontSize = max(8.5, $fontSize - (($estLines - 45) * 0.15));
-            $lineHeight = max(1.1, $lineHeight - 0.1);
+        if ($estLines > 40) {
+            $fontSize = max(8.5, $fontSize - (($estLines - 40) * 0.2));
+            $lineHeight = max(1.05, $lineHeight - 0.1);
             $autofitClasses[] = 'autofit-compressed';
+        }
+        
+        if ($estLines > 55) {
+            $autofitClasses[] = 'autofit-2col';
         }
         
         if ($isPdf) {
@@ -134,10 +138,13 @@ class ResumeRenderer
                     }
                 }
                 {$css}
-                .section-item { margin-bottom: 12px; clear: both; page-break-inside: avoid; }
+                .section-item { margin-bottom: 12px; page-break-inside: avoid; }
+                .autofit-2col .section-item { width: 48%; float: left; margin-right: 2%; min-height: 80px; }
+                .autofit-2col .section-item:nth-child(2n) { margin-right: 0; }
+                .autofit-2col .section-title { clear: both; page-break-after: avoid; margin-top: 15px; margin-bottom: 10px; }
+                .section-title { page-break-after: avoid; margin-top: 15px; margin-bottom: 10px; }
                 .item-header { margin-bottom: 2px; overflow: hidden; }
                 .item-desc { margin-top: 2px; text-align: justify; }
-                .section-title { page-break-after: avoid; margin-top: 15px; margin-bottom: 10px; }
 
                 /* Auto-fit Helpers */
                 .autofit-compressed .section-item { margin-bottom: 4px; }
@@ -248,11 +255,12 @@ class ResumeRenderer
                 " : "") . "
 
                 " . (!empty($skills) ? "
-                <div class='section-group'>
+                <div class='section-group full-width'>
                     <div class='section-title'>Habilidades</div>
                     <div class='skills-box'>{$skillsText}</div>
                 </div>
                 " : "") . "
+                <div style='clear: both;'></div>
             </div>
             
             <script>
