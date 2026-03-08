@@ -164,7 +164,7 @@ async function generateSummaryWithAI(btn) {
         Crie um resumo profissional impactante para um candidato do nicho "${activeNiche === 'tech' ? 'Tecnologia/TI' : 'Saúde/Enfermagem'}".
         NOME DO CANDIDATO: ${name}
         
-        O resumo deve ser escrito em primeira pessoa, ter entre 3 e 4 linhas, e destacar competências e compromisso com resultados/qualidade.
+        O resumo deve ser escrito em PRIMEIRA PESSOA, ser EXTREMAMENTE CONCISO (máximo 2 a 3 linhas), e destacar competências e compromisso com resultados/qualidade.
         Não use placeholders como "[Habilidade]", crie um texto fluído e profissional que sirva de base.
         
         Responda APENAS com o texto do resumo, sem saudações ou explicações.
@@ -207,14 +207,13 @@ async function generateExperienceWithAI(btn) {
     try {
         const prompt = `
         Aja como um especialista em currículos de alta conversão.
-        Com base no cargo "${position}" na empresa "${company}" (Nicho: ${activeNiche === 'tech' ? 'Tecnologia' : 'Saúde'}), gere uma lista de 3 a 4 tópicos de realizações profissionais impactantes.
+        Com base no cargo "${position}" na empresa "${company}" (Nicho: ${activeNiche === 'tech' ? 'Tecnologia' : 'Saúde'}), gere uma lista EXTREMAMENTE CONCISA de 2 a 3 tópicos de realizações profissionais.
         
         REGRAS:
-        - Escreva em PRIMEIRA PESSOA (ex: "Liderei", "Desenvolvi", "Implementei").
-        - Use verbos de ação.
-        - Foque em resultados e conquistas.
+        - Escreva em PRIMEIRA PESSOA (ex: "Liderei", "Desenvolvi").
+        - Use verbos de ação e frases curtas.
+        - Não ultrapasse 2 linhas por tópico.
         - Não use placeholders como "[...]".
-        - O texto deve ser profissional e pronto para uso.
         - Responda APENAS com os tópicos (começando com bullet points ou hífens).
         `;
 
@@ -246,10 +245,10 @@ async function generateSkillsWithAI(btn) {
     try {
         const prompt = `
         Aja como um recrutador especializado no nicho de ${activeNiche === 'tech' ? 'Tecnologia/TI' : 'Saúde/Enfermagem'}.
-        Sugira as 10 habilidades (hard e soft skills) mais importantes e valorizadas no mercado atualmente para este perfil.
+        Sugira as 8 habilidades (hard e soft skills) mais essenciais e valorizadas para este perfil.
         Considere que o nome do candidato é ${name || 'um profissional do setor'}.
         
-        Responda APENAS as habilidades separadas por vírgula, sem explicações.
+        Responda APENAS as habilidades separadas por vírgula, de forma direta, sem explicações.
         `;
 
         const aiResponse = await puter.ai.chat(prompt, { model: 'gpt-4o-mini' });
