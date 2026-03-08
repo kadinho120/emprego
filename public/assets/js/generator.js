@@ -187,6 +187,85 @@ async function generateSummaryWithAI(btn) {
     }
 }
 
+async function generateExperienceWithAI(btn) {
+    const dynamicField = btn.closest('.dynamic-field');
+    const textarea = dynamicField.querySelector('textarea');
+    const company = dynamicField.querySelector('input[name*="[company]"]').value;
+    const position = dynamicField.querySelector('input[name*="[position]"]').value;
+    const nicheInput = document.getElementById('nicheInput');
+    const activeNiche = nicheInput ? nicheInput.value : 'tech';
+
+    if (!company || !position) {
+        alert('Por favor, preencha a Empresa e o Cargo para que a I.A. tenha contexto.');
+        return;
+    }
+
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '🤖 Gerando...';
+
+    try {
+        const prompt = `
+        Aja como um especialista em currículos de alta conversão.
+        Com base no cargo "${position}" na empresa "${company}" (Nicho: ${activeNiche === 'tech' ? 'Tecnologia' : 'Saúde'}), gere uma lista de 3 a 4 tópicos de realizações profissionais impactantes.
+        
+        REGRAS:
+        - Use verbos de ação.
+        - Foque em resultados e conquistas.
+        - Não use placeholders como "[...]".
+        - O texto deve ser profissional e pronto para uso.
+        - Responda APENAS com os tópicos (começando com bullet points ou hífens).
+        `;
+
+        const aiResponse = await puter.ai.chat(prompt, { model: 'gpt-4o-mini' });
+        textarea.value = aiResponse.toString().trim();
+        
+        if (typeof updatePreview === 'function') {
+            updatePreview();
+        }
+    } catch (err) {
+        console.error('Erro ao gerar experiência:', err);
+        alert('Erro ao gerar experiência com I.A.');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
+}
+
+async function generateSkillsWithAI(btn) {
+    const input = btn.closest('.space-y-2').querySelector('input[name="skills"]');
+    const nicheInput = document.getElementById('nicheInput');
+    const activeNiche = nicheInput ? nicheInput.value : 'tech';
+    const name = document.querySelector('input[name="full_name"]').value;
+
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '🤖 Gerando...';
+
+    try {
+        const prompt = `
+        Aja como um recrutador especializado no nicho de ${activeNiche === 'tech' ? 'Tecnologia/TI' : 'Saúde/Enfermagem'}.
+        Sugira as 10 habilidades (hard e soft skills) mais importantes e valorizadas no mercado atualmente para este perfil.
+        Considere que o nome do candidato é ${name || 'um profissional do setor'}.
+        
+        Responda APENAS as habilidades separadas por vírgula, sem explicações.
+        `;
+
+        const aiResponse = await puter.ai.chat(prompt, { model: 'gpt-4o-mini' });
+        input.value = aiResponse.toString().trim();
+        
+        if (typeof updatePreview === 'function') {
+            updatePreview();
+        }
+    } catch (err) {
+        console.error('Erro ao gerar habilidades:', err);
+        alert('Erro ao gerar habilidades com I.A.');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
+}
+
 function closeSuggestions() {
     const modal = document.getElementById('suggestionModal');
     modal.classList.add('hidden');
@@ -310,7 +389,10 @@ function addExperience() {
         <div class="space-y-2">
             <div class="flex justify-between items-center px-1">
                 <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Descrição</label>
-                <button type="button" class="text-[10px] font-bold text-indigo-400 hover:text-white transition-colors" onclick="openSuggestions('experience', this)">✨ Ver Sugestões</button>
+                <div class="flex gap-3 items-center">
+                    <button type="button" class="text-[10px] font-bold text-indigo-400 hover:text-white transition-colors" onclick="openSuggestions('experience', this)">✨ Ver Sugestões</button>
+                    <button type="button" class="text-[10px] font-bold text-emerald-400 hover:text-white transition-colors" onclick="generateExperienceWithAI(this)">🤖 Gerar com I.A.</button>
+                </div>
             </div>
             <textarea name="experience[${expCount}][description]" rows="3" class="form-input text-sm resize-none"></textarea>
         </div>

@@ -471,9 +471,14 @@
                                             <div class="flex justify-between items-center px-1">
                                                 <label
                                                     class="text-xs font-bold text-slate-400 uppercase tracking-wider">Descrição</label>
-                                                <button type="button"
-                                                    class="text-[10px] font-bold text-indigo-400 hover:text-white transition-colors"
-                                                    onclick="openSuggestions('experience', this)">✨ Ver Sugestões</button>
+                                                <div class="flex gap-3 items-center">
+                                                    <button type="button"
+                                                        class="text-[10px] font-bold text-indigo-400 hover:text-white transition-colors"
+                                                        onclick="openSuggestions('experience', this)">✨ Ver Sugestões</button>
+                                                    <button type="button"
+                                                        class="text-[10px] font-bold text-emerald-400 hover:text-white transition-colors"
+                                                        onclick="generateExperienceWithAI(this)">🤖 Gerar com I.A.</button>
+                                                </div>
                                             </div>
                                             <textarea name="experience[<?php echo $index; ?>][description]" rows="3"
                                                 class="form-input text-sm resize-none"><?php echo htmlspecialchars($exp['description'] ?? ''); ?></textarea>
@@ -575,9 +580,14 @@
                             <div class="space-y-2">
                                 <div class="flex justify-between items-center px-1">
                                     <label class="text-sm font-semibold text-slate-300">Habilidades</label>
-                                    <button type="button"
-                                        class="text-xs font-bold text-indigo-400 hover:text-white transition-colors"
-                                        onclick="openSuggestions('skills', this)">✨ Sugestões</button>
+                                    <div class="flex gap-3 items-center">
+                                        <button type="button"
+                                            class="text-xs font-bold text-indigo-400 hover:text-white transition-colors"
+                                            onclick="openSuggestions('skills', this)">✨ Sugestões</button>
+                                        <button type="button"
+                                            class="text-xs font-bold text-emerald-400 hover:text-white transition-colors"
+                                            onclick="generateSkillsWithAI(this)">🤖 Gerar com I.A.</button>
+                                    </div>
                                 </div>
                                 <input type="text" name="skills" class="form-input"
                                     placeholder="PHP, PostgreSQL, Docker, UX Design" required
